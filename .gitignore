@@ -1,0 +1,40 @@
+# Files yang berisi data sensitif
+.env
+.env.backup
+.env.production
+auth.json
+
+# Cache Laravel (Ini yang tadi bikin error)
+/bootstrap/cache/*
+!/bootstrap/cache/.gitignore
+/.phpunit.cache
+.phpunit.result.cache
+
+# Dependencies
+/node_modules
+/vendor
+
+# Storage & Log
+/public/storage
+/public/build
+/public/hot
+/storage/*.key
+/storage/pail
+*.log
+
+# Editor & System files
+.DS_Store
+Thumbs.db
+/.idea
+/.vscode
+/.fleet
+/.nova
+/.zed
+.phpactor.json
+Homestead.json
+Homestead.yaml
+.env
+bootstrap/cache/
+vendor/
+node_modules/.env
+bootstrap/cache/

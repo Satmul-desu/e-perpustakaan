@@ -1,0 +1,221 @@
+// Fonts
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+// Variables - Must be imported BEFORE Bootstrap
+$primary: #3b82f6;
+$secondary: #64748b;
+$success: #22c55e;
+$danger: #ef4444;
+$warning: #f59e0b;
+$info: #06b6d4;
+$light: #f8fafc;
+$dark: #0f172a;
+$body-bg: #0f172a;
+$body-color: #f1f5f9;
+$font-family-sans-serif: 'Inter', sans-serif;
+
+// Bootstrap
+@import 'bootstrap/scss/bootstrap';
+
+// Bootstrap Icons
+@import 'bootstrap-icons/font/bootstrap-icons.css';
+
+// Custom Dark Theme Styles
+body {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+    min-height: 100vh;
+    font-family: 'Inter', sans-serif;
+}
+
+// Text Colors
+.text-custom {
+    color: #60a5fa !important;
+}
+
+// Button Styles
+.btn-custom {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    border: none;
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.btn-custom:hover {
+    background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+}
+
+// Card Styles
+.card-custom {
+    background: rgba(30, 41, 59, 0.8);
+    border: 1px solid #334155;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.card-custom:hover {
+    border-color: #3b82f6;
+    box-shadow: 0 8px 32px rgba(59, 130, 246, 0.2);
+}
+
+// Form Control Styles
+.form-control-custom {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid #334155;
+    color: white;
+}
+
+.form-control-custom:focus {
+    background: rgba(15, 23, 42, 0.8);
+    border-color: #3b82f6;
+    color: white;
+    box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.25);
+}
+
+// Section Title
+.section-title {
+    color: white;
+    position: relative;
+    padding-bottom: 15px;
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, #3b82f6, #60a5fa);
+    border-radius: 2px;
+}
+
+// Navbar Styles
+.navbar-dark {
+    background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%) !important;
+}
+
+// Dropdown Styles
+.dropdown-menu {
+    background: #1e293b;
+    border: 1px solid #334155;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.dropdown-item {
+    color: #ffffff;
+}
+
+.dropdown-item:hover {
+    background: #334155;
+    color: #ffffff;
+}
+
+.dropdown-divider {
+    border-color: #334155;
+}
+
+// Custom Scrollbar
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #0f172a;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #334155;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #3b82f6;
+}
+
+// Link Styles
+a {
+    color: #60a5fa;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: #93c5fd;
+}
+
+// Badge Styles
+.badge {
+    font-weight: 500;
+}
+
+// List Group Styles
+.list-group-item {
+    background: rgba(30, 41, 59, 0.8);
+    border-color: #334155;
+    color: #f1f5f9;
+}
+
+// Table Styles
+.table {
+    color: #f1f5f9;
+}
+
+.table-dark {
+    --bs-table-bg: #1e293b;
+    --bs-table-border-color: #334155;
+}
+
+// Alert Styles
+.alert {
+    border: 1px solid;
+}
+
+// Toast Styles
+.toast {
+    background: #1e293b;
+    border: 1px solid #334155;
+    color: #f1f5f9;
+}
+
+// Pagination Styles
+.pagination {
+    gap: 4px;
+}
+
+.pagination .page-link {
+    background: #1e293b;
+    border: 1px solid #334155;
+    color: #94a3b8;
+    padding: 0.5rem 0.875rem;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.pagination .page-link:hover {
+    background: #334155;
+    border-color: #3b82f6;
+    color: #f1f5f9;
+}
+
+.pagination .page-item.active .page-link {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    border-color: #3b82f6;
+    color: white;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+}
+
+.pagination .page-item.disabled .page-link {
+    background: transparent;
+    border-color: #334155;
+    color: #64748b;
+}
+
+.pagination .page-link:focus {
+    box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.25);
+}
+

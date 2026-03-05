@@ -1,297 +1,222 @@
 <?php
-// app/Http/Controllers/Admin/ReportController.php
 
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Loan;
 use App\Models\Order;
-use App\Models\Category;
+use App\Models\OrderItem;
+use App\Models\Product;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Cache;
-// use Maatwebsite\Excel\Facades\Excel;
 
 class ReportController extends Controller
 {
     /**
-     * Menampilkan halaman laporan di browser.
-     * 
-     * Fitur:
-     * 1. Filter Rentang Tanggal (Date Range)
-     * 2. Summary Statistik Lengkap
-     * 3. Grafik Penjualan per Kategori (Analitik)
-     * 4. Tabel Detail Transaksi dengan Pagination
-     * 5. Analisis Produk Terlaris per Kategori
+     * Sales Report
      */
     public function sales(Request $request)
     {
-        // ============================================================
-        // 1. FILTER TANGGAL (dengan validasi)
-        // ============================================================
-        $dateFrom = $request->date_from ?? now()->startOfMonth()->toDateString();
-        $dateTo = $request->date_to ?? now()->toDateString();
+        // Date filters with defaults
+        $dateFrom = $request->get('date_from', now()->startOfMonth()->toDateString());
+        $dateTo = $request->get('date_to', now()->toDateString());
         
-        // Validasi: tanggal tidak boleh lebih dari 1 tahun
-        if (now()->parse($dateFrom)->diffInDays(now()->parse($dateTo)) > 365) {
-            $dateFrom = now()->subYear()->toDateString();
+        // Build base query for completed/paid orders
+        $orderQuery = Order::whereBetween('created_at', [$dateFrom, $dateTo . ' 23:59:59'])
+            ->where('payment_status', 'paid')
+            ->whereIn('status', ['processing', 'completed']);
+        
+        // Apply status filter
+        if ($request->has('status') && $request->status) {
+            $orderQuery->where('status', $request->status);
         }
-
-        // Cache key berdasarkan filter
-        $cacheKey = 'sales_report_' . md5($dateFrom . $dateTo);
-
-        // ============================================================
-        // 2. SUMMARY STATISTIK (dengan Caching)
-        // ============================================================
-        $summary = Cache::remember($cacheKey . '_summary', now()->addMinutes(5), function () use ($dateFrom, $dateTo) {
-            return Order::whereDate('created_at', '>=', $dateFrom)
-                ->whereDate('created_at', '<=', $dateTo)
-                ->where('payment_status', 'paid')
-                ->selectRaw('
-                    COUNT(*) as total_orders,
-                    SUM(total_amount) as total_revenue,
-                    SUM(shipping_cost) as total_shipping,
-                    AVG(total_amount) as avg_order_value,
-                    COUNT(DISTINCT user_id) as unique_customers
-                ')
-                ->first();
-        });
-
-        // ============================================================
-        // 3. DATA ORDER (dengan Eager Loading + Pagination)
-        // ============================================================
-        $orders = Order::with(['user', 'orderItems.product.category'])
-            ->whereDate('created_at', '>=', $dateFrom)
-            ->whereDate('created_at', '<=', $dateTo)
+        
+        // Summary Statistics
+        $ordersForStats = clone $orderQuery;
+        $totalRevenue = (float) $ordersForStats->sum('total_amount');
+        $totalOrders = $ordersForStats->count();
+        $uniqueCustomers = $ordersForStats->distinct('user_id')->count('user_id');
+        $avgOrderValue = $totalOrders > 0 ? $totalRevenue / $totalOrders : 0;
+        $totalShipping = (float) $ordersForStats->sum('shipping_cost');
+        
+        $summary = (object) [
+            'total_revenue' => $totalRevenue,
+            'total_orders' => $totalOrders,
+            'unique_customers' => $uniqueCustomers,
+            'avg_order_value' => $avgOrderValue,
+            'total_shipping' => $totalShipping,
+        ];
+        
+        // Get orders with pagination
+        $orders = $orderQuery->with(['user', 'orderItems'])->orderBy('created_at', 'desc')->paginate(20);
+        
+        // Sales by Category
+        $byCategory = DB::table('order_items')
+            ->join('orders', 'order_items.order_id', '=', 'orders.id')
+            ->join('products', 'order_items.product_id', '=', 'products.id')
+            ->join('categories', 'products.category_id', '=', 'categories.id')
+            ->whereBetween('orders.created_at', [$dateFrom, $dateTo . ' 23:59:59'])
+            ->where('orders.payment_status', 'paid')
+            ->whereIn('orders.status', ['processing', 'completed'])
+            ->select(
+                'categories.id as category_id',
+                'categories.name as category_name',
+                DB::raw('SUM(order_items.quantity) as total_sold'),
+                DB::raw('SUM(order_items.subtotal) as total_revenue')
+            )
+            ->groupBy('categories.id', 'categories.name')
+            ->orderByDesc('total_revenue')
+            ->get();
+        
+        // Daily Trend Data
+        $dailyTrend = DB::table('orders')
+            ->whereBetween('created_at', [$dateFrom, $dateTo . ' 23:59:59'])
             ->where('payment_status', 'paid')
-            ->latest()
-            ->paginate(20);
-
-        // ============================================================
-        // 4. ANALISIS PENJUALAN PER KATEGORI
-        // ============================================================
-        $byCategory = Cache::remember($cacheKey . '_category', now()->addMinutes(10), function () use ($dateFrom, $dateTo) {
-            return DB::table('order_items')
-                ->join('orders', 'orders.id', '=', 'order_items.order_id')
-                ->join('products', 'products.id', '=', 'order_items.product_id')
-                ->join('categories', 'categories.id', '=', 'products.category_id')
-                ->whereDate('orders.created_at', '>=', $dateFrom)
-                ->whereDate('orders.created_at', '<=', $dateTo)
-                ->where('orders.payment_status', 'paid')
-                ->groupBy('categories.id', 'categories.name')
-                ->select([
-                    'categories.id',
-                    'categories.name as category_name',
-                    DB::raw('SUM(order_items.quantity) as total_sold'),
-                    DB::raw('SUM(order_items.subtotal) as total_revenue'),
-                    DB::raw('COUNT(DISTINCT order_items.product_id) as unique_products')
-                ])
-                ->orderByDesc('total_revenue')
-                ->get();
-        });
-
-        // ============================================================
-        // 5. PRODUK TERLARIS PER KATEGORI
-        // ============================================================
-        $topProductsByCategory = Cache::remember($cacheKey . '_top_products', now()->addMinutes(10), function () use ($dateFrom, $dateTo) {
-            return DB::table('order_items')
-                ->join('orders', 'orders.id', '=', 'order_items.order_id')
-                ->join('products', 'products.id', '=', 'order_items.product_id')
-                ->join('categories', 'categories.id', '=', 'products.category_id')
-                ->whereDate('orders.created_at', '>=', $dateFrom)
-                ->whereDate('orders.created_at', '<=', $dateTo)
-                ->where('orders.payment_status', 'paid')
-                ->groupBy('categories.id', 'categories.name', 'products.id', 'products.name')
-                ->select([
-                    'categories.name as category_name',
-                    'products.id as product_id',
-                    'products.name as product_name',
-                    DB::raw('SUM(order_items.quantity) as total_sold'),
-                    DB::raw('SUM(order_items.subtotal) as total_revenue')
-                ])
-                ->orderByDesc('total_sold')
-                ->limit(10)
-                ->get()
-                ->groupBy('category_name');
-        });
-
-        // ============================================================
-        // 6. TREN PENJUALAN HARIAN (untuk Line Chart)
-        // ============================================================
-        $dailyTrend = Order::withoutGlobalScope('ordered')
-            ->whereDate('created_at', '>=', $dateFrom)
-            ->whereDate('created_at', '<=', $dateTo)
-            ->where('payment_status', 'paid')
-            ->select([
+            ->whereIn('status', ['processing', 'completed'])
+            ->select(
                 DB::raw('DATE(created_at) as date'),
                 DB::raw('COUNT(*) as orders'),
                 DB::raw('SUM(total_amount) as revenue')
-            ])
+            )
             ->groupBy(DB::raw('DATE(created_at)'))
-            ->orderBy('date', 'asc')
-            ->get();
-
-        // ============================================================
-        // 7. ORDER STATUS DISTRIBUTION
-        // ============================================================
-        $orderStatus = Order::whereDate('created_at', '>=', $dateFrom)
-            ->whereDate('created_at', '<=', $dateTo)
-            ->select('status', DB::raw('COUNT(*) as count'))
-            ->groupBy('orders.status')
-            ->pluck('count', 'status')
-            ->toArray();
-
-        // ============================================================
-        // 8. DAFTAR KATEGORI (untuk filter dropdown)
-        // ============================================================
-        $categories = Category::orderBy('name')->pluck('name', 'id');
-
+            ->orderBy('date')
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'date' => $item->date,
+                    'orders' => (int) $item->orders,
+                    'revenue' => (float) $item->revenue,
+                ];
+            });
+        
+        // Top Products by Category
+        $topProductsByCategory = $byCategory->map(function ($category) {
+            $products = DB::table('order_items')
+                ->join('orders', 'order_items.order_id', '=', 'orders.id')
+                ->join('products', 'order_items.product_id', '=', 'products.id')
+                ->whereBetween('orders.created_at', [$dateFrom, $dateTo . ' 23:59:59'])
+                ->where('orders.payment_status', 'paid')
+                ->whereIn('orders.status', ['processing', 'completed'])
+                ->where('products.category_id', $category->category_id)
+                ->select(
+                    'products.id',
+                    'products.name as product_name',
+                    DB::raw('SUM(order_items.quantity) as total_sold'),
+                    DB::raw('SUM(order_items.subtotal) as total_revenue')
+                )
+                ->groupBy('products.id', 'products.name')
+                ->orderByDesc('total_sold')
+                ->limit(5)
+                ->get();
+            
+            return $products;
+        });
+        
         return view('admin.reports.sales', compact(
-            'orders', 
-            'summary', 
+            'dateFrom',
+            'dateTo',
+            'summary',
             'byCategory',
-            'topProductsByCategory',
             'dailyTrend',
-            'orderStatus',
-            'categories',
-            'dateFrom', 
-            'dateTo'
+            'topProductsByCategory',
+            'orders'
         ));
     }
 
     /**
-     * Handle download Excel dengan formatting lengkap.
-     * NOTE: Feature disabled - maatwebsite/excel not installed
+     * Loan Reports
      */
-    public function exportSales(Request $request)
+    public function loans(Request $request)
     {
-        $dateFrom = $request->date_from ?? now()->startOfMonth()->toDateString();
-        $dateTo = $request->date_to ?? now()->toDateString();
-
-        // Validasi
-        $request->validate([
-            'date_from' => 'nullable|date',
-            'date_to' => 'nullable|date|after_or_equal:date_from',
-        ]);
-
-        // Temporarily disabled - need to install maatwebsite/excel package
-        return redirect()->back()->with('error', 'Fitur export Excel sementara tidak tersedia. Silakan install package maatwebsite/excel.');
+        $query = Loan::with(['user', 'book.category']);
         
-        /*
-        $filename = 'laporan-penjualan-' . $dateFrom . '-sd-' . $dateTo . '.xlsx';
-
-        return Excel::download(
-            new SalesReportExport($dateFrom, $dateTo),
-            $filename
-        );
-        */
+        // Filter by status
+        if ($request->has('status') && $request->status) {
+            $query->where('status', $request->status);
+        }
+        
+        // Filter by date range
+        if ($request->has('date_from') && $request->date_from) {
+            $query->whereDate('loan_date', '>=', $request->date_from);
+        }
+        
+        if ($request->has('date_to') && $request->date_to) {
+            $query->whereDate('loan_date', '<=', $request->date_to);
+        }
+        
+        $loans = $query->orderBy('loan_date', 'desc')->paginate(20);
+        
+        // Statistics
+        $stats = [
+            'total' => Loan::count(),
+            'pending' => Loan::where('status', 'pending')->count(),
+            'borrowed' => Loan::where('status', 'borrowed')->count(),
+            'returned' => Loan::where('status', 'returned')->count(),
+            'overdue' => Loan::overdue()->count(),
+        ];
+        
+        return view('admin.reports.loans', compact('loans', 'stats'));
     }
 
     /**
-     * Export laporan penjualan ke Word.
+     * Export Loans to Excel
      */
-    public function exportWord(Request $request)
+    public function exportLoans(Request $request)
     {
-        $dateFrom = $request->date_from ?? now()->startOfMonth()->toDateString();
-        $dateTo = $request->date_to ?? now()->toDateString();
-
-        // Validasi
-        $request->validate([
-            'date_from' => 'nullable|date',
-            'date_to' => 'nullable|date|after_or_equal:date_from',
-        ]);
-
-        // Get data untuk export
-        $summary = Order::whereDate('created_at', '>=', $dateFrom)
-            ->whereDate('created_at', '<=', $dateTo)
-            ->where('payment_status', 'paid')
-            ->selectRaw('
-                COUNT(*) as total_orders,
-                SUM(total_amount) as total_revenue,
-                SUM(shipping_cost) as total_shipping,
-                AVG(total_amount) as avg_order_value,
-                COUNT(DISTINCT user_id) as unique_customers
-            ')
-            ->first();
-
-        $orders = Order::with(['user', 'orderItems.product'])
-            ->whereDate('created_at', '>=', $dateFrom)
-            ->whereDate('created_at', '<=', $dateTo)
-            ->where('payment_status', 'paid')
-            ->latest()
-            ->get();
-
-        $byCategory = DB::table('order_items')
-            ->join('orders', 'orders.id', '=', 'order_items.order_id')
-            ->join('products', 'products.id', '=', 'order_items.product_id')
-            ->join('categories', 'categories.id', '=', 'products.category_id')
-            ->whereDate('orders.created_at', '>=', $dateFrom)
-            ->whereDate('orders.created_at', '<=', $dateTo)
-            ->where('orders.payment_status', 'paid')
-            ->groupBy('categories.id', 'categories.name')
-            ->select([
-                'categories.name as category_name',
-                DB::raw('SUM(order_items.quantity) as total_sold'),
-                DB::raw('SUM(order_items.subtotal) as total_revenue'),
-            ])
-            ->orderByDesc('total_revenue')
-            ->get();
-
-        // Generate filename
-        $filename = 'laporan-penjualan-' . $dateFrom . '-sd-' . $dateTo . '.doc';
-
-        // Set headers untuk Word
-        header('Content-Type: application/vnd.ms-word');
-        header('Content-Disposition: attachment;filename="' . $filename . '"');
-        header('Cache-Control: max-age=0');
-
-        // Render view ke HTML string
-        $html = view('admin.reports.word-export', compact(
-            'dateFrom', 'dateTo', 'summary', 'orders', 'byCategory'
-        ))->render();
-
-        echo $html;
-        exit;
-    }
-
-    /**
-     * API endpoint untuk data chart (JSON).
-     */
-    public function chartData(Request $request)
-    {
-        $dateFrom = $request->date_from ?? now()->startOfMonth()->toDateString();
-        $dateTo = $request->date_to ?? now()->toDateString();
-
-        $dailyTrend = Order::withoutGlobalScope('ordered')
-            ->whereDate('created_at', '>=', $dateFrom)
-            ->whereDate('created_at', '<=', $dateTo)
-            ->where('payment_status', 'paid')
-            ->select([
-                DB::raw('DATE(created_at) as date'),
-                DB::raw('COUNT(*) as orders'),
-                DB::raw('SUM(total_amount) as revenue')
-            ])
-            ->groupBy(DB::raw('DATE(created_at)'))
-            ->orderBy('date', 'asc')
-            ->get();
-
-        $byCategory = DB::table('order_items')
-            ->join('orders', 'orders.id', '=', 'order_items.order_id')
-            ->join('products', 'products.id', '=', 'order_items.product_id')
-            ->join('categories', 'categories.id', '=', 'products.category_id')
-            ->whereDate('orders.created_at', '>=', $dateFrom)
-            ->whereDate('orders.created_at', '<=', $dateTo)
-            ->where('orders.payment_status', 'paid')
-            ->groupBy('categories.id', 'categories.name')
-            ->select([
-                'categories.name as category_name',
-                DB::raw('SUM(order_items.subtotal) as total_revenue'),
-            ])
-            ->orderByDesc('total_revenue')
-            ->get();
-
-        return response()->json([
-            'daily_trend' => $dailyTrend,
-            'by_category' => $byCategory,
-        ]);
+        $query = Loan::with(['user', 'book']);
+        
+        // Apply same filters as index
+        if ($request->has('date_from') && $request->date_from) {
+            $query->whereDate('loan_date', '>=', $request->date_from);
+        }
+        
+        if ($request->has('date_to') && $request->date_to) {
+            $query->whereDate('loan_date', '<=', $request->date_to);
+        }
+        
+        $loans = $query->get();
+        
+        // Create CSV content
+        $csvData = [];
+        $csvData[] = ['No', 'Peminjam', 'Email', 'Buku', 'Kategori', 'Tgl Pinjam', 'Jatuh Tempo', 'Tgl Kembali', 'Status', 'Durasi (hari)'];
+        
+        $statusText = [
+            'pending' => 'Menunggu',
+            'approved' => 'Disetujui',
+            'borrowed' => 'Dipinjam',
+            'returned' => 'Dikembalikan',
+            'overdue' => 'Terlambat',
+            'cancelled' => 'Dibatalkan'
+        ];
+        
+        foreach ($loans as $index => $loan) {
+            $csvData[] = [
+                $index + 1,
+                $loan->user->name,
+                $loan->user->email,
+                $loan->book->name,
+                $loan->book->category->name ?? '-',
+                $loan->loan_date->format('Y-m-d'),
+                $loan->due_date->format('Y-m-d'),
+                $loan->return_date ? $loan->return_date->format('Y-m-d') : '-',
+                $statusText[$loan->status] ?? $loan->status,
+                $loan->loan_duration
+            ];
+        }
+        
+        $filename = 'laporan_peminjaman_' . date('Y-m-d_His') . '.csv';
+        
+        $handle = fopen('php://memory', 'r+');
+        foreach ($csvData as $line) {
+            fputcsv($handle, $line);
+        }
+        rewind($handle);
+        $content = stream_get_contents($handle);
+        fclose($handle);
+        
+        return response($content)
+            ->header('Content-Type', 'text/csv')
+            ->header('Content-Disposition', "attachment; filename=\"{$filename}\"");
     }
 }

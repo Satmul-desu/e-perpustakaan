@@ -12,8 +12,8 @@
 <div class="row justify-content-center">
     <div class="col-lg-8">
         <div class="card border-0 shadow-sm">
-            <div class="card-header bg-white">
-                <h6 class="mb-0">Form Tambah Kategori</h6>
+            <div class="card-header bg-dark">
+                <h6 class="mb-0 text-white">Form Tambah Kategori</h6>
             </div>
             <div class="card-body">
                 <form action="{{ route('admin.categories.store') }}" method="POST" enctype="multipart/form-data">

@@ -1,8 +1,3 @@
-{{-- ================================================
-     FILE: resources/views/cs/index.blade.php
-     FUNGSI: Halaman Customer Service (CS) dengan form Aduan/Laporan
-     ================================================ --}}
-
 @extends('layouts.app')
 
 @section('title', 'Customer Service - TokoBuku')

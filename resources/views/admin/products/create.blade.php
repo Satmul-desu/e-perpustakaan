@@ -1,27 +1,27 @@
 {{-- ================================================
      FILE: resources/views/admin/products/create.blade.php
-     FUNGSI: Form untuk menambah produk baru
+     FUNGSI: Form untuk menambah buku baru
      ================================================ --}}
 
 @extends('layouts.admin')
 
-@section('title', 'Tambah Produk')
-@section('page-title', 'Tambah Produk Baru')
+@section('title', 'Tambah Buku')
+@section('page-title', 'Tambah Buku Baru')
 
 @section('content')
 <div class="row justify-content-center">
     <div class="col-lg-8">
         <div class="card border-0 shadow-sm">
-            <div class="card-header bg-white">
-                <h6 class="mb-0">Informasi Produk</h6>
+            <div class="card-header bg-dark">
+                <h6 class="mb-0 text-white">Informasi Buku</h6>
             </div>
             <div class="card-body">
                 <form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
 
-                    {{-- Nama Produk --}}
+                    {{-- Nama Buku --}}
                     <div class="mb-3">
-                        <label for="name" class="form-label">Nama Produk <span class="text-danger">*</span></label>
+                        <label for="name" class="form-label">Nama Buku <span class="text-danger">*</span></label>
                         <input type="text" class="form-control @error('name') is-invalid @enderror"
                                id="name" name="name" value="{{ old('name') }}" required>
                         @error('name')
@@ -56,31 +56,14 @@
                         @enderror
                     </div>
 
-                    {{-- Harga --}}
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="price" class="form-label">Harga <span class="text-danger">*</span></label>
-                                <div class="input-group">
-                                    <span class="input-group-text">Rp</span>
-                                    <input type="number" class="form-control @error('price') is-invalid @enderror"
-                                           id="price" name="price" value="{{ old('price') }}" min="0" step="100" required>
-                                </div>
-                                @error('price')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="stock" class="form-label">Stok <span class="text-danger">*</span></label>
-                                <input type="number" class="form-control @error('stock') is-invalid @enderror"
-                                       id="stock" name="stock" value="{{ old('stock', 0) }}" min="0" required>
-                                @error('stock')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
+                    {{-- Stok --}}
+                    <div class="mb-3">
+                        <label for="stock" class="form-label">Stok <span class="text-danger">*</span></label>
+                        <input type="number" class="form-control @error('stock') is-invalid @enderror"
+                               id="stock" name="stock" value="{{ old('stock', 1) }}" min="0" required>
+                        @error('stock')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
 
                     {{-- Status --}}
@@ -89,18 +72,18 @@
                             <input class="form-check-input" type="checkbox" id="is_active" name="is_active" value="1"
                                    {{ old('is_active', true) ? 'checked' : '' }}>
                             <label class="form-check-label" for="is_active">
-                                Produk Aktif (tampil di katalog)
+                                Buku Aktif (tampil di katalog)
                             </label>
                         </div>
                     </div>
 
-                    {{-- Gambar Produk --}}
+                    {{-- Gambar Buku --}}
                     <div class="mb-3">
-                        <label for="images" class="form-label">Gambar Produk</label>
+                        <label for="images" class="form-label">Gambar Buku</label>
                         <input type="file" class="form-control @error('images') is-invalid @enderror"
                                id="images" name="images[]" multiple accept="image/*">
                         <div class="form-text">
-                            Pilih satu atau lebih gambar. Gambar pertama akan dijadikan thumbnail utama.
+                            Pilih satu atau lebih gambar. Gambar pertama akan dijadikan sampul utama.
                         </div>
                         @error('images')
                             <div class="invalid-feedback d-block">{{ $message }}</div>
@@ -113,7 +96,7 @@
                             <i class="bi bi-arrow-left me-1"></i> Kembali
                         </a>
                         <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-check-lg me-1"></i> Simpan Produk
+                            <i class="bi bi-check-lg me-1"></i> Simpan Buku
                         </button>
                     </div>
                 </form>

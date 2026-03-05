@@ -74,17 +74,7 @@
             </div>
 
             {{-- Connected Accounts Section --}}
-            <div class="col-lg-6">
-                <div class="profile-card">
-                    <div class="card-header">
-                        <i class="bi bi-link-45deg me-2"></i>Akun Terhubung
-                    </div>
-                    <div class="card-body">
-                        @include('profile.partials.connected-accounts')
-                    </div>
-                </div>
-            </div>
-
+          
             {{-- Admin Access Section --}}
             @if($user->isAdmin())
             <div class="col-12">

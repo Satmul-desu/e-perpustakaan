@@ -10,7 +10,7 @@
 
 @section('content')
 <div class="card border-0 shadow-sm">
-    <div class="card-header bg-white">
+    <div class="card-header bg-black">
         <h6 class="mb-0">Kelola Pesanan Pelanggan</h6>
     </div>
     <div class="card-body">

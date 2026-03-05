@@ -20,17 +20,11 @@
                 </p>
                 {{-- Social Media Icons --}}
                 <div class="social-links d-flex gap-2">
-                    <a href="#" class="social-link social-facebook" title="Facebook">
-                        <i class="bi bi-facebook"></i>
-                    </a>
-                    <a href="#" class="social-link social-instagram" title="Instagram">
+                    <a href="https://instagram.com/syasya_niss" class="social-link social-instagram" title="Instagram">
                         <i class="bi bi-instagram"></i>
                     </a>
-                    <a href="#" class="social-link social-whatsapp" title="WhatsApp">
+                    <a href="https://wa.me/6282129939458" class="social-link social-whatsapp" title="WhatsApp">
                         <i class="bi bi-whatsapp"></i>
-                    </a>
-                    <a href="#" class="social-link social-twitter" title="Twitter">
-                        <i class="bi bi-twitter-x"></i>
                     </a>
                 </div>
             </div>
@@ -47,8 +41,8 @@
                         </a>
                     </li>
                     <li class="mb-2">
-                        <a href="{{ route('flash-sale') }}" class="footer-link text-danger">
-                            <i class="bi bi-lightning-fill me-2" style="color: #fbbf24;"></i>Flash Sale
+                        <a href="#" class="footer-link">
+                            <i class="bi bi-lightning-fill me-2" ></i>peminjaman buku
                         </a>
                     </li>
                     <li class="mb-2">
@@ -57,7 +51,7 @@
                         </a>
                     </li>
                     <li class="mb-2">
-                        <a href="#" class="footer-link">
+                        <a href="https://wa.me/6282129939458" class="footer-link">
                             <i class="bi bi-telephone me-2"></i>Kontak
                         </a>
                     </li>
@@ -85,14 +79,14 @@
                             <i class="bi bi-truck me-2"></i>Pengiriman
                         </a>
                     </li>
-                    <li class="mb-2">
+                   <li class="mb-2">
                         <a href="#" class="footer-link">
                             <i class="bi bi-arrow-repeat me-2"></i>Pengembalian
+
                         </a>
                     </li>
                 </ul>
-            </div>
-
+            </div> 
             {{-- Contact Info --}}
             <div class="col-lg-3 col-md-6">
                 <h6 class="footer-heading text-white mb-3">
@@ -109,7 +103,7 @@
                     </li>
                     <li class="mb-2 d-flex align-items-center">
                         <i class="bi bi-envelope me-2 text-primary"></i>
-                        <span class="text-secondary small">TokoBuku@TokoOnline.com</span>
+                        <span class="text-secondary small">PerpustakaanBuku@PerpustakaanOnline.com</span>
                     </li>
                     <li class="mb-2 d-flex align-items-center">
                         <i class="bi bi-clock me-2 text-primary"></i>
@@ -124,7 +118,7 @@
             <div class="row align-items-center">
                 {{-- Payment Badges --}}
                 <div class="col-md-6 mb-3 mb-md-0">
-                    <span class="text-secondary me-3 small">Metode Pembayaran:</span>
+                    <span class="text-secondary me-3 small">Metode Pembayaran:(jika ingin di tebus atau terkena denda)</span>
                     <div class="payment-badges d-inline-flex gap-2">
                         <span class="payment-badge bg-primary rounded px-2 py-1 text-white small">
                             <i class="bi bi-credit-card me-1"></i>Visa
@@ -145,8 +139,8 @@
                 <div class="col-md-6 text-md-end">
                     <p class="copyright mb-0 text-secondary small">
                         <i class="bi bi-c-circle me-1"></i>
-                        {{ date('Y') }} <span class="text-white fw-bold">TokoBuku</span>. 
-                        All rights reserved. Made with <i class="bi bi-heart-fill text-danger" style="font-size: 0.7rem;"></i>
+                        {{ date('Y') }} <span class="text-white fw-bold">Perpustakaan Buku</span>. 
+                        All rights reserved. Made with tsutaz<i class="bi bi-heart-fill text-danger" style="font-size: 0.7rem;"></i>
                     </p>
                 </div>
             </div>

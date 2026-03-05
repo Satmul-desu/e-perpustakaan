@@ -1,22 +1,14 @@
-{{-- ================================================
-     FILE: resources/views/admin/users/index.blade.php
-     FUNGSI: Halaman daftar pengguna admin
-     ================================================ --}}
-
 @extends('layouts.admin')
 
-@section('title', 'Kelola Pengguna')
-@section('page-title', 'Kelola Pengguna')
+@section('title', 'Kelola Anggota')
+@section('page-title', 'Kelola Anggota')
 
 @section('content')
 <div class="row">
     <div class="col-12">
         <div class="card border-0 shadow-sm">
-            <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                <h6 class="mb-0">Daftar Pengguna</h6>
-                <a href="#" class="btn btn-primary" onclick="alert('Fitur tambah user belum diimplementasi')">
-                    <i class="bi bi-person-plus me-2"></i>Tambah Pengguna
-                </a>
+            <div class="card-header bg-dark d-flex justify-content-between align-items-center">
+                <h6 class="mb-0 text-white">Daftar Anggota</h6>
             </div>
             <div class="card-body">
                 @if(session('success'))
@@ -43,7 +35,6 @@
                                 <th>Role</th>
                                 <th>Status Verifikasi</th>
                                 <th>Tanggal Daftar</th>
-                                <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -75,7 +66,7 @@
                                         @if($user->role === 'admin')
                                             <span class="badge bg-danger">Admin</span>
                                         @else
-                                            <span class="badge bg-primary">Customer</span>
+                                            <span class="badge bg-primary">Anggota</span>
                                         @endif
                                     </td>
                                     <td>
@@ -90,33 +81,12 @@
                                         @endif
                                     </td>
                                     <td>{{ $user->created_at->format('d/m/Y') }}</td>
-                                    <td>
-                                        <div class="btn-group" role="group">
-                                            <button type="button"
-                                                    class="btn btn-sm btn-outline-info"
-                                                    onclick="alert('Fitur detail user belum diimplementasi')">
-                                                <i class="bi bi-eye"></i>
-                                            </button>
-                                            <button type="button"
-                                                    class="btn btn-sm btn-outline-warning"
-                                                    onclick="alert('Fitur edit user belum diimplementasi')">
-                                                <i class="bi bi-pencil"></i>
-                                            </button>
-                                            @if($user->role !== 'admin')
-                                                <button type="button"
-                                                        class="btn btn-sm btn-outline-danger"
-                                                        onclick="alert('Fitur hapus user belum diimplementasi')">
-                                                    <i class="bi bi-trash"></i>
-                                                </button>
-                                            @endif
-                                        </div>
-                                    </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="7" class="text-center text-muted py-4">
+                                    <td colspan="6" class="text-center text-muted py-4">
                                         <i class="bi bi-people fs-1 d-block mb-2"></i>
-                                        Belum ada pengguna terdaftar
+                                        Belum ada anggota terdaftar
                                     </td>
                                 </tr>
                             @endforelse

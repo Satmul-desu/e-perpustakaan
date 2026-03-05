@@ -25,7 +25,7 @@ class ProductController extends Controller
         $products = Product::query()
         // Eager Loading: Meload relasi kategori & gambar utama sekaligus.
         // Tanpa 'with', Laravel akan mengeksekusi 1 query tambahan untuk SETIAP baris produk (N+1 Problem).
-            ->with(['category', 'primaryImage'])
+            ->with(['category', 'primaryImage', 'images'])
 
         // Filter: Pencarian nama produk
             ->when($request->search, function ($query, $search) {
@@ -65,41 +65,38 @@ class ProductController extends Controller
     {
         try {
             // === DB TRANSACTION START ===
-            // Kita membungkus operasi ini dalam transaksi.
-            // Mengapa? Karena kita melakukan DUA aksi penulisan database:
-            // 1. Create Product
-            // 2. Create Product Images
-            // Jika step 2 gagal (misal upload error), step 1 harus DIBATALKAN (Rollback) agar tidak ada data sampah.
             DB::beginTransaction();
 
-            // 1. Simpan data produk
-            // $request->validated() hanya mengambil data yang lolos validasi di FormRequest.
-            // Method create() memanfaatkan fitur Mass Assignment Laravel.
-            $product = Product::create($request->validated());
+            // 1. Siapkan data produk dengan nilai default untuk price (karena ini library, tidak perlu harga)
+            $validatedData = $request->validated();
+            
+            // Set default price ke 0 untuk library (buku tidak dijual)
+            if (!isset($validatedData['price'])) {
+                $validatedData['price'] = 0;
+            }
 
-            // 2. Upload gambar (jika ada)
-            // Kita pisahkan logika upload ke helper method agar kode store() tetap bersih.
+            // 2. Simpan data produk
+            $product = Product::create($validatedData);
+
+            // 3. Upload gambar (jika ada)
             if ($request->hasFile('images')) {
                 $this->uploadImages($request->file('images'), $product);
             }
 
             // === DB TRANSACTION COMMIT ===
-            // Jika sampai sini tidak ada error, simpan semua perubahan secara permanen.
             DB::commit();
 
             return redirect()
                 ->route('admin.products.index')
-                ->with('success', 'Produk berhasil ditambahkan!');
+                ->with('success', 'Buku berhasil ditambahkan!');
 
         } catch (\Exception $e) {
             // === DB TRANSACTION ROLLBACK ===
-            // Jika terjadi error APAPUN di block try, batalkan semua query yang sudah dijalankan.
             DB::rollBack();
 
-            // Kembalikan user ke form sebelumnya dengan pesan error dan input mereka.
             return back()
                 ->withInput()
-                ->with('error', 'Gagal menyimpan produk: ' . $e->getMessage());
+                ->with('error', 'Gagal menyimpan buku: ' . $e->getMessage());
         }
     }
 
@@ -113,6 +110,7 @@ class ProductController extends Controller
         $product->load([
             'category', 
             'images', 
+            'primaryImage',
             'orderItems.order.user'  // Nested eager loading untuk orderItems->order->user
         ]);
 
@@ -126,7 +124,7 @@ class ProductController extends Controller
     {
         $categories = Category::active()->orderBy('name')->get();
         // Load gambar yang sudah ada agar bisa ditampilkan/dihapus di form edit.
-        $product->load('images');
+        $product->load(['images', 'primaryImage', 'category']);
 
         return view('admin.products.edit', compact('product', 'categories'));
     }
@@ -141,7 +139,14 @@ class ProductController extends Controller
             DB::beginTransaction();
 
             // 1. Update data dasar produk
-            $product->update($request->validated());
+            $validatedData = $request->validated();
+            
+            // Ensure price has a value (for library system)
+            if (!isset($validatedData['price'])) {
+                $validatedData['price'] = $product->price ?? 0;
+            }
+
+            $product->update($validatedData);
 
             // 2. Upload gambar BARU (jika user menambah gambar)
             if ($request->hasFile('images')) {
@@ -154,7 +159,6 @@ class ProductController extends Controller
             }
 
             // 4. Set gambar Utama (Primary Image)
-            // Jika user memilih gambar tertentu jadi thumbnail baru.
             if ($request->has('primary_image')) {
                 $this->setPrimaryImage($product, $request->primary_image);
             }
@@ -163,7 +167,7 @@ class ProductController extends Controller
 
             return redirect()
                 ->route('admin.products.index')
-                ->with('success', 'Produk berhasil diperbarui!');
+                ->with('success', 'Buku berhasil diperbarui!');
 
         } catch (\Exception $e) {
             DB::rollBack();

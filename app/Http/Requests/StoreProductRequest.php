@@ -29,20 +29,10 @@ class StoreProductRequest extends FormRequest
             'name'           => ['required', 'string', 'max:255'],
             'description'    => ['nullable', 'string'],
 
-            // Harga minimal 1000 rupiah
-            'price'          => ['required', 'numeric', 'min:1000'],
-
-            // Harga diskon (opsional), tapi jika diisi:
-            // 1. Harus numeric
-            // 2. Minimal 0
-            // 3. Harus KURANG DARI ('lt' = less than) harga asli (price)
-            'discount_price' => ['nullable', 'numeric', 'min:0', 'lt:price'],
-
-            'stock'          => ['required', 'integer', 'min:0'],
-            'weight'         => ['required', 'integer', 'min:1'], // Berat minimal 1 gram
+            // Stok buku (opsional untuk library)
+            'stock'          => ['nullable', 'integer', 'min:0'],
 
             'is_active'      => ['boolean'],
-            'is_featured'    => ['boolean'],
 
             // Validasi Array Gambar
             // 'images' harus berupa array

@@ -9,9 +9,9 @@
 @section('page-title', 'Manajemen Aduan')
 
 @section('content')
-{{-- Stats Cards --}}
-<div class="row g-4 mb-4">
-    <div class="col-md-3">
+{{-- Stats Cards - Full Width --}}
+<div class="row g-3 mb-4">
+    <div class="col-xl-3 col-md-6">
         <div class="stat-card">
             <div class="stat-icon warning">
                 <i class="bi bi-clock"></i>
@@ -20,7 +20,7 @@
             <div class="stat-value">{{ $stats['pending'] }}</div>
         </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-xl-3 col-md-6">
         <div class="stat-card">
             <div class="stat-icon info">
                 <i class="bi bi-gear"></i>
@@ -29,7 +29,7 @@
             <div class="stat-value">{{ $stats['in_progress'] }}</div>
         </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-xl-3 col-md-6">
         <div class="stat-card">
             <div class="stat-icon success">
                 <i class="bi bi-check-circle"></i>
@@ -38,7 +38,7 @@
             <div class="stat-value">{{ $stats['resolved'] }}</div>
         </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-xl-3 col-md-6">
         <div class="stat-card">
             <div class="stat-icon danger">
                 <i class="bi bi-exclamation-triangle"></i>

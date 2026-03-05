@@ -142,9 +142,7 @@ class CategoryController extends Controller
         // Jangan hapus kategori jika masih ada produk di dalamnya.
         // Ini mencegah produk menjadi "yatim piatu" (orphan data) yang tidak punya kategori.
         if ($category->products()->exists()) {
-            return back()->with('error',
-                'Kategori tidak dapat dihapus karena masih memiliki produk. Silahkan pindahkan atau hapus produk terlebih dahulu.');
-                'Kategori tidak dapat dihapus karena masih memiliki buku. Silahkan pindahkan atau hapus buku terlebih dahulu.');
+            return back()->with('error', 'Kategori tidak dapat dihapus karena masih memiliki produk. Silahkan pindahkan atau hapus produk terlebih dahulu.');
         }
 
         // 2. Hapus file gambar fisik dari storage

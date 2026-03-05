@@ -8,7 +8,7 @@
             <div class="col-lg-3 d-none d-lg-block">
                 <div class="filter-sidebar card border-0" style="background: rgba(30, 41, 59, 0.95); border: 1px solid #334155 !important; position: sticky; top: 80px;">
                     <div class="card-header bg-transparent border-bottom border-secondary fw-bold py-3">
-                        <i class="bi bi-funnel me-2"></i>Filter Produk
+                        <i class="bi bi-funnel me-2" ></i>Filter Produk
                     </div>
                     <div class="card-body">
                         <form action="{{ route('catalog.index') }}" method="GET" id="filter-form">

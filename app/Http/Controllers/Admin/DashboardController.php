@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Complaint;
-use App\Models\Order;
+use App\Models\Loan;
 use App\Models\Product;
 use App\Models\User;
 use App\Models\Category;
@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\DB;
 class DashboardController extends Controller
 {
     /**
-     * Display the admin dashboard with comprehensive statistics.
+     * Display the admin dashboard with comprehensive statistics for library.
      * 
      * Performance Optimizations:
      * - Uses Eager Loading to prevent N+1 queries
@@ -32,44 +32,50 @@ class DashboardController extends Controller
         
         $stats = Cache::remember($cacheKey, now()->addMinutes(5), function () {
             return [
-                // Total Pendapatan (hanya dari order yang sudah dibayar)
-                'total_revenue' => Order::where('payment_status', 'paid')
-                    ->whereIn('status', ['processing', 'completed', 'delivered'])
-                    ->sum('total_amount'),
+                // Total Peminjaman (semua status)
+                'total_loans' => Loan::count(),
 
-                // Total Pesanan (semua status)
-                'total_orders' => Order::count(),
+                // Buku Sedang Dipinjam (status borrowed/approved)
+                'active_loans' => Loan::whereIn('status', ['approved', 'borrowed'])->count(),
 
-                // Pesanan Pending (menunggu konfirmasi)
-                'pending_orders' => Order::where('status', 'pending')
-                    ->where('payment_status', 'paid')
+                // Buku Terlambat (overdue)
+                'overdue_loans' => Loan::where(function ($q) {
+                        $q->where('status', 'overdue')
+                          ->orWhere(function ($q2) {
+                              $q2->whereIn('status', ['approved', 'borrowed'])
+                                 ->where('due_date', '<', now());
+                          });
+                    })->count(),
+
+                // Total Buku Tersedia (stok > 0)
+                'available_books' => Product::where('stock', '>', 0)
+                    ->where('is_active', true)
                     ->count(),
 
-                // Pesanan Sedang Diproses
-                'processing_orders' => Order::where('status', 'processing')->count(),
-
-                // Total Produk
-                'total_products' => Product::count(),
+                // Total Buku
+                'total_books' => Product::count(),
 
                 // Total Kategori
                 'total_categories' => Category::count(),
 
-                // Total Pelanggan (role = customer)
-                'total_customers' => User::where('role', 'customer')->count(),
+                // Total Anggota Perpustakaan
+                'total_members' => User::where('role', 'customer')->count(),
 
                 // Stok Rendah (≤5) - Alert untuk restock
                 'low_stock' => Product::where('stock', '<=', 5)
                     ->where('is_active', true)
                     ->count(),
 
-                // Produk Habis
+                // Buku Habis
                 'out_of_stock' => Product::where('stock', 0)
                     ->where('is_active', true)
                     ->count(),
 
-                // Rata-rata Nilai Pesanan
-                'avg_order_value' => Order::where('payment_status', 'paid')
-                    ->avg('total_amount') ?? 0,
+                // Rata-rata Peminjaman per bulan
+                'avg_loans_per_month' => $this->calculateAvgLoansPerMonth(),
+
+                // Peminjaman Pending (menunggu persetujuan)
+                'pending_loans' => Loan::where('status', 'pending')->count(),
 
                 // Aduan Pending (untuk notifikasi CS)
                 'complaint_pending' => Complaint::where('status', 'pending')->count(),
@@ -78,101 +84,111 @@ class DashboardController extends Controller
         });
 
         // ============================================================
-        // 2. PESANAN TERBARU (Recent Orders)
+        // 2. PEMINJAMAN TERBARU (Recent Loans)
         // ============================================================
-        // Eager load 'user' dan 'orderItems' untuk menghindari N+1
-        $recentOrders = Order::with(['user', 'orderItems.product'])
+        $recentLoans = Loan::with(['user', 'book.category', 'book.primaryImage'])
             ->latest()
             ->take(10)
             ->get();
 
         // ============================================================
-        // 3. PRODUK TERLARIS (Top Products)
+        // 3. BUKU TERPOPULER (Most Popular Books - by loan count)
         // ============================================================
-        // Using raw subquery for PostgreSQL compatibility
-        $topProducts = Product::withoutGlobalScope('ordered')
-            ->with('category', 'primaryImage')
+        $topBooks = Product::with('category', 'primaryImage')
             ->select('products.*')
             ->leftJoinSub(
-                DB::table('order_items')
-                    ->join('orders', 'order_items.order_id', '=', 'orders.id')
-                    ->where('orders.payment_status', 'paid')
+                DB::table('loans')
                     ->select([
-                        'order_items.product_id',
-                        DB::raw('COALESCE(SUM(order_items.quantity), 0) as sold_count')
+                        'book_id',
+                        DB::raw('COUNT(*) as loan_count')
                     ])
-                    ->groupBy('order_items.product_id'),
-                'sold_counts',
+                    ->groupBy('book_id'),
+                'loan_counts',
                 'products.id',
                 '=',
-                'sold_counts.product_id'
+                'loan_counts.book_id'
             )
-            ->where('sold_counts.sold_count', '>', 0)
-            ->orderByDesc('sold_counts.sold_count')
+            ->whereNotNull('loan_counts.loan_count')
+            ->orderByDesc('loan_counts.loan_count')
             ->take(5)
             ->get();
 
         // ============================================================
-        // 4. DATA CHART: PENDAPATAN 7 HARI TERAKHIR
+        // 4. DATA CHART: PEMINJAMAN 7 HARI TERAKHIR
         // ============================================================
-        $revenueChart = Order::withoutGlobalScope('ordered')
-            ->select([
+        $loansChart = Loan::select([
                 DB::raw('DATE(created_at) as date'),
-                DB::raw('SUM(total_amount) as total'),
+                DB::raw('COUNT(*) as total'),
             ])
-            ->where('payment_status', 'paid')
             ->where('created_at', '>=', now()->subDays(7))
             ->groupBy(DB::raw('DATE(created_at)'))
             ->orderBy('date', 'asc')
             ->get();
 
         // ============================================================
-        // 5. DATA CHART: PENJUALAN BULANAN (12 Bulan)
+        // 5. DATA CHART: PEMINJAMAN BULANAN (12 Bulan)
         // ============================================================
-        $monthlySales = Order::withoutGlobalScope('ordered')
-            ->select([
+        $monthlyLoans = Loan::select([
                 DB::raw("TO_CHAR(created_at, 'YYYY-MM') as month"),
-                DB::raw('COUNT(*) as orders'),
-                DB::raw('SUM(total_amount) as revenue'),
+                DB::raw('COUNT(*) as loans'),
             ])
-            ->where('payment_status', 'paid')
             ->where('created_at', '>=', now()->subMonths(12))
             ->groupBy(DB::raw("TO_CHAR(created_at, 'YYYY-MM')"))
             ->orderBy('month', 'asc')
             ->get();
 
         // ============================================================
-        // 6. PENJUALAN PER KATEGORI (untuk Doughnut Chart)
+        // 6. PEMINJAMAN PER KATEGORI (untuk Doughnut Chart)
         // ============================================================
-        $salesByCategory = DB::table('order_items')
-            ->join('orders', 'orders.id', '=', 'order_items.order_id')
-            ->join('products', 'products.id', '=', 'order_items.product_id')
+        $loansByCategory = DB::table('loans')
+            ->join('products', 'products.id', '=', 'loans.book_id')
             ->join('categories', 'categories.id', '=', 'products.category_id')
-            ->where('orders.payment_status', 'paid')
-            ->where('orders.created_at', '>=', now()->subDays(30))
+            ->where('loans.created_at', '>=', now()->subDays(30))
             ->groupBy('categories.id', 'categories.name')
             ->select([
                 'categories.name as category_name',
-                DB::raw('SUM(order_items.quantity) as total_sold'),
-                DB::raw('SUM(order_items.subtotal) as total_revenue'),
+                DB::raw('COUNT(loans.id) as total_loans'),
             ])
-            ->orderByDesc('total_revenue')
+            ->orderByDesc('total_loans')
             ->get();
 
         // ============================================================
-        // 7. AKTIVITAS TERBARU (Activity Log)
+        // 7. ANGGOTA TERLAMBAT (Members with Overdue Books)
         // ============================================================
-        $recentActivities = Order::with('user')
+        $overdueMembers = Loan::with(['user', 'book'])
+            ->where(function ($q) {
+                $q->where('status', 'overdue')
+                  ->orWhere(function ($q2) {
+                      $q2->whereIn('status', ['approved', 'borrowed'])
+                         ->where('due_date', '<', now());
+                  });
+            })
+            ->latest()
+            ->take(5)
+            ->get();
+
+        // ============================================================
+        // 8. AKTIVITAS TERBARU (Activity Log)
+        // ============================================================
+        $recentActivities = Loan::with(['user', 'book'])
             ->latest()
             ->take(5)
             ->get()
-            ->map(function ($order) {
+            ->map(function ($loan) {
+                $statusText = match($loan->status) {
+                    'pending' => 'menunggu persetujuan',
+                    'approved' => 'disetujui',
+                    'borrowed' => 'dipinjam',
+                    'returned' => 'dikembalikan',
+                    'overdue' => 'terlambat',
+                    'cancelled' => 'dibatalkan',
+                    default => $loan->status,
+                };
                 return [
-                    'type' => $order->payment_status === 'paid' ? 'payment' : 'order',
-                    'message' => $order->user->name . ' memesan #' . $order->order_number,
-                    'amount' => $order->total_amount,
-                    'time' => $order->created_at->diffForHumans(),
-                    'status' => $order->status,
+                    'type' => $loan->status === 'returned' ? 'return' : 'loan',
+                    'message' => $loan->user->name . ' ' . $statusText . ' "' . ($loan->book->name ?? 'Buku') . '"',
+                    'time' => $loan->created_at->diffForHumans(),
+                    'status' => $loan->status,
                 ];
             });
 
@@ -185,20 +201,37 @@ class DashboardController extends Controller
             ->take(5)
             ->get();
 
-        // Get pending orders count for notifications
-        $pendingCount = $stats['pending_orders'];
+        // Get pending loans count for notifications
+        $pendingCount = $stats['pending_loans'];
 
         return view('admin.dashboard', compact(
             'stats', 
-            'recentOrders', 
-            'topProducts', 
-            'revenueChart',
-            'monthlySales',
-            'salesByCategory',
+            'recentLoans', 
+            'topBooks', 
+            'loansChart',
+            'monthlyLoans',
+            'loansByCategory',
             'recentActivities',
+            'overdueMembers',
             'complaintCount',
             'recentComplaints',
             'pendingCount'
         ));
     }
+
+    /**
+     * Calculate average loans per month
+     */
+    private function calculateAvgLoansPerMonth(): int
+    {
+        $totalLoans = Loan::count();
+        if ($totalLoans == 0) return 0;
+        
+        $firstLoan = Loan::oldest('created_at')->first();
+        if (!$firstLoan) return 0;
+        
+        $months = now()->diffInMonths($firstLoan->created_at) + 1;
+        return round($totalLoans / max(1, $months));
+    }
 }
+

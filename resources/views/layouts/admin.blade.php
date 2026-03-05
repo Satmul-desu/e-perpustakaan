@@ -11,7 +11,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <title>@yield('title') - TokoBuku Admin</title>
+                    <title>@yield('title') - Perpustakaan Buku</title>
 
     {{-- Fonts --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -274,6 +274,14 @@
             margin-left: var(--sidebar-width);
             min-height: 100vh;
             background: var(--bg-dark);
+            width: calc(100% - var(--sidebar-width));
+        }
+
+        /* Page Content - Full Width */
+        .page-content {
+            padding: 2rem;
+            width: 100%;
+            max-width: 100%;
         }
 
         /* Header */
@@ -285,6 +293,7 @@
             position: sticky;
             top: 0;
             z-index: 100;
+            width: 100%;
         }
 
         .page-title {
@@ -554,9 +563,25 @@
             border-radius: 6px;
         }
 
-        /* Page Content */
+        /* Page Content - Full Width */
         .page-content {
             padding: 2rem;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        /* Container Fluid for Full Width */
+        .page-content .container-fluid,
+        .page-content > .row {
+            width: 100%;
+            max-width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Ensure cards take full width */
+        .page-content .card {
+            width: 100%;
         }
 
         /* Responsive */
@@ -769,9 +794,9 @@
             <div class="sidebar-brand">
                 <a href="{{ route('admin.dashboard') }}" class="logo">
                     <div class="logo-icon">
-                        <i class="bi bi-shop"></i>
+                        <i class="bi bi-book"></i>
                     </div>
-                    <span class="logo-text">TokoBuku</span>
+                    <span>Perpustakaan</span>
                 </a>
             </div>
 
@@ -793,8 +818,8 @@
                     <li class="nav-item">
                         <a href="{{ route('admin.products.index') }}"
                            class="nav-link {{ request()->routeIs('admin.products.*') ? 'active' : '' }}">
-                            <i class="bi bi-box-seam"></i>
-                            <span>Produk</span>
+                            <i class="bi bi-book-half"></i>
+                            <span>Buku</span>
                         </a>
                     </li>
 
@@ -807,10 +832,10 @@
                     </li>
 
                     <li class="nav-item">
-                        <a href="{{ route('admin.orders.index') }}"
-                           class="nav-link {{ request()->routeIs('admin.orders.*') ? 'active' : '' }}">
-                            <i class="bi bi-receipt"></i>
-                            <span>Pesanan</span>
+                        <a href="{{ route('admin.loans.index') }}"
+                           class="nav-link {{ request()->routeIs('admin.loans.*') ? 'active' : '' }}">
+                            <i class="bi bi-journal-bookmark"></i>
+                            <span>Peminjaman</span>
                             @if(isset($pendingCount) && $pendingCount > 0)
                                 <span class="badge badge-notif">{{ $pendingCount }}</span>
                             @endif
@@ -832,7 +857,7 @@
                         <a href="{{ route('admin.users.index') }}"
                            class="nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
                             <i class="bi bi-people"></i>
-                            <span>Pengguna</span>
+                            <span>Anggota</span>
                         </a>
                     </li>
                 </ul>
@@ -843,10 +868,10 @@
 
                 <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a href="{{ route('admin.reports.sales') }}"
+                        <a href="{{ route('admin.reports.loans') }}"
                            class="nav-link {{ request()->routeIs('admin.reports.*') ? 'active' : '' }}">
                             <i class="bi bi-graph-up-arrow"></i>
-                            <span>Laporan Penjualan</span>
+                            <span>Laporan Peminjaman</span>
                         </a>
                     </li>
                 </ul>
@@ -886,7 +911,7 @@
                 </div>
                 <div class="header-actions">
                     <a href="{{ route('home') }}" class="btn btn-outline-primary" target="_blank">
-                        <i class="bi bi-box-arrow-up-right me-2"></i>Lihat Toko
+                        <i class="bi bi-box-arrow-up-right me-2"></i>Lihat Perpustakaan
                     </a>
 
                     {{-- Notification Dropdown --}}
@@ -931,15 +956,15 @@
                                     </div>
                                 @endif
 
-                                {{-- Pending Orders --}}
+                                {{-- Pending Loans --}}
                                 @if(isset($pendingCount) && $pendingCount > 0)
-                                    <a href="{{ route('admin.orders.index', ['status' => 'pending']) }}" class="dropdown-item-custom">
+                                    <a href="{{ route('admin.loans.index', ['status' => 'pending']) }}" class="dropdown-item-custom">
                                         <div class="icon-wrapper order">
-                                            <i class="bi bi-receipt"></i>
+                                            <i class="bi bi-journal-bookmark"></i>
                                         </div>
                                         <div class="content">
-                                            <div class="title">{{ $pendingCount }} Pesanan Pending</div>
-                                            <div class="description">Menunggu konfirmasi pembayaran</div>
+                                            <div class="title">{{ $pendingCount }} Peminjaman Menunggu</div>
+                                            <div class="description">Menunggu persetujuan</div>
                                         </div>
                                         <div class="time">Baru</div>
                                     </a>
@@ -970,8 +995,8 @@
                             <a href="{{ route('admin.users.index') }}" class="dropdown-item-custom">
                                 <i class="bi bi-people"></i>
                                 <div class="content">
-                                    <div class="title">Kelola Pengguna</div>
-                                    <div class="description">Admin & Customer</div>
+                                    <div class="title">Kelola Anggota</div>
+                                    <div class="description">Admin & Anggota</div>
                                 </div>
                             </a>
                             <div class="dropdown-footer-custom" style="border-top: 1px solid var(--border-color); padding: 0.75rem;">

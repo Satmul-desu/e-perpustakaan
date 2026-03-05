@@ -1,6 +1,6 @@
 {{-- ================================================
      FILE: resources/views/partials/navbar.blade.php
-     FUNGSI: Navigation bar - Modern & Responsive
+     FUNGSI: Navigation bar - Perpustakaan Modern & Responsive
      ================================================ --}}
 
 <nav class="navbar navbar-expand-lg navbar-dark sticky-top modern-navbar">
@@ -12,7 +12,6 @@
                  class="brand-logo me-2">
             <span class="brand-text">
                 <span class="text-white">Perpustakaan</span><span class="text-primary">Buku</span>
-            </span>
         </a>
 
         {{-- Desktop Search (Hidden on Mobile) --}}
@@ -39,15 +38,6 @@
                     </a>
                 </li>
 
-                {{-- Flash Sale --}}
-                <li class="nav-item">
-                    <a class="nav-link nav-flashsale d-flex align-items-center" href="{{ route('flash-sale') }}">
-                        <i class="bi bi-lightning-fill me-1"></i>
-                        <span class="d-none d-lg-inline">Flash Sale</span>
-                        <span class="d-lg-none">Flash Sale</span>
-                    </a>
-                </li>
-
                 @auth
                     {{-- Wishlist --}}
                     <li class="nav-item">
@@ -61,16 +51,16 @@
                         </a>
                     </li>
 
-                    {{-- Cart --}}
+                    {{-- Loans / Peminjaman --}}
                     <li class="nav-item">
-                        <a class="nav-link position-relative d-flex align-items-center text-white nav-icon-link" href="{{ route('cart.index') }}">
-                            <i class="bi bi-cart3 nav-icon" style="color: #60a5fa;"></i>
+                        <a class="nav-link position-relative d-flex align-items-center text-white nav-icon-link" href="{{ route('loans.index') }}">
+                            <i class="bi bi-book nav-icon" style="color: #60a5fa;"></i>
                             @php
-                                $cartCount = auth()->user()->cart?->items()->count() ?? 0;
+                                $loanCount = auth()->user()->loans()->whereIn('status', ['pending', 'approved', 'borrowed'])->count() ?? 0;
                             @endphp
-                            @if($cartCount > 0)
-                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success nav-badge">
-                                    {{ $cartCount > 9 ? '9+' : $cartCount }}
+                            @if($loanCount > 0)
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning nav-badge">
+                                    {{ $loanCount > 9 ? '9+' : $loanCount }}
                                 </span>
                             @endif
                         </a>
@@ -91,8 +81,8 @@
                                 </a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="{{ route('orders.index') }}">
-                                    <i class="bi bi-bag-fill me-2"></i> Pesanan Saya
+                                <a class="dropdown-item" href="{{ route('loans.index') }}">
+                                    <i class="bi bi-book me-2"></i> Peminjaman Saya
                                 </a>
                             </li>
                             @if(auth()->user()->isAdmin())
@@ -199,15 +189,6 @@
     .nav-link:hover {
         background: rgba(59, 130, 246, 0.15);
         color: #60a5fa !important;
-    }
-    
-    .nav-flashsale {
-        color: #fbbf24 !important;
-        font-weight: 600;
-    }
-    
-    .nav-flashsale:hover {
-        color: #fcd34d !important;
     }
     
     .nav-icon-link {
@@ -449,10 +430,5 @@
         .brand-text {
             font-size: 1rem;
         }
-        
-        .nav-flashsale span {
-            font-size: 0.85rem;
-        }
     }
 </style>
-

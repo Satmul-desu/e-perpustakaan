@@ -4,13 +4,14 @@
     // Default values untuk backward compatibility
     $author = $author ?? null;
     $description = $description ?? ($product->description ?? '');
-    $imageUrl = $product->image_url ?? asset('images/image-removebg-preview.png');
+    $imageUrl = $product->primaryImage?->image_url 
+        ?? ($product->image_url ?? asset('images/image-removebg-preview.png'));
     $isComingSoon = $isComingSoon ?? ($product->stock == 0);
     $isFlashSale = $isFlashSale ?? false;
 @endphp
 
-<div class="product-card-wrapper h-100">
-    <div class="card product-card h-100 border-0 shadow-sm" style="background: rgba(30, 41, 59, 0.95); border: 1px solid #334155 !important;">
+<div class="product-card-wrapper">
+    <div class="card product-card border-0 shadow-sm" style="background: rgba(30, 41, 59, 0.95); border: 1px solid #334155 !important;">
         
         {{-- Product Image --}}
         <div class="product-image-wrapper position-relative overflow-hidden">
@@ -22,20 +23,6 @@
                 >
             </a>
 
-            {{-- Discount Badge --}}
-            @if($product->has_discount)
-                <span class="badge position-absolute top-0 start-0 m-2 discount-badge">
-                    -{{ $product->discount_percentage }}%
-                </span>
-            @endif
-
-            {{-- Flash Sale Badge --}}
-            @if($isFlashSale)
-                <span class="badge position-absolute top-0 start-0 m-2 flash-badge">
-                    <i class="bi bi-lightning-fill me-1"></i>FLASH
-                </span>
-            @endif
-
             {{-- Wishlist Button --}}
             @auth
                 <button onclick="toggleWishlist({{ $product->id }})"
@@ -45,18 +32,15 @@
                 </button>
             @endauth
 
-            {{-- Coming Soon / Stock Badge --}}
-            @if($isComingSoon)
+            {{-- Availability Badge --}}
+            @if($product->stock == 0)
                 <div class="overlay-badge position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
-                    <div class="text-center">
-                        <i class="bi bi-clock-history text-warning"></i>
-                        <span class="badge bg-warning text-dark d-block mt-1">Coming Soon</span>
-                    </div>
+                    <span class="badge bg-danger">Tidak Tersedia</span>
                 </div>
-            @elseif($product->stock == 0)
-                <div class="overlay-badge position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
-                    <span class="badge bg-danger">Stok Habis</span>
-                </div>
+            @elseif($product->stock <= 3)
+                <span class="badge position-absolute top-0 start-0 m-2 stock-badge-low">
+                    Tersisa {{ $product->stock }}
+                </span>
             @endif
         </div>
 
@@ -86,26 +70,10 @@
                 </div>
             @endif
 
-            {{-- Price Section --}}
-            <div class="price-section mb-2 mt-auto">
-                @if($product->has_discount)
-                    <small class="text-secondary text-decoration-line-through d-block original-price">
-                        {{ $product->formatted_original_price }}
-                    </small>
-                    <span class="fw-bold discounted-price">
-                        {{ $product->formatted_final_price }}
-                    </span>
-                @elseif(!$isComingSoon)
-                    <span class="fw-bold regular-price">
-                        {{ $product->formatted_price }}
-                    </span>
-                @endif
-            </div>
-
-            {{-- Stock Info (非 Coming Soon) --}}
-            @if(!$isComingSoon && $product->stock > 0)
+            {{-- Stock Info --}}
+            @if($product->stock > 0)
                 <div class="stock-info mb-2">
-                    <small class="{{ $product->stock <= 5 ? 'text-warning' : 'text-success' }}">
+                    <small class="{{ $product->stock <= 3 ? 'text-warning' : 'text-success' }}">
                         <i class="bi bi-box-seam me-1"></i>
                         Stok: {{ $product->stock }}
                     </small>
@@ -115,25 +83,23 @@
 
         {{-- Card Footer --}}
         <div class="card-footer border-0 pt-0 pb-2 px-2" style="background: transparent;">
-            @if(!$isComingSoon)
-                <form action="{{ route('cart.add') }}" method="POST" class="add-to-cart-form">
+            @if($product->stock > 0)
+                <form action="{{ route('loans.store') }}" method="POST" class="borrow-form">
                     @csrf
-                    <input type="hidden" name="product_id" value="{{ $product->id }}">
-                    <input type="hidden" name="quantity" value="1">
-
+                    <input type="hidden" name="book_id" value="{{ $product->id }}">
+                    
                     <button
                         type="submit"
                         class="btn btn-custom w-100"
-                        @if($product->stock == 0) disabled @endif
                     >
-                        <i class="bi bi-cart-plus me-1"></i>
-                        {{ $product->stock == 0 ? 'Habis' : 'Tambah' }}
+                        <i class="bi bi-book me-1"></i>
+                        Pinjam Buku
                     </button>
                 </form>
             @else
                 <button class="btn btn-outline-secondary w-100" disabled>
-                    <i class="bi bi-bell me-1"></i>
-                    Coming Soon
+                    <i class="bi bi-x-circle me-1"></i>
+                    Tidak Tersedia
                 </button>
             @endif
         </div>
@@ -177,16 +143,10 @@
         transform: scale(1.08);
     }
     
-    .discount-badge {
-        background: #ef4444;
+    .stock-badge-low {
+        background: #f59e0b;
         font-size: 0.75rem;
         font-weight: 600;
-    }
-    
-    .flash-badge {
-        background: linear-gradient(135deg, #f59e0b, #d97706);
-        font-size: 0.65rem;
-        font-weight: 700;
     }
     
     .wishlist-btn {
@@ -211,10 +171,6 @@
     .overlay-badge {
         background: rgba(0, 0, 0, 0.6);
         z-index: 5;
-    }
-    
-    .overlay-badge i {
-        font-size: 2rem;
     }
     
     .product-category {
@@ -248,23 +204,6 @@
     
     .product-author small {
         font-size: 0.75rem;
-    }
-    
-    .price-section {
-        min-height: 28px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-    }
-    
-    .original-price {
-        font-size: 0.75rem;
-    }
-    
-    .discounted-price,
-    .regular-price {
-        font-size: 1.1rem;
-        color: #60a5fa;
     }
     
     .stock-info i {
@@ -311,11 +250,6 @@
     @media (min-width: 576px) and (max-width: 991.98px) {
         .product-image-wrapper {
             height: 180px;
-        }
-        
-        .discounted-price,
-        .regular-price {
-            font-size: 1rem;
         }
         
         .product-title a {
@@ -369,16 +303,6 @@
             transform: none !important;
         }
         
-        .discount-badge {
-            font-size: 0.65rem;
-            padding: 0.25rem 0.5rem;
-        }
-        
-        .flash-badge {
-            font-size: 0.6rem;
-            padding: 0.2rem 0.4rem;
-        }
-        
         .wishlist-btn {
             width: 26px;
             height: 26px;
@@ -389,15 +313,6 @@
         
         .wishlist-btn i {
             font-size: 0.85rem;
-        }
-        
-        .overlay-badge i {
-            font-size: 1.5rem;
-        }
-        
-        .overlay-badge .badge {
-            font-size: 0.7rem;
-            padding: 0.25rem 0.5rem;
         }
         
         .card-body {
@@ -425,23 +340,6 @@
         
         .product-author {
             display: none !important;
-        }
-        
-        .price-section {
-            min-height: auto;
-            margin-bottom: 0.5rem !important;
-            flex-direction: row;
-            align-items: baseline;
-            gap: 0.5rem;
-        }
-        
-        .original-price {
-            font-size: 0.7rem;
-        }
-        
-        .discounted-price,
-        .regular-price {
-            font-size: 0.9rem;
         }
         
         .stock-info {
@@ -481,15 +379,9 @@
             font-size: 0.75rem;
         }
         
-        .discounted-price,
-        .regular-price {
-            font-size: 0.85rem;
-        }
-        
         .btn-custom {
             font-size: 0.7rem;
             padding: 0.35rem 0.4rem;
         }
     }
 </style>
-

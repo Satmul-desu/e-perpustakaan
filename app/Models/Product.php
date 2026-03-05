@@ -28,6 +28,10 @@ class Product extends Model
         'is_featured',
     ];
 
+    protected $attributes = [
+        'price' => 0,
+    ];
+
     protected $casts = [
         'price' => 'decimal:2',
         'discount_price' => 'decimal:2',

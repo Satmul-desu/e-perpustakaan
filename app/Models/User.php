@@ -58,6 +58,48 @@ class User extends Authenticatable
         return $this->hasMany(Wishlist::class);
     }
 
+    public function loans(): HasMany
+    {
+        return $this->hasMany(Loan::class);
+    }
+
+    public function approvedLoans(): HasMany
+    {
+        return $this->hasMany(Loan::class, 'approved_by');
+    }
+
+    /**
+     * Check if user has active loans
+     */
+    public function hasActiveLoans(): bool
+    {
+        return $this->loans()->whereIn('status', [
+            Loan::STATUS_PENDING,
+            Loan::STATUS_APPROVED,
+            Loan::STATUS_BORROWED,
+        ])->exists();
+    }
+
+    /**
+     * Get count of active loans
+     */
+    public function activeLoansCount(): int
+    {
+        return $this->loans()->whereIn('status', [
+            Loan::STATUS_PENDING,
+            Loan::STATUS_APPROVED,
+            Loan::STATUS_BORROWED,
+        ])->count();
+    }
+
+    /**
+     * Check if user can borrow more books
+     */
+    public function canBorrowBooks(int $maxLoans = 5): bool
+    {
+        return $this->activeLoansCount() < $maxLoans;
+    }
+
     // Scopes
     public function scopeAdmin($query)
     {

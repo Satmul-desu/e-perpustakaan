@@ -5,66 +5,43 @@
 @section('content')
     {{-- Hero Section --}}
     <section class="hero-section py-5">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-6 order-2 order-lg-1">
-                    <h1 class="hero-title mb-3">
-                        <span class="text-white">Selamat Datang Di</span><br>
-                        <span class="text-primary">Perpustakaan Buku Online</span><br>
-                        <span class="text-white"> Ternyaman</span>
+        <!-- Video Background with Frame -->
+        <div class="hero-video-frame">
+            <video class="hero-video" autoplay muted loop playsinline>
+                <source src="{{ asset('vidios.mp4') }}" type="video/mp4">
+            </video>
+        </div>
+       
+        <div class="hero-overlay" style="background: rgba(0, 0, 0, 0.6);"></div>
+        
+        <div class="container position-relative" style="padding-top: 80px;">
+            <div class="row justify-content-center text-center">
+                <div class="col-lg-10 col-md-12">
+                    <h1 class="hero-title mb-4">
+                        <span class="text-white">Selamat Datang di</span><br>
+                        <span class="text-primary">Perpustakaan Buku</span><br>
+                        <span class="text-white">Online</span>
                     </h1>
                     <p class="hero-subtitle mb-4">
-                        Temukan berbagai buku berkualitas dengan harga terbaik.
-                        menanti Anda!
+                        Temukan dan pinjam buku favorit Anda dengan mudah. 
+                        Nikmati pengalaman membaca tanpa batas!
                     </p>
-                    {{-- Trust Badges --}}
-                    <div class="trust-badges mt-4 d-flex flex-wrap gap-3">
+                    <div class="trust-badges mt-4 d-flex flex-wrap justify-content-center gap-4">
                         <div class="trust-badge">
-                            <i class="bi bi-shield-check text-success"></i>
-                            <span>100% Ori</span>
+                            <i class="bi bi-book text-success"></i>
+                            <span>Koleksi Lengkap</span>
                         </div>
                         <div class="trust-badge">
-                            <i class="bi bi-arrow-repeat text-info"></i>
-                            <span>fasilitas mewah</span>
+                            <i class="bi bi-clock-history text-info"></i>
+                            <span>Peminjaman Cepat</span>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-6 order-1 order-lg-2 text-center mb-4 mb-lg-0">
+                
+                <div class="col-lg-12 mt-4">
                     <img src="{{ asset('images/logo-removebg-preview.png') }}"
-                         alt="Toko Buku"
+                         alt="Perpustakaan"
                          class="hero-image img-fluid">
-                </div>
-            </div>
-        </div>
-    </section>
-
-    {{-- Promo Banner Section --}}
-    <section class="promo-section py-4">
-        <div class="container">
-            <div class="row g-3">
-                <div class="col-md-6">
-                        <div class="promo-decoration">
-                            <i class="bi bi-clock-history"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="promo-card promo-welcome h-100"
-                         style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);">
-                        <div class="promo-content">
-                            <div class="promo-icon mb-2">
-                                <i class="bi bi-gift-fill"></i>
-                            </div>
-                            <h3 class="fw-bold text-white mb-1">Member Baru?</h3>
-                            <p class="text-white opacity-90 mb-3">Voucher Rp 50.000 untuk pembelian pertama</p>
-                            <a href="{{ route('register') }}" class="btn btn-light btn-sm">
-                                Daftar Sekarang <i class="bi bi-arrow-right ms-1"></i>
-                            </a>
-                        </div>
-                        <div class="promo-decoration">
-                            <i class="bi bi-person-plus-fill"></i>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -123,68 +100,6 @@
                     <i class="bi bi-chevron-right"></i>
                 </button>
             </div>
-        </div>
-    </section>
-
-    {{-- Coming Soon Section --}}
-    <section class="coming-soon-section py-5">
-        <div class="container">
-            <div class="section-header text-center mb-4">
-                <h2 class="section-title text-white mb-2">
-                    <i class="bi bi-clock-history me-2 text-warning"></i>
-                    Coming Soon
-                </h2>
-                <p class="section-subtitle text-secondary">Buku-buku yang akan segera hadir</p>
-            </div>
-            
-            <div class="coming-soon-grid">
-                @php
-                    $comingSoonBooks = [
-                        ['id' => 101, 'name' => 'Nightbooks', 'author' => 'J.A WHITE', 'image' => 'book1.jpeg', 'price' => 45000, 'category' => 'Horor'],
-                        ['id' => 102, 'name' => 'Twisted Love', 'author' => 'ANA HUANG', 'image' => 'book2.jpeg', 'price' => 55000, 'category' => 'Romance'],
-                        ['id' => 103, 'name' => 'They Both Die...', 'author' => 'ADAM SILVERA', 'image' => 'book3.jpeg', 'price' => 60000, 'category' => 'Fiksi'],
-                        ['id' => 104, 'name' => 'Shadow Girl', 'author' => 'LIANA LIU', 'image' => 'book4.jpeg', 'price' => 52000, 'category' => 'Romance'],
-                        ['id' => 105, 'name' => 'Tentang Kamu', 'author' => 'TERE LIYE', 'image' => 'book5.jpeg', 'price' => 48000, 'category' => 'Romance'],
-                    ];
-                @endphp
-                
-                @foreach($comingSoonBooks as $book)
-                    <div class="coming-soon-item">
-                        @php
-                            $mockProduct = new \stdClass();
-                            $mockProduct->id = $book['id'];
-                            $mockProduct->name = $book['name'];
-                            $mockProduct->slug = \Illuminate\Support\Str::slug($book['name']);
-                            $mockProduct->price = $book['price'];
-                            $mockProduct->discount_price = null;
-                            $mockProduct->stock = 0;
-                            $mockProduct->has_discount = false;
-                            $mockProduct->image_url = asset('images/books/' . $book['image']);
-                            $mockProduct->description = 'Buku yang akan segera hadir.';
-                            
-                            $mockCategory = new \stdClass();
-                            $mockCategory->name = $book['category'];
-                            $mockProduct->category = $mockCategory;
-                            
-                            $mockProduct->formatted_price = 'Rp ' . number_format($book['price'], 0, ',', '.');
-                        @endphp
-                        
-                        @include('partials.product-card', [
-                            'product' => $mockProduct,
-                            'author' => $book['author'],
-                            'description' => 'Segera hadir!',
-                            'isComingSoon' => true
-                        ])
-                    </div>
-                @endforeach
-            </div>
-            
-            <div class="text-center mt-4">
-                <a href="#" class="btn btn-outline-primary">
-                    Lihat Semua Coming Soon <i class="bi bi-arrow-right ms-1"></i>
-                </a>
-            </div>
-        </div>
     </section>
 
     {{-- Produk Unggulan Section --}}
@@ -193,9 +108,9 @@
             <div class="section-header text-center mb-4">
                 <h2 class="section-title text-white mb-2">
                     <i class="bi bi-star-fill me-2 text-warning"></i>
-                    Produk Unggulan
+                    Koleksi Unggulan
                 </h2>
-                <p class="section-subtitle text-secondary">Koleksi buku terbaik pilihan kami</p>
+                <p class="section-subtitle text-secondary">Buku-buku pilihan yang tersedia untuk dipinjam</p>
             </div>
             
             @if($featuredProducts->count() > 0)
@@ -214,13 +129,13 @@
                 
                 <div class="text-center mt-4">
                     <a href="{{ route('catalog.index') }}" class="btn btn-hero-primary">
-                        <i class="bi bi-grid me-2"></i>Lihat Semua Produk
+                        <i class="bi bi-grid me-2"></i>Lihat Semua Buku
                     </a>
                 </div>
             @else
                 <div class="text-center py-5">
                     <i class="bi bi-inbox text-secondary" style="font-size: 4rem;"></i>
-                    <p class="text-secondary mt-3">Belum ada produk unggulan.</p>
+                    <p class="text-secondary mt-3">Belum ada buku tersedia.</p>
                 </div>
             @endif
         </div>
@@ -233,27 +148,107 @@
                 <div class="row align-items-center">
                     <div class="col-lg-8 mb-3 mb-lg-0">
                         <h3 class="text-white fw-bold mb-2">
-                            <i class="bi bi-bag-check-fill me-2 text-primary"></i>
-                            Siap Memulai Petualangan Membaca?
+                            <i class="bi bi-book me-2 text-primary"></i>
+                            Mulai Membaca Hari Ini!
                         </h3>
-                        <p class="text-secondary mb-0">Temukan ribuan buku menarik dengan harga terjangkau. Bergabung sekarang!</p>
+                        <p class="text-secondary mb-0">Pinjam buku favorit Anda dengan mudah dan nyaman. Bergabung sekarang!</p>
                     </div>
                     <div class="col-lg-4 text-lg-end">
                         <a href="{{ route('catalog.index') }}" class="btn btn-hero-primary btn-lg">
-                            <i class="bi bi-shop me-2"></i>Jelajahi Sekarang
+                            <i class="bi bi-search me-2"></i>Jelajahi Koleksi
                         </a>
                     </div>
-                </div>
             </div>
-        </div>
     </section>
 
     <style>
         /* ========== HERO SECTION ========== */
         .hero-section {
-            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #1e40af 100%);
             position: relative;
             overflow: hidden;
+        }
+        
+        .hero-video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            transform: translate(-50%, -50%);
+            z-index: 0;
+            object-fit: cover;
+        }
+        
+        /* Video Frame/Bingkai */
+        .hero-video-frame {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+        
+        .hero-video-frame::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            bottom: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            z-index: 1;
+            pointer-events: none;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.3), inset 0 0 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Responsive Video Frame */
+        @media (max-width: 575.98px) {
+            .hero-video-frame::before {
+                top: 10px;
+                left: 10px;
+                right: 10px;
+                bottom: 10px;
+                border-width: 2px;
+                border-radius: 12px;
+            }
+        }
+        
+        @media (max-width: 359.98px) {
+            .hero-video-frame::before {
+                top: 8px;
+                left: 8px;
+                right: 8px;
+                bottom: 8px;
+                border-width: 2px;
+                border-radius: 10px;
+            }
+        }
+        
+        .hero-video-frame::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 30%, transparent 70%, rgba(255,255,255,0.05) 100%);
+            z-index: 2;
+            pointer-events: none;
+        }
+        
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(30, 58, 138, 0.85) 50%, rgba(15, 23, 42, 0.9) 100%);
+            z-index: 1;
         }
         
         .hero-section::before {
@@ -265,23 +260,27 @@
             bottom: 0;
             background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
             pointer-events: none;
+            z-index: 2;
         }
         
         .hero-title {
-            font-size: 2.5rem;
-            font-weight: 700;
+            font-size: 3.5rem;
+            font-weight: 800;
             line-height: 1.2;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 0 0 40px rgba(59, 130, 246, 0.6), 3px 3px 10px rgba(0, 0, 0, 0.8);
         }
         
         .hero-subtitle {
-            font-size: 1.1rem;
-            opacity: 0.85;
+            font-size: 1.3rem;
+            opacity: 1;
             line-height: 1.6;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
         }
         
         .hero-image {
-            max-height: 350px;
+            max-height: 600px;
             animation: float 3s ease-in-out infinite;
+            filter: drop-shadow(0 0 30px rgba(255, 255, 255, 0.5)) drop-shadow(0 8px 25px rgba(0, 0, 0, 0.8));
         }
         
         @keyframes float {
@@ -306,22 +305,6 @@
             box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
         }
         
-        .btn-hero-outline {
-            background: transparent;
-            color: white;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            padding: 0.75rem 1.5rem;
-            font-weight: 600;
-            border-radius: 10px;
-            transition: all 0.3s ease;
-        }
-        
-        .btn-hero-outline:hover {
-            border-color: #60a5fa;
-            color: #60a5fa;
-            background: rgba(96, 165, 250, 0.1);
-        }
-        
         .trust-badges {
             display: flex;
             flex-wrap: wrap;
@@ -332,44 +315,19 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            font-size: 0.85rem;
-            color: #94a3b8;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #ffffff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            background: rgba(255, 255, 255, 0.15);
+            padding: 8px 16px;
+            border-radius: 25px;
+            backdrop-filter: blur(5px);
         }
         
         .trust-badge i {
-            font-size: 1.1rem;
-        }
-        
-        /* ========== PROMO SECTION ========== */
-        .promo-card {
-            position: relative;
-            border-radius: 16px;
-            padding: 1.5rem;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s ease;
-        }
-        
-        .promo-card:hover {
-            transform: translateY(-5px);
-        }
-        
-        .promo-content {
-            position: relative;
-            z-index: 2;
-        }
-        
-        .promo-icon {
-            font-size: 2rem;
-        }
-        
-        .promo-decoration {
-            position: absolute;
-            bottom: -20px;
-            right: -20px;
-            font-size: 6rem;
-            opacity: 0.15;
-            transform: rotate(-15deg);
+            font-size: 1.3rem;
+            filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5));
         }
         
         /* ========== CATEGORY SECTION ========== */
@@ -456,25 +414,6 @@
             box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5);
         }
         
-        /* ========== COMING SOON SECTION ========== */
-        .coming-soon-section {
-            background: rgba(15, 23, 42, 0.3);
-        }
-        
-        .coming-soon-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 1.25rem;
-        }
-        
-        .coming-soon-item {
-            transition: transform 0.3s ease;
-        }
-        
-        .coming-soon-item:hover {
-            transform: translateY(-5px);
-        }
-        
         /* ========== FEATURED SECTION ========== */
         .featured-section {
             background: rgba(15, 23, 42, 0.5);
@@ -511,15 +450,11 @@
         /* Tablet (576px - 991px) */
         @media (min-width: 576px) and (max-width: 991.98px) {
             .hero-title {
-                font-size: 2rem;
+                font-size: 2.5rem;
             }
             
             .hero-image {
-                max-height: 280px;
-            }
-            
-            .coming-soon-grid {
-                grid-template-columns: repeat(3, 1fr);
+                max-height: 500px;
             }
             
             .featured-grid {
@@ -538,25 +473,21 @@
         /* Mobile (< 576px) */
         @media (max-width: 575.98px) {
             .hero-section {
-                padding: 2rem 0 !important;
+                padding: 3rem 0 !important;
             }
             
             .hero-title {
-                font-size: 1.5rem;
+                font-size: 2rem;
                 text-align: center;
             }
             
             .hero-subtitle {
-                font-size: 0.95rem;
+                font-size: 1rem;
                 text-align: center;
             }
             
-            .hero-actions {
-                justify-content: center;
-            }
-            
             .hero-image {
-                max-height: 200px;
+                max-height: 400px;
                 margin-bottom: 1.5rem;
             }
             
@@ -565,20 +496,8 @@
             }
             
             .trust-badge {
-                font-size: 0.75rem;
-            }
-            
-            .promo-card {
-                padding: 1.25rem;
-                border-radius: 12px;
-            }
-            
-            .promo-icon {
-                font-size: 1.5rem;
-            }
-            
-            .promo-decoration {
-                font-size: 4rem;
+                font-size: 0.85rem;
+                padding: 6px 12px;
             }
             
             .section-title {
@@ -605,10 +524,6 @@
                 font-size: 0.8rem;
             }
             
-            .category-count {
-                font-size: 0.7rem;
-            }
-            
             .slider-btn {
                 width: 36px;
                 height: 36px;
@@ -616,11 +531,6 @@
             
             .slider-btn i {
                 font-size: 0.9rem;
-            }
-            
-            .coming-soon-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 0.75rem;
             }
             
             .featured-grid {
@@ -649,7 +559,6 @@
                 font-size: 1.25rem;
             }
             
-            .coming-soon-grid,
             .featured-grid {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 0.5rem;
@@ -672,4 +581,3 @@
         }
     </script>
 @endsection
-

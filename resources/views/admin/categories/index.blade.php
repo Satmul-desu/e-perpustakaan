@@ -1,13 +1,6 @@
-{{-- ================================================
-     FILE: resources/views/admin/categories/index.blade.php
-     FUNGSI: Halaman daftar kategori admin
-     ================================================ --}}
-
 @extends('layouts.admin')
-
 @section('title', 'Kelola Kategori')
 @section('page-title', 'Kelola Kategori')
-
 @section('content')
 <div class="row">
     <div class="col-12">
@@ -25,14 +18,12 @@
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
                 @endif
-
                 @if(session('error'))
                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                         {{ session('error') }}
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
                 @endif
-
                 <div class="table-responsive">
                     <table class="table table-hover">
                         <thead class="table-light">
@@ -117,12 +108,9 @@
                         </tbody>
                     </table>
                 </div>
-
-                {{-- Pagination Custom --}}
                 @if($categories->hasPages())
                     <nav aria-label="Page navigation example">
                         <ul class="pagination justify-content-center mb-0 mt-4">
-                            {{-- Previous Page Link --}}
                             @if ($categories->onFirstPage())
                                 <li class="page-item disabled">
                                     <a class="page-link" href="#" aria-label="Previous">
@@ -136,8 +124,6 @@
                                     </a>
                                 </li>
                             @endif
-
-                            {{-- Pagination Elements --}}
                             @foreach ($categories->getUrlRange(1, $categories->lastPage()) as $page => $url)
                                 @if ($page == $categories->currentPage())
                                     <li class="page-item active">
@@ -157,8 +143,6 @@
                                     </li>
                                 @endif
                             @endforeach
-
-                            {{-- Next Page Link --}}
                             @if ($categories->hasMorePages())
                                 <li class="page-item">
                                     <a class="page-link" href="{{ $categories->nextPageUrl() }}" aria-label="Next">

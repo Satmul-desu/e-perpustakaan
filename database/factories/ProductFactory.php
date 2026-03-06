@@ -1,19 +1,14 @@
 <?php
-// database/factories/ProductFactory.php
-
 namespace Database\Factories;
-
 use App\Models\Category;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
-
 class ProductFactory extends Factory
 {
     public function definition(): array
     {
         $name  = fake()->words(rand(2, 5), true);
         $price = fake()->numberBetween(50000, 10000000);
-
         return [
             'category_id'    => Category::inRandomOrder()->first()?->id ?? Category::factory(),
             'name'           => ucwords($name),
@@ -30,8 +25,6 @@ class ProductFactory extends Factory
             'is_featured'    => fake()->boolean(10),
         ];
     }
-
-    // State modifiers
     public function featured(): static
     {
         return $this->state(fn() => [
@@ -39,7 +32,6 @@ class ProductFactory extends Factory
             'is_active'   => true,
         ]);
     }
-
     public function onSale(): static
     {
         return $this->state(function (array $attributes) {
@@ -49,7 +41,6 @@ class ProductFactory extends Factory
             ];
         });
     }
-
     public function outOfStock(): static
     {
         return $this->state(fn() => ['stock' => 0]);

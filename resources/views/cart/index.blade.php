@@ -1,21 +1,12 @@
-{{-- ================================================
-     FILE: resources/views/cart/index.blade.php
-     FUNGSI: Halaman keranjang belanja (Dark Theme)
-     ================================================ --}}
-
 @extends('layouts.app')
-
 @section('title', 'Keranjang Belanja')
-
 @section('content')
 <div class="container py-4">
     <h2 class="mb-4 text-white">
         <i class="bi bi-cart3 me-2"></i>Buku Yang Akan Di Pinjam
     </h2>
-
     @if($cart && $cart->items->count())
         <div class="row">
-            {{-- Cart Items --}}
             <div class="col-lg-8 mb-4">
                 <div class="card card-custom">
                     <div class="card-body p-0">
@@ -91,8 +82,6 @@
                     </div>
                 </div>
             </div>
-
-            {{-- Order Summary --}}
             <div class="col-lg-4">
                 <div class="card card-custom">
                     <div class="card-header border-secondary" style="background: transparent;">
@@ -121,7 +110,6 @@
             </div>
         </div>
     @else
-        {{-- Empty Cart --}}
         <div class="text-center py-5">
             <i class="bi bi-cart-x display-1 text-secondary"></i>
             <h4 class="mt-3 text-white">Keranjang Kosong</h4>
@@ -133,4 +121,3 @@
     @endif
 </div>
 @endsection
-

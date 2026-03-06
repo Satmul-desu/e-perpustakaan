@@ -1,16 +1,8 @@
-{{-- ================================================
-     FILE: resources/views/admin/orders/show.blade.php
-     FUNGSI: Menampilkan detail pesanan lengkap
-     ================================================ --}}
-
 @extends('layouts.admin')
-
 @section('title', 'Detail Pesanan')
 @section('page-title', 'Detail Pesanan: ' . $order->order_number)
-
 @section('content')
 <div class="row g-4">
-    {{-- Informasi Pesanan --}}
     <div class="col-lg-8">
         <div class="card border-0 shadow-sm">
             <div class="card-header bg-white d-flex justify-content-between align-items-center">
@@ -20,7 +12,6 @@
                 </div>
             </div>
             <div class="card-body">
-                {{-- Daftar Produk --}}
                 <div class="table-responsive">
                     <table class="table">
                         <thead class="table-light">
@@ -36,7 +27,7 @@
                                 <tr>
                                     <td>
                                         <div class="d-flex align-items-center">
-                                            <img src="{{ $item->product->primary_image_url ?? 'https://via.placeholder.com/50' }}"
+                                            <img src="{{ $item->product->primary_image_url ?? 'https://via.placeholder.com/50x50?text=No+Image' }}"
                                                  class="rounded me-3" width="50" height="50" style="object-fit: cover;">
                                             <div>
                                                 <div class="fw-medium">{{ $item->product_name }}</div>
@@ -71,10 +62,7 @@
             </div>
         </div>
     </div>
-
-    {{-- Informasi Pengiriman & Pembayaran --}}
     <div class="col-lg-4">
-        {{-- Status & Aksi --}}
         <div class="card border-0 shadow-sm mb-4">
             <div class="card-header bg-white">
                 <h6 class="mb-0">Status & Aksi</h6>
@@ -93,7 +81,6 @@
                         </select>
                     </form>
                 </div>
-
                 <div class="mb-3">
                     <label class="form-label">Status Pembayaran</label>
                     <div>
@@ -106,7 +93,6 @@
                         @endif
                     </div>
                 </div>
-
                 <div class="d-grid">
                     <a href="{{ route('admin.orders.index') }}" class="btn btn-secondary">
                         <i class="bi bi-arrow-left me-1"></i> Kembali
@@ -114,8 +100,6 @@
                 </div>
             </div>
         </div>
-
-        {{-- Informasi Pengiriman --}}
         <div class="card border-0 shadow-sm mb-4">
             <div class="card-header bg-white">
                 <h6 class="mb-0">Informasi Pengiriman</h6>
@@ -135,8 +119,6 @@
                 </div>
             </div>
         </div>
-
-        {{-- Informasi Pelanggan --}}
         <div class="card border-0 shadow-sm">
             <div class="card-header bg-white">
                 <h6 class="mb-0">Informasi Pelanggan</h6>

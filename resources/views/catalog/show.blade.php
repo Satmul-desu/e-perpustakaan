@@ -1,15 +1,7 @@
-{{-- ================================================
-     FILE: resources/views/catalog/show.blade.php
-     FUNGSI: Halaman detail produk
-     ================================================ --}}
-
 @extends('layouts.app')
-
 @section('title', $product->name)
-
 @section('content')
 <div class="container py-4">
-    {{-- Breadcrumb --}}
     <nav aria-label="breadcrumb" class="mb-4">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
@@ -22,27 +14,21 @@
             <li class="breadcrumb-item active">{{ Str::limit($product->name, 30) }}</li>
         </ol>
     </nav>
-
     <div class="row">
-        {{-- Product Images --}}
         <div class="col-lg-6 mb-4">
             <div class="card border-0 shadow-sm">
-                {{-- Main Image --}}
                 <div class="position-relative">
                     <img src="{{ $product->image_url }}"
                          id="main-image"
                          class="card-img-top"
                          alt="{{ $product->name }}"
                          style="height: 400px; object-fit: contain; background: #f8f9fa;">
-
                     @if($product->has_discount)
                         <span class="badge bg-danger position-absolute top-0 start-0 m-3 fs-6">
                             -{{ $product->discount_percentage }}%
                         </span>
                     @endif
                 </div>
-
-                {{-- Thumbnail Gallery --}}
                 @if($product->images->count() > 1)
                     <div class="card-body">
                         <div class="d-flex gap-2 overflow-auto">
@@ -57,21 +43,14 @@
                 @endif
             </div>
         </div>
-
-        {{-- Product Info --}}
         <div class="col-lg-6">
             <div class="card border-0 shadow-sm">
                 <div class="card-body">
-                    {{-- Category --}}
                     <a href="{{ route('catalog.index', ['category' => $product->category->slug]) }}"
                        class="badge bg-light text-dark text-decoration-none mb-2">
                         {{ $product->category->name }}
                     </a>
-
-                    {{-- Title --}}
                     <h2 class="mb-3">{{ $product->name }}</h2>
-
-                    {{-- Price --}}
                     <div class="mb-4">
                         @if($product->has_discount)
                             <div class="text-muted text-decoration-line-through">
@@ -82,8 +61,6 @@
                             {{ $product->formatted_price }}
                         </div>
                     </div>
-
-                    {{-- Stock Status --}}
                     <div class="mb-4">
                         @if($product->stock > 10)
                             <span class="badge bg-success">
@@ -99,12 +76,9 @@
                             </span>
                         @endif
                     </div>
-
-                    {{-- Add to Cart Form --}}
                     <form action="{{ route('cart.add') }}" method="POST" class="mb-4">
                         @csrf
                         <input type="hidden" name="product_id" value="{{ $product->id }}">
-
                         <div class="row g-3 align-items-end">
                             <div class="col-auto">
                                 <label class="form-label">Jumlah</label>
@@ -127,8 +101,6 @@
                             </div>
                         </div>
                     </form>
-
-                    {{-- Wishlist --}}
                     @auth
                         <button type="button"
                                 onclick="toggleWishlist({{ $product->id }})"
@@ -137,16 +109,12 @@
                             {{ auth()->user()->hasInWishlist($product) ? 'Hapus dari Wishlist' : 'Tambah ke Wishlist' }}
                         </button>
                     @endauth
-
                     <hr>
-
-                    {{-- Product Details --}}
                     <div class="mb-3">
                         <h6>Deskripsi</h6>
                         <p class="text-muted">{!! nl2br(e($product->description)) !!}</p>
                         <img src="{{ asset('images/galih.jpg') }}" alt="Product Image" class="img-fluid mt-3" style="max-height: 300px;">
                     </div>
-
                     <div class="row text-muted small">
                         <div class="col-6 mb-2">
                             <i class="bi bi-box me-2"></i> Berat: {{ $product->weight }} gram
@@ -160,7 +128,6 @@
         </div>
     </div>
 </div>
-
 @push('scripts')
 <script>
     function incrementQty() {

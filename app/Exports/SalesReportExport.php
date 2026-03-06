@@ -1,8 +1,5 @@
 <?php
-// app/Exports/SalesReportExport.php
-
 namespace App\Exports;
-
 use App\Models\Order;
 use App\Models\Category;
 use Maatwebsite\Excel\Concerns\FromCollection;
@@ -16,21 +13,15 @@ use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use Illuminate\Support\Facades\DB;
-
 class SalesReportExport implements WithStyles, WithTitle
 {
     protected string $dateFrom;
     protected string $dateTo;
-
     public function __construct(string $dateFrom, string $dateTo)
     {
         $this->dateFrom = $dateFrom;
         $this->dateTo = $dateTo;
     }
-
-    /**
-     * Return data for the Excel file
-     */
     public function collection()
     {
         return Order::with(['user', 'orderItems.product'])
@@ -54,18 +45,10 @@ class SalesReportExport implements WithStyles, WithTitle
                 ];
             });
     }
-
-    /**
-     * Sheet title
-     */
     public function title(): string
     {
         return 'Detail Pesanan';
     }
-
-    /**
-     * Headings for the main sheet
-     */
     public function headings(): array
     {
         return [
@@ -81,10 +64,6 @@ class SalesReportExport implements WithStyles, WithTitle
             'Status',
         ];
     }
-
-    /**
-     * Map data to cells
-     */
     public function map($order): array
     {
         return [
@@ -100,20 +79,13 @@ class SalesReportExport implements WithStyles, WithTitle
             $order['status'],
         ];
     }
-
-    /**
-     * Apply styles to the spreadsheet
-     */
     public function styles(Worksheet $sheet)
     {
-        // Get data for summary calculations
         $orders = $this->collection();
         $totalRevenue = $orders->sum('total_amount');
         $totalOrders = $orders->count();
         $totalShipping = $orders->sum('shipping_cost');
         $avgOrder = $totalOrders > 0 ? $totalRevenue / $totalOrders : 0;
-
-        // Style configuration
         $headerStyle = [
             'font' => [
                 'bold' => true,
@@ -134,24 +106,18 @@ class SalesReportExport implements WithStyles, WithTitle
                 ],
             ],
         ];
-
         $numberStyle = [
             'alignment' => [
                 'horizontal' => Alignment::HORIZONTAL_RIGHT,
             ],
         ];
-
-        // Get last row
         $lastRow = $sheet->getHighestRow() + 2;
-
-        // Add summary section
         $sheet->mergeCells('A' . ($lastRow) . ':B' . ($lastRow));
         $sheet->setCellValue('A' . $lastRow, 'RINGKASAN LAPORAN');
         $sheet->getStyle('A' . $lastRow)->applyFromArray([
             'font' => ['bold' => true, 'size' => 14],
             'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER],
         ]);
-
         $summaryRow = $lastRow + 1;
         $sheet->setCellValue('A' . $summaryRow, 'Total Pesanan');
         $sheet->setCellValue('B' . $summaryRow, $totalOrders);
@@ -161,13 +127,9 @@ class SalesReportExport implements WithStyles, WithTitle
         $sheet->setCellValue('B' . ($summaryRow + 2), '=SUM(H2:H' . ($lastRow - 2) . ')');
         $sheet->setCellValue('A' . ($summaryRow + 3), 'Rata-rata Pesanan');
         $sheet->setCellValue('B' . ($summaryRow + 3), '=B' . ($summaryRow + 1) . '/' . $totalOrders);
-
-        // Format currency cells
         $sheet->getStyle('G' . ($summaryRow + 1) . ':B' . ($summaryRow + 3))
             ->getNumberFormat()
             ->setFormatCode('#,##0');
-
-        // Set column widths
         $sheet->getColumnDimension('A')->setWidth(18);
         $sheet->getColumnDimension('B')->setWidth(20);
         $sheet->getColumnDimension('C')->setWidth(25);
@@ -178,31 +140,20 @@ class SalesReportExport implements WithStyles, WithTitle
         $sheet->getColumnDimension('H')->setWidth(12);
         $sheet->getColumnDimension('I')->setWidth(15);
         $sheet->getColumnDimension('J')->setWidth(15);
-
         return [
             1 => $headerStyle,
         ];
     }
-
-    /**
-     * Create the spreadsheet with multiple sheets
-     */
     public function spreadsheet(): Spreadsheet
     {
         $spreadsheet = new Spreadsheet();
-
-        // Sheet 1: Orders Detail
         $sheet1 = $spreadsheet->getActiveSheet();
         $sheet1->setTitle('Detail Pesanan');
-
-        // Headers
         $headers = $this->headings();
         foreach ($headers as $index => $header) {
             $cell = chr(65 + $index) . '1';
             $sheet1->setCellValue($cell, $header);
         }
-
-        // Data
         $orders = $this->collection();
         $row = 2;
         foreach ($orders as $order) {
@@ -218,25 +169,14 @@ class SalesReportExport implements WithStyles, WithTitle
             $sheet1->setCellValue('J' . $row, $order['status']);
             $row++;
         }
-
-        // Apply styles to sheet 1
         $this->applyHeaderStyles($sheet1);
         $this->applyCurrencyFormat($sheet1, 'G', 2, $row - 1);
         $this->applyCurrencyFormat($sheet1, 'H', 2, $row - 1);
         $this->applyCurrencyFormat($sheet1, 'I', 2, $row - 1);
-
-        // Sheet 2: Category Summary
         $this->createCategorySheet($spreadsheet);
-
-        // Sheet 3: Daily Summary
         $this->createDailySheet($spreadsheet);
-
         return $spreadsheet;
     }
-
-    /**
-     * Apply header styles
-     */
     private function applyHeaderStyles(Worksheet $sheet)
     {
         $highestColumn = $sheet->getHighestColumn();
@@ -261,25 +201,16 @@ class SalesReportExport implements WithStyles, WithTitle
             ],
         ]);
     }
-
-    /**
-     * Apply currency format to a column range
-     */
     private function applyCurrencyFormat(Worksheet $sheet, $column, $startRow, $endRow)
     {
         $sheet->getStyle($column . $startRow . ':' . $column . $endRow)
             ->getNumberFormat()
             ->setFormatCode('#,##0');
     }
-
-    /**
-     * Create category summary sheet
-     */
     private function createCategorySheet(Spreadsheet $spreadsheet)
     {
         $sheet = $spreadsheet->createSheet(1);
         $sheet->setTitle('Per Kategori');
-
         $categories = DB::table('order_items')
             ->join('orders', 'orders.id', '=', 'order_items.order_id')
             ->join('products', 'products.id', '=', 'order_items.product_id')
@@ -295,15 +226,10 @@ class SalesReportExport implements WithStyles, WithTitle
             ])
             ->orderByDesc('total_revenue')
             ->get();
-
-        // Headers
         $sheet->setCellValue('A1', 'Kategori');
         $sheet->setCellValue('B1', 'Total Terjual');
         $sheet->setCellValue('C1', 'Total Pendapatan');
-
         $this->applyHeaderStyles($sheet);
-
-        // Data
         $row = 2;
         $totalRevenue = $categories->sum('total_revenue');
         foreach ($categories as $category) {
@@ -312,27 +238,18 @@ class SalesReportExport implements WithStyles, WithTitle
             $sheet->setCellValue('C' . $row, $category->total_revenue);
             $row++;
         }
-
-        // Total row
         $sheet->setCellValue('A' . $row, 'TOTAL');
         $sheet->setCellValue('B' . $row, '=' . 'SUM(B2:B' . ($row - 1) . ')');
         $sheet->setCellValue('C' . $row, '=' . 'SUM(C2:C' . ($row - 1) . ')');
-
-        // Format
         $sheet->getColumnDimension('A')->setWidth(25);
         $sheet->getColumnDimension('B')->setWidth(15);
         $sheet->getColumnDimension('C')->setWidth(20);
         $this->applyCurrencyFormat($sheet, 'C', 2, $row);
     }
-
-    /**
-     * Create daily summary sheet
-     */
     private function createDailySheet(Spreadsheet $spreadsheet)
     {
         $sheet = $spreadsheet->createSheet(2);
         $sheet->setTitle('Harian');
-
         $daily = Order::whereDate('created_at', '>=', $this->dateFrom)
             ->whereDate('created_at', '<=', $this->dateTo)
             ->where('payment_status', 'paid')
@@ -344,15 +261,10 @@ class SalesReportExport implements WithStyles, WithTitle
             ->groupBy('date')
             ->orderBy('date', 'asc')
             ->get();
-
-        // Headers
         $sheet->setCellValue('A1', 'Tanggal');
         $sheet->setCellValue('B1', 'Jumlah Pesanan');
         $sheet->setCellValue('C1', 'Pendapatan');
-
         $this->applyHeaderStyles($sheet);
-
-        // Data
         $row = 2;
         foreach ($daily as $day) {
             $sheet->setCellValue('A' . $row, \Carbon\Carbon::parse($day->date)->format('d/m/Y'));
@@ -360,17 +272,12 @@ class SalesReportExport implements WithStyles, WithTitle
             $sheet->setCellValue('C' . $row, $day->revenue);
             $row++;
         }
-
-        // Total row
         $sheet->setCellValue('A' . $row, 'TOTAL');
         $sheet->setCellValue('B' . $row, '=' . 'SUM(B2:B' . ($row - 1) . ')');
         $sheet->setCellValue('C' . $row, '=' . 'SUM(C2:C' . ($row - 1) . ')');
-
-        // Format
         $sheet->getColumnDimension('A')->setWidth(15);
         $sheet->getColumnDimension('B')->setWidth(18);
         $sheet->getColumnDimension('C')->setWidth(20);
         $this->applyCurrencyFormat($sheet, 'C', 2, $row);
     }
 }
-

@@ -1,15 +1,7 @@
-{{-- ================================================
-     FILE: resources/views/admin/complaints/index.blade.php
-     FUNGSI: Halaman list aduan untuk admin
-     ================================================ --}}
-
 @extends('layouts.admin')
-
 @section('title', 'Manajemen Aduan - TokoBuku Admin')
 @section('page-title', 'Manajemen Aduan')
-
 @section('content')
-{{-- Stats Cards - Full Width --}}
 <div class="row g-3 mb-4">
     <div class="col-xl-3 col-md-6">
         <div class="stat-card">
@@ -48,8 +40,6 @@
         </div>
     </div>
 </div>
-
-{{-- Filter & Search --}}
 <div class="card mb-4">
     <div class="card-body">
         <form method="GET" action="{{ route('admin.complaints.index') }}" class="row g-3">
@@ -95,8 +85,6 @@
         </form>
     </div>
 </div>
-
-{{-- Complaints Table --}}
 <div class="card">
     <div class="card-body p-0">
         <div class="table-responsive">
@@ -176,8 +164,6 @@
             </table>
         </div>
     </div>
-    
-    {{-- Pagination --}}
     @if($complaints->hasPages())
         <div class="card-footer">
             {{ $complaints->appends(request()->query())->links() }}
@@ -185,13 +171,11 @@
     @endif
 </div>
 @endsection
-
 @push('styles')
 <style>
     .table-warning {
         background-color: rgba(234, 179, 8, 0.1) !important;
     }
-    
     .user-avatar-sm {
         width: 32px;
         height: 32px;
@@ -206,4 +190,3 @@
     }
 </style>
 @endpush
-

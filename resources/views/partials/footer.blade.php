@@ -1,13 +1,8 @@
-{{-- ================================================
-     FILE: resources/views/partials/footer.blade.php
-     FUNGSI: Footer - Modern & Responsive
-     ================================================ --}}
-
 <footer class="modern-footer mt-5">
     <div class="container">
-        {{-- Main Footer Content --}}
+        
         <div class="row g-4">
-            {{-- Brand & Description --}}
+          
             <div class="col-lg-4 col-md-6 footer-brand">
                 <div class="footer-logo mb-3">
                     <img src="{{ asset('images/logo-removebg-preview.png') }}" alt="Logo" class="footer-logo-img">
@@ -18,7 +13,7 @@
                 <p class="footer-desc text-secondary small mb-3">
                     Perpustakaan Buku Online Terpercaya, Murah, Aman, dan Lengkap dengan berbagai genre buku berkualitas.
                 </p>
-                {{-- Social Media Icons --}}
+             
                 <div class="social-links d-flex gap-2">
                     <a href="https://instagram.com/syasya_niss" class="social-link social-instagram" title="Instagram">
                         <i class="bi bi-instagram"></i>
@@ -29,7 +24,6 @@
                 </div>
             </div>
 
-            {{-- Quick Links --}}
             <div class="col-lg-2 col-md-6">
                 <h6 class="footer-heading text-white mb-3">
                     <i class="bi bi-grid-3x3-gap-fill me-2 text-primary"></i>Menu
@@ -420,4 +414,3 @@
         }
     }
 </style>
-

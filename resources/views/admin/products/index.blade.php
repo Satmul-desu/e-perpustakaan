@@ -1,13 +1,6 @@
-{{-- ================================================
-     FILE: resources/views/admin/products/index.blade.php
-     FUNGSI: Halaman daftar buku admin dengan fitur filter dan search
-     ================================================ --}}
-
 @extends('layouts.admin')
-
 @section('title', 'Kelola Buku')
 @section('page-title', 'Kelola Buku')
-
 @section('content')
 <div class="row">
     <div class="col-12">
@@ -19,7 +12,6 @@
                 </a>
             </div>
             <div class="card-body">
-                {{-- Filter Form --}}
                 <form method="GET" class="row g-3 mb-4">
                     <div class="col-md-4">
                         <input type="text"
@@ -50,21 +42,18 @@
                         </a>
                     </div>
                 </form>
-
                 @if(session('success'))
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
                         {{ session('success') }}
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
                 @endif
-
                 @if(session('error'))
                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                         {{ session('error') }}
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
                 @endif
-
                 <div class="table-responsive">
                     <table class="table table-hover">
                         <thead class="table-light">
@@ -90,7 +79,7 @@
                                                  class="rounded"
                                                  width="50" height="50"
                                                  style="object-fit: cover;"
-                                                 onerror="this.onerror=null; this.src='https://via.placeholder.com/50?text=No+Image'">
+                                                 onerror="this.onerror=null; this.src='https://via.placeholder.com/50x50?text=No+Image'" />
                                         @else
                                             <div class="bg-light rounded d-flex align-items-center justify-content-center"
                                                  style="width: 50px; height: 50px;">
@@ -158,8 +147,6 @@
                         </tbody>
                     </table>
                 </div>
-
-                {{-- Pagination Custom --}}
                 @if($products->hasPages())
                     <nav aria-label="Page navigation example">
                         <ul class="pagination justify-content-center mb-0 mt-4">
@@ -176,7 +163,6 @@
                                     </a>
                                 </li>
                             @endif
-
                             @foreach ($products->getUrlRange(1, $products->lastPage()) as $page => $url)
                                 @if ($page == $products->currentPage())
                                     <li class="page-item active">
@@ -196,7 +182,6 @@
                                     </li>
                                 @endif
                             @endforeach
-
                             @if ($products->hasMorePages())
                                 <li class="page-item">
                                     <a class="page-link" href="{{ $products->nextPageUrl() }}" aria-label="Next">
@@ -218,4 +203,3 @@
     </div>
 </div>
 @endsection
-

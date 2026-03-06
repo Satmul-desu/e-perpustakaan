@@ -1,11 +1,8 @@
 @extends('layouts.app')
-
 @section('title', 'Pesanan Saya')
-
 @section('content')
 <div class="orders-page py-4">
     <div class="container">
-        {{-- Page Header --}}
         <div class="orders-header mb-4">
             <div class="row align-items-center">
                 <div class="col-md-8 mb-3 mb-md-0">
@@ -24,9 +21,7 @@
                 </div>
             </div>
         </div>
-
         @if($orders->isEmpty())
-            {{-- Empty State --}}
             <div class="empty-state-card">
                 <div class="empty-icon-wrapper mb-4">
                     <div class="empty-icon-bg">
@@ -43,7 +38,6 @@
                 </a>
             </div>
         @else
-            {{-- Orders List --}}
             <div class="orders-list">
                 @foreach($orders as $order)
                     <div class="order-card mb-3">
@@ -77,7 +71,6 @@
                                             'cancelled' => 'bg-danger text-white',
                                         ];
                                         $badgeClass = $statusClasses[$order->status] ?? 'bg-secondary text-white';
-                                        
                                         $paymentStatusClasses = [
                                             'paid' => 'bg-success text-white',
                                             'unpaid' => 'bg-danger text-white',
@@ -96,11 +89,9 @@
                                 </div>
                             </div>
                         </div>
-                        
                         <div class="order-body">
                             <div class="row align-items-center">
                                 <div class="col-md-8 mb-3 mb-md-0">
-                                    {{-- Order Items Preview --}}
                                     <div class="order-items-preview">
                                         @if($order->orderItems->count() > 0)
                                             <div class="item-thumb">
@@ -125,7 +116,6 @@
                                         <span class="text-secondary">Tidak ada item dalam pesanan ini</span>
                                     </div>
                                 @endif
-                                
                                 <div class="col-md-4 text-md-end">
                                     <a href="{{ route('orders.show', $order) }}" class="btn btn-outline-primary btn-sm">
                                         <i class="bi bi-eye me-1"></i>Lihat Detail
@@ -136,8 +126,6 @@
                     </div>
                 @endforeach
             </div>
-
-            {{-- Pagination --}}
             @if($orders->hasPages())
             <div class="pagination-wrapper mt-4">
                 <nav>
@@ -150,22 +138,17 @@
         @endif
     </div>
 </div>
-
 <style>
-    /* ========== PAGE HEADER ========== */
     .orders-page {
         min-height: 60vh;
     }
-    
     .page-title {
         font-size: 1.75rem;
         font-weight: 700;
     }
-    
     .page-subtitle {
         font-size: 0.95rem;
     }
-    
     .btn-custom {
         background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
         color: white;
@@ -175,14 +158,12 @@
         border-radius: 10px;
         transition: all 0.3s ease;
     }
-    
     .btn-custom:hover {
         background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
         color: white;
         transform: translateY(-2px);
         box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
     }
-    
     .btn-outline-primary {
         color: #60a5fa;
         border-color: #3b82f6;
@@ -192,14 +173,11 @@
         border-radius: 8px;
         transition: all 0.3s ease;
     }
-    
     .btn-outline-primary:hover {
         background: rgba(59, 130, 246, 0.2);
         border-color: #60a5fa;
         color: #60a5fa;
     }
-    
-    /* ========== ORDER CARD ========== */
     .order-card {
         background: rgba(30, 41, 59, 0.9);
         border: 1px solid #334155;
@@ -207,87 +185,70 @@
         overflow: hidden;
         transition: all 0.3s ease;
     }
-    
     .order-card:hover {
         border-color: #3b82f6;
         box-shadow: 0 10px 30px rgba(59, 130, 246, 0.2);
     }
-    
     .order-header {
         background: rgba(15, 23, 42, 0.5);
         padding: 1rem 1.25rem;
         border-bottom: 1px solid #334155;
     }
-    
     .order-info {
         display: flex;
         flex-direction: column;
     }
-    
     .order-label {
         font-size: 0.75rem;
         color: #64748b;
         text-transform: uppercase;
         margin-bottom: 0.25rem;
     }
-    
     .order-number {
         font-weight: 600;
         color: white;
         font-size: 0.95rem;
     }
-    
     .order-value {
         color: #e0e0e0;
         font-size: 0.9rem;
     }
-    
     .order-badges .badge {
         font-size: 0.75rem;
         padding: 0.4rem 0.75rem;
     }
-    
     .order-body {
         padding: 1rem 1.25rem;
     }
-    
-    /* ========== ORDER ITEMS PREVIEW ========== */
     .order-items-preview {
         display: flex;
         align-items: center;
         gap: 1rem;
     }
-    
     .item-thumb {
         width: 60px;
         height: 70px;
         flex-shrink: 0;
     }
-    
     .item-thumb img {
         width: 100%;
         height: 100%;
         object-fit: cover;
         border: 1px solid #334155;
     }
-    
     .item-info {
         display: flex;
         flex-direction: column;
     }
-    
     .item-name {
         color: white;
         font-weight: 500;
         font-size: 0.9rem;
         margin-bottom: 0.25rem;
     }
-    
     .item-count {
         font-size: 0.8rem;
     }
-    
-    /* ========== EMPTY STATE ========== */
     .empty-state-card {
         background: rgba(30, 41, 59, 0.8);
         border: 1px solid #334155;
@@ -297,14 +258,12 @@
         max-width: 500px;
         margin: 2rem auto;
     }
-    
     .empty-icon-wrapper {
         position: relative;
         width: 100px;
         height: 100px;
         margin: 0 auto 1.5rem;
     }
-    
     .empty-icon-bg {
         width: 100px;
         height: 100px;
@@ -314,28 +273,22 @@
         align-items: center;
         justify-content: center;
     }
-    
     .empty-icon-bg i {
         font-size: 3rem;
         color: #60a5fa;
     }
-    
     .empty-title {
         font-size: 1.5rem;
         font-weight: 700;
     }
-    
     .empty-text {
         font-size: 0.95rem;
         line-height: 1.6;
     }
-    
     .btn-lg {
         padding: 0.85rem 2rem;
         font-size: 1rem;
     }
-    
-    /* ========== PAGINATION ========== */
     .pagination {
         --bs-pagination-color: #60a5fa;
         --bs-pagination-bg: rgba(30, 41, 59, 0.8);
@@ -346,7 +299,6 @@
         --bs-pagination-active-bg: #3b82f6;
         --bs-pagination-active-border-color: #3b82f6;
     }
-    
     .page-link {
         border-radius: 0.5rem;
         margin: 0 2px;
@@ -354,153 +306,116 @@
         border: 1px solid #334155;
         color: white;
     }
-    
     .page-item.disabled .page-link {
         background: rgba(30, 41, 59, 0.6);
         border-color: #334155;
         color: #64748b;
     }
-    
-    /* ========== RESPONSIVE STYLES ========== */
-    
-    /* Tablet (576px - 991px) */
     @media (min-width: 576px) and (max-width: 991.98px) {
         .page-title {
             font-size: 1.5rem;
         }
-        
         .order-header {
             padding: 0.75rem 1rem;
         }
-        
         .order-body {
             padding: 0.75rem 1rem;
         }
-        
         .item-thumb {
             width: 50px;
             height: 60px;
         }
     }
-    
-    /* Mobile (< 576px) */
     @media (max-width: 575.98px) {
         .orders-page {
             padding-top: 1rem !important;
             padding-bottom: 1rem !important;
         }
-        
         .page-title {
             font-size: 1.35rem;
         }
-        
         .page-subtitle {
             font-size: 0.85rem;
         }
-        
         .orders-header .row {
             text-align: center;
         }
-        
         .col-md-4.text-md-end {
             text-align: center !important;
         }
-        
         .orders-header .btn {
             margin-top: 0.5rem;
         }
-        
         .order-card {
             border-radius: 12px;
         }
-        
         .order-header {
             padding: 0.75rem;
         }
-        
         .order-info {
             text-align: center;
         }
-        
         .order-badges {
             justify-content: center !important;
             margin-top: 0.5rem;
         }
-        
         .order-badges .badge {
             font-size: 0.7rem;
             padding: 0.3rem 0.6rem;
         }
-        
         .order-body {
             padding: 0.75rem;
         }
-        
         .order-items-preview {
             flex-direction: column;
             text-align: center;
             gap: 0.75rem;
         }
-        
         .item-thumb {
             width: 50px;
             height: 60px;
         }
-        
         .item-info {
             align-items: center;
         }
-        
         .order-body .col-md-4 {
             text-align: center !important;
             margin-top: 0.75rem;
         }
-        
         .order-body .btn {
             width: 100%;
         }
-        
         .empty-state-card {
             padding: 2.5rem 1.5rem;
             border-radius: 16px;
         }
-        
         .empty-icon-bg {
             width: 80px;
             height: 80px;
         }
-        
         .empty-icon-bg i {
             font-size: 2.5rem;
         }
-        
         .empty-title {
             font-size: 1.25rem;
         }
-        
         .empty-text {
             font-size: 0.85rem;
         }
-        
         .pagination-wrapper {
             margin-top: 1.5rem !important;
         }
     }
-    
-    /* Very Small Mobile (< 360px) */
     @media (max-width: 359.98px) {
         .page-title {
             font-size: 1.2rem;
         }
-        
         .order-badges {
             gap: 0.25rem !important;
         }
-        
         .empty-state-card {
             padding: 2rem 1rem;
         }
     }
 </style>
 @endsection
-

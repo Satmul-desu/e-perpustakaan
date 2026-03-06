@@ -1,16 +1,10 @@
-{{-- resources/views/profile/partials/update-profile-information-form.blade.php --}}
-
 <p class="text-muted small">Perbarui informasi profil dan alamat email kamu.</p>
-
 <form id="send-verification" method="post" action="{{ route('verification.send') }}">
     @csrf
 </form>
-
 <form method="post" action="{{ route('profile.update') }}">
     @csrf
     @method('patch')
-
-    {{-- Nama --}}
     <div class="mb-3">
         <label for="name" class="form-label">Nama Lengkap</label>
         <input type="text"
@@ -23,8 +17,6 @@
             <div class="invalid-feedback">{{ $message }}</div>
         @enderror
     </div>
-
-    {{-- Email --}}
     <div class="mb-3">
         <label for="email" class="form-label">Email</label>
         <input type="email"
@@ -36,8 +28,6 @@
         @error('email')
             <div class="invalid-feedback">{{ $message }}</div>
         @enderror
-
-        {{-- Email Verification Notice --}}
         @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $user->hasVerifiedEmail())
             <div class="mt-2">
                 <p class="text-warning small mb-1">
@@ -54,8 +44,6 @@
             </div>
         @endif
     </div>
-
-    {{-- Phone --}}
     <div class="mb-3">
         <label for="phone" class="form-label">Nomor Telepon</label>
         <input type="tel"
@@ -69,8 +57,6 @@
         @enderror
         <div class="form-text">Format: 08xxxxxxxxxx atau +628xxxxxxxxxx</div>
     </div>
-
-    {{-- Address --}}
     <div class="mb-3">
         <label for="address" class="form-label">Alamat Lengkap</label>
         <textarea name="address"
@@ -82,6 +68,5 @@
             <div class="invalid-feedback">{{ $message }}</div>
         @enderror
     </div>
-
     <button type="submit" class="btn btn-primary">Simpan Informasi</button>
 </form>

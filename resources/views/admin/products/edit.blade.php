@@ -1,13 +1,6 @@
-{{-- ================================================
-     FILE: resources/views/admin/products/edit.blade.php
-     FUNGSI: Form untuk mengedit buku yang sudah ada
-     ================================================ --}}
-
 @extends('layouts.admin')
-
 @section('title', 'Edit Buku')
 @section('page-title', 'Edit Buku: ' . $product->name)
-
 @section('content')
 <div class="row justify-content-center">
     <div class="col-lg-8">
@@ -19,8 +12,6 @@
                 <form action="{{ route('admin.products.update', $product) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
-
-                    {{-- Nama Buku --}}
                     <div class="mb-3">
                         <label for="name" class="form-label">Nama Buku <span class="text-danger">*</span></label>
                         <input type="text" class="form-control @error('name') is-invalid @enderror"
@@ -29,8 +20,6 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-
-                    {{-- Kategori --}}
                     <div class="mb-3">
                         <label for="category_id" class="form-label">Kategori <span class="text-danger">*</span></label>
                         <select class="form-select @error('category_id') is-invalid @enderror"
@@ -47,8 +36,6 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-
-                    {{-- Deskripsi --}}
                     <div class="mb-3">
                         <label for="description" class="form-label">Deskripsi</label>
                         <textarea class="form-control @error('description') is-invalid @enderror"
@@ -57,8 +44,6 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-
-                    {{-- Stok --}}
                     <div class="mb-3">
                         <label for="stock" class="form-label">Stok <span class="text-danger">*</span></label>
                         <input type="number" class="form-control @error('stock') is-invalid @enderror"
@@ -67,8 +52,6 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-
-                    {{-- Status --}}
                     <div class="mb-3">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" id="is_active" name="is_active" value="1"
@@ -78,8 +61,6 @@
                             </label>
                         </div>
                     </div>
-
-                    {{-- Gambar Buku yang Ada --}}
                     @if($product->images && $product->images->count() > 0)
                         <div class="mb-3">
                             <label class="form-label">Gambar Buku Saat Ini</label>
@@ -89,7 +70,7 @@
                                         <div class="card">
                                             <img src="{{ $image->image_url }}" class="card-img-top" alt="Book Image"
                                                  style="height: 150px; object-fit: cover;"
-                                                 onerror="this.onerror=null; this.src='https://via.placeholder.com/200x150?text=No+Image'">
+                                                 onerror="this.onerror=null; this.src='https://via.placeholder.com/150x200?text=No+Image'" />
                                             <div class="card-body p-2">
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="checkbox"
@@ -118,8 +99,6 @@
                             </div>
                         </div>
                     @endif
-
-                    {{-- Upload Gambar Baru --}}
                     <div class="mb-3">
                         <label for="images" class="form-label">Tambah Gambar Baru</label>
                         <input type="file" class="form-control @error('images') is-invalid @enderror"
@@ -131,8 +110,6 @@
                             <div class="invalid-feedback d-block">{{ $message }}</div>
                         @enderror
                     </div>
-
-                    {{-- Tombol Aksi --}}
                     <div class="d-flex justify-content-between">
                         <a href="{{ route('admin.products.index') }}" class="btn btn-secondary">
                             <i class="bi bi-arrow-left me-1"></i> Kembali

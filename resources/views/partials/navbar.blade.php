@@ -1,7 +1,3 @@
-{{-- ================================================
-     FILE: resources/views/partials/navbar.blade.php
-     FUNGSI: Navigation bar - Perpustakaan Modern & Responsive
-     ================================================ --}}
 
 <nav class="navbar navbar-expand-lg navbar-dark sticky-top modern-navbar">
     <div class="container">
@@ -161,6 +157,8 @@
         border-bottom: 1px solid #334155;
         padding-top: 0.5rem;
         padding-bottom: 0.5rem;
+        position: relative;
+        z-index: 1030;
     }
     
     .brand-logo {
@@ -255,13 +253,42 @@
         white-space: nowrap;
     }
     
+    /* Dropdown Container - PENTING untuk fungsi dropdown */
+    .nav-item.dropdown {
+        position: relative;
+    }
+    
+    /* Dropdown Menu - styling dan positioning */
     .modern-dropdown {
+        display: none;
+        position: absolute;
+        top: 100%;
+        right: 0;
+        z-index: 1050;
         background: #1e293b;
         border: 1px solid #334155;
         border-radius: 12px;
         box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
         padding: 0.5rem;
         min-width: 200px;
+        margin-top: 0.5rem;
+    }
+    
+    /* Show dropdown when active */
+    .modern-dropdown.show {
+        display: block;
+        animation: dropdownFadeIn 0.2s ease-out;
+    }
+    
+    @keyframes dropdownFadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
     
     .modern-dropdown .dropdown-item {
@@ -269,6 +296,14 @@
         padding: 0.6rem 1rem;
         border-radius: 8px;
         transition: all 0.2s ease;
+        cursor: pointer;
+        text-decoration: none;
+        display: block;
+        width: 100%;
+        border: none;
+        background: none;
+        font-size: 1rem;
+        text-align: left;
     }
     
     .modern-dropdown .dropdown-item:hover {
@@ -284,6 +319,17 @@
     .dropdown-divider {
         border-color: #334155;
         margin: 0.5rem 0;
+    }
+    
+    /* Dropdown arrow rotation */
+    .user-dropdown-toggle[aria-expanded="true"] .dropdown-arrow {
+        transform: rotate(180deg);
+    }
+    
+    .dropdown-arrow {
+        transition: transform 0.3s ease;
+        font-size: 0.75rem;
+        margin-left: 0.25rem;
     }
     
     /* ========== AUTH BUTTONS ========== */
@@ -432,3 +478,55 @@
         }
     }
 </style>
+
+<script>
+    // ========== DROPDOWN PROFIL FIX ==========
+    document.addEventListener('DOMContentLoaded', function() {
+        var userDropdown = document.getElementById('userDropdown');
+        var dropdownMenu = document.querySelector('.modern-dropdown');
+        
+        if (userDropdown && dropdownMenu) {
+            // Toggle dropdown on click
+            userDropdown.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                var isShown = dropdownMenu.classList.contains('show');
+                
+                // Close all dropdowns first
+                document.querySelectorAll('.modern-dropdown.show').forEach(function(dropdown) {
+                    dropdown.classList.remove('show');
+                });
+                
+                // Toggle current dropdown
+                if (!isShown) {
+                    dropdownMenu.classList.add('show');
+                    userDropdown.setAttribute('aria-expanded', 'true');
+                } else {
+                    userDropdown.setAttribute('aria-expanded', 'false');
+                }
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!userDropdown.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                    dropdownMenu.classList.remove('show');
+                    userDropdown.setAttribute('aria-expanded', 'false');
+                }
+            });
+            
+            // Close dropdown on Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    dropdownMenu.classList.remove('show');
+                    userDropdown.setAttribute('aria-expanded', 'false');
+                }
+            });
+            
+            // Prevent dropdown from closing when clicking inside
+            dropdownMenu.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+        }
+    });
+</script>

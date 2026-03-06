@@ -1,8 +1,6 @@
 @extends('layouts.admin')
-
 @section('title', 'Kelola Anggota')
 @section('page-title', 'Kelola Anggota')
-
 @section('content')
 <div class="row">
     <div class="col-12">
@@ -17,14 +15,12 @@
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
                 @endif
-
                 @if(session('error'))
                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                         {{ session('error') }}
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
                 @endif
-
                 <div class="table-responsive">
                     <table class="table table-hover">
                         <thead class="table-light">
@@ -93,8 +89,6 @@
                         </tbody>
                     </table>
                 </div>
-
-                {{-- Pagination --}}
                 @if($users->hasPages())
                     <div class="d-flex justify-content-center mt-4">
                         {{ $users->links() }}

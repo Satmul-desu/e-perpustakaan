@@ -1,19 +1,8 @@
-{{-- ================================================
-     FILE: resources/views/admin/dashboard.blade.php
-     FUNGSI: Halaman dashboard admin perpustakaan modern dengan statistik lengkap
-     ================================================ --}}
-
 @extends('layouts.admin')
-
 @section('title', 'Dashboard')
 @section('page-title', 'Dashboard')
-
 @section('content')
-{{-- ================================================
-     1. STATISTIK UTAMA (6 Kolom Full Width)
-     ================================================ --}}
 <div class="row g-3 mb-4">
-    {{-- Total Peminjaman --}}
     <div class="col-xl-2 col-md-4 col-6">
         <div class="stat-card animate-fade-in">
             <div class="stat-icon success">
@@ -26,8 +15,6 @@
             </div>
         </div>
     </div>
-
-    {{-- Buku Sedang Dipinjam --}}
     <div class="col-xl-2 col-md-4 col-6">
         <div class="stat-card animate-fade-in animate-delay-1">
             <div class="stat-icon primary">
@@ -40,8 +27,6 @@
             </div>
         </div>
     </div>
-
-    {{-- Buku Terlambat --}}
     <div class="col-xl-2 col-md-4 col-6">
         <div class="stat-card animate-fade-in animate-delay-2">
             <div class="stat-icon warning">
@@ -60,8 +45,6 @@
             @endif
         </div>
     </div>
-
-    {{-- Peminjaman Pending --}}
     <div class="col-xl-2 col-md-4 col-6">
         <div class="stat-card animate-fade-in animate-delay-3">
             <div class="stat-icon info">
@@ -80,8 +63,6 @@
             @endif
         </div>
     </div>
-
-    {{-- Total Buku --}}
     <div class="col-xl-2 col-md-4 col-6">
         <div class="stat-card">
             <div class="stat-icon primary">
@@ -94,8 +75,6 @@
             </div>
         </div>
     </div>
-
-    {{-- Total Anggota --}}
     <div class="col-xl-2 col-md-4 col-6">
         <div class="stat-card">
             <div class="stat-icon" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(37, 99, 235, 0.2)); color: #60a5fa;">
@@ -109,8 +88,6 @@
         </div>
     </div>
 </div>
-
-{{-- Alert Stok Rendah --}}
 @if($stats['low_stock'] > 0 || $stats['out_of_stock'] > 0)
 <div class="row g-4 mb-4">
     <div class="col-12">
@@ -130,12 +107,7 @@
     </div>
 </div>
 @endif
-
-{{-- ================================================
-     2. CHARTS SECTION - Full Width
-     ================================================ --}}
 <div class="row g-4 mb-4">
-    {{-- Peminjaman Chart (Full Width) --}}
     <div class="col-xl-8">
         <div class="card h-100">
             <div class="card-header d-flex justify-content-between align-items-center">
@@ -150,8 +122,6 @@
             </div>
         </div>
     </div>
-
-    {{-- Peminjaman per Kategori (Doughnut) --}}
     <div class="col-xl-4">
         <div class="card h-100">
             <div class="card-header">
@@ -170,12 +140,7 @@
         </div>
     </div>
 </div>
-
-{{-- ================================================
-     3. RECENT LOANS & SIDEBAR WIDGETS - Full Width
-     ================================================ --}}
 <div class="row g-4">
-{{-- Recent Loans --}}
     <div class="col-xl-8">
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
@@ -219,7 +184,7 @@
                                                  class="rounded me-2" 
                                                  width="30" height="40"
                                                  style="object-fit: cover;"
-                                                 onerror="this.src='https://via.placeholder.com/30x40?text=B'">
+                                                 onerror="this.src='https://via.placeholder.com/30x40?text=Buku'" />
                                             @else
                                             <div class="bg-secondary rounded me-2 d-flex align-items-center" style="width:30px;height:40px">
                                                 <i class="bi bi-book text-white mx-auto"></i>
@@ -267,10 +232,7 @@
             </div>
         </div>
     </div>
-
-{{-- Sidebar Widgets --}}
     <div class="col-xl-4">
-        {{-- Top Books --}}
         <div class="card mb-4">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <span><i class="bi bi-trophy me-2"></i>Buku Terpopuler</span>
@@ -292,11 +254,11 @@
                                 <span class="badge bg-secondary">{{ $index + 1 }}</span>
                             @endif
                         </div>
-                        <img src="{{ $book->primaryImage?->image_url ?? 'https://via.placeholder.com/50' }}"
+                        <img src="{{ $book->primaryImage?->image_url ?? 'https://via.placeholder.com/50x50?text=Buku' }}" 
                              class="rounded me-3"
                              width="50" height="50"
                              style="object-fit: cover;"
-                             onerror="this.src='https://via.placeholder.com/50?text=No+Image'">
+                             onerror="this.src='https://via.placeholder.com/50x50?text=Buku'" />
                         <div class="flex-grow-1">
                             <h6 class="mb-1" style="font-size: 0.9rem;">{{ Str::limit($book->name, 25) }}</h6>
                             <small class="text-success fw-medium">{{ number_format($book->loan_count ?? 0) }}x dipinjam</small>
@@ -313,8 +275,6 @@
                 @endforelse
             </div>
         </div>
-
-        {{-- Overdue Members --}}
         <div class="card mb-4">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <span><i class="bi bi-exclamation-triangle me-2"></i>Anggota Terlambat</span>
@@ -344,8 +304,6 @@
                 @endforelse
             </div>
         </div>
-
-        {{-- Quick Actions --}}
         <div class="card">
             <div class="card-header">
                 <i class="bi bi-lightning me-2"></i>Aksi Cepat
@@ -366,10 +324,6 @@
         </div>
     </div>
 </div>
-
-{{-- ================================================
-     4. ACTIVITY LOG - Full Width
-     ================================================ --}}
 <div class="row g-4 mt-2">
     <div class="col-12">
         <div class="card">
@@ -400,10 +354,8 @@
     </div>
 </div>
 @endsection
-
 @push('styles')
 <style>
-/* User Avatar Small */
 .user-avatar-sm {
     width: 32px;
     height: 32px;
@@ -416,25 +368,20 @@
     font-weight: 700;
     color: white;
 }
-
-/* Timeline */
 .timeline {
     position: relative;
     padding-left: 30px;
 }
-
 .timeline-item {
     position: relative;
     padding-bottom: 1.5rem;
     padding-left: 20px;
     border-left: 2px solid var(--border-color);
 }
-
 .timeline-item:last-child {
     border-left-color: transparent;
     padding-bottom: 0;
 }
-
 .timeline-marker {
     position: absolute;
     left: -7px;
@@ -444,39 +391,29 @@
     border-radius: 50%;
     border: 2px solid var(--bg-card);
 }
-
 .timeline-marker.bg-success {
     background: var(--success-color);
 }
-
 .timeline-marker.bg-primary {
     background: var(--primary-color);
 }
-
 .timeline-content {
     flex-grow: 1;
 }
-
 .timeline-end {
     margin-left: auto;
 }
 </style>
 @endpush
-
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Shared Chart Options
     Chart.defaults.color = '#94a3b8';
     Chart.defaults.borderColor = '#334155';
-    
-    // Daily Loans Data
     const dailyData = @json($loansChart);
     const monthlyData = @json($monthlyLoans);
     const categoryData = @json($loansByCategory);
-    
-    // Daily Chart
     const loansCtx = document.getElementById('revenueChart').getContext('2d');
     let loansChart = new Chart(loansCtx, {
         type: 'line',
@@ -536,13 +473,10 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
-
-    // Switch Chart Function
     window.switchChart = function(type) {
         const btnGroup = event.target.closest('.btn-group');
         btnGroup.querySelectorAll('.btn').forEach(btn => btn.classList.remove('active'));
         event.target.classList.add('active');
-
         if (type === 'monthly') {
             loansChart.data.labels = monthlyData.map(item => {
                 const [year, month] = item.month.split('-');
@@ -559,14 +493,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         loansChart.update();
     };
-
-    // Category Doughnut Chart
     @if($loansByCategory->count() > 0)
     const categoryCtx = document.getElementById('categoryChart').getContext('2d');
     const categoryColors = [
         '#6366f1', '#22c55e', '#f59e0b', '#ef4444', '#06b6d4', '#8b5cf6', '#ec4899'
     ];
-
     new Chart(categoryCtx, {
         type: 'doughnut',
         data: {
@@ -612,4 +543,3 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 @endpush
-

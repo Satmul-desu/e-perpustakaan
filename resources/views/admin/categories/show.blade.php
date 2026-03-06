@@ -1,13 +1,6 @@
-{{-- ================================================
-     FILE: resources/views/admin/categories/show.blade.php
-     FUNGSI: Halaman detail kategori
-     ================================================ --}}
-
 @extends('layouts.admin')
-
 @section('title', 'Detail Kategori')
 @section('page-title', 'Detail Kategori: ' . $category->name)
-
 @section('content')
 <div class="row">
     <div class="col-lg-4">
@@ -23,7 +16,6 @@
                              class="img-fluid rounded">
                     </div>
                 @endif
-
                 <table class="table table-sm">
                     <tr>
                         <td><strong>Nama</strong></td>
@@ -52,7 +44,6 @@
                         <td>{{ $category->updated_at->format('d/m/Y H:i') }}</td>
                     </tr>
                 </table>
-
                 <div class="d-grid gap-2">
                     <a href="{{ route('admin.categories.edit', $category) }}" class="btn btn-warning">
                         <i class="bi bi-pencil me-2"></i>Edit Kategori
@@ -64,7 +55,6 @@
             </div>
         </div>
     </div>
-
     <div class="col-lg-8">
         <div class="card border-0 shadow-sm">
             <div class="card-header bg-white d-flex justify-content-between align-items-center">

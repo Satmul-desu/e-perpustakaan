@@ -1,16 +1,10 @@
 <?php
-
 namespace Database\Seeders;
-
 use App\Models\Category;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-
 class CategorySeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
         $categories = [
@@ -71,14 +65,12 @@ class CategorySeeder extends Seeder
                 'is_active' => true,
             ],
         ];
-
         foreach ($categories as $categoryData) {
             Category::updateOrCreate(
                 ['slug' => $categoryData['slug']],
                 $categoryData
             );
         }
-
         $this->command->info('Berhasil membuat ' . count($categories) . ' kategori sample.');
     }
 }

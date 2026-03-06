@@ -1,14 +1,10 @@
 <?php
-
 namespace App\Models;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
 class Complaint extends Model
 {
     use HasFactory;
-
     protected $fillable = [
         'user_id',
         'type',
@@ -22,32 +18,19 @@ class Complaint extends Model
         'responded_by',
         'responded_at',
     ];
-
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'responded_at' => 'datetime',
     ];
-
-    /**
-     * Get the user that owns the complaint.
-     */
     public function user()
     {
         return $this->belongsTo(User::class);
     }
-
-    /**
-     * Get the admin who responded to the complaint.
-     */
     public function responder()
     {
         return $this->belongsTo(User::class, 'responded_by');
     }
-
-    /**
-     * Get status badge color.
-     */
     public function getStatusBadgeAttribute()
     {
         $badges = [
@@ -56,13 +39,8 @@ class Complaint extends Model
             'resolved' => 'success',
             'closed' => 'secondary',
         ];
-
         return $badges[$this->status] ?? 'secondary';
     }
-
-    /**
-     * Get priority badge color.
-     */
     public function getPriorityBadgeAttribute()
     {
         $badges = [
@@ -71,13 +49,8 @@ class Complaint extends Model
             'high' => 'warning',
             'urgent' => 'danger',
         ];
-
         return $badges[$this->priority] ?? 'secondary';
     }
-
-    /**
-     * Get type icon.
-     */
     public function getTypeIconAttribute()
     {
         $icons = [
@@ -85,13 +58,8 @@ class Complaint extends Model
             'report' => 'bi-flag',
             'question' => 'bi-question-circle',
         ];
-
         return $icons[$this->type] ?? 'bi-chat';
     }
-
-    /**
-     * Get category display name.
-     */
     public function getCategoryNameAttribute()
     {
         $names = [
@@ -101,13 +69,8 @@ class Complaint extends Model
             'shipping' => 'Pengiriman',
             'other' => 'Lainnya',
         ];
-
         return $names[$this->category] ?? $this->category;
     }
-
-    /**
-     * Get status display name.
-     */
     public function getStatusNameAttribute()
     {
         $names = [
@@ -116,13 +79,8 @@ class Complaint extends Model
             'resolved' => 'Selesai',
             'closed' => 'Ditutup',
         ];
-
         return $names[$this->status] ?? $this->status;
     }
-
-    /**
-     * Get priority display name.
-     */
     public function getPriorityNameAttribute()
     {
         $names = [
@@ -131,24 +89,14 @@ class Complaint extends Model
             'high' => 'Tinggi',
             'urgent' => 'Mendesak',
         ];
-
         return $names[$this->priority] ?? $this->priority;
     }
-
-    /**
-     * Scope for pending complaints.
-     */
     public function scopePending($query)
     {
         return $query->where('status', 'pending');
     }
-
-    /**
-     * Scope for user's complaints.
-     */
     public function scopeForUser($query, $userId)
     {
         return $query->where('user_id', $userId);
     }
 }
-

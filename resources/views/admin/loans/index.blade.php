@@ -1,10 +1,7 @@
 @extends('layouts.admin')
-
 @section('title', 'Kelola Peminjaman')
 @section('page-title', 'Kelola Peminjaman')
-
 @section('content')
-{{-- Stats Cards - Full Width --}}
 <div class="row g-3 mb-4">
     <div class="col-xl-3 col-md-6">
         <div class="stat-card" style="background: linear-gradient(135deg, #6b7280, #4b5563);">
@@ -51,16 +48,12 @@
         </div>
     </div>
 </div>
-
-{{-- Mark Overdue Button --}}
 <form method="POST" action="{{ route('admin.loans.mark-overdue') }}" class="mb-4">
     @csrf
     <button type="submit" class="btn btn-warning">
         <i class="bi bi-exclamation-triangle me-1"></i>Update Status Terlambat
     </button>
 </form>
-
-{{-- Filter --}}
 <div class="card mb-4">
     <div class="card-header">
         <i class="bi bi-funnel me-2"></i>Filter Peminjaman
@@ -90,8 +83,6 @@
         </form>
     </div>
 </div>
-
-{{-- Loans Table --}}
 <div class="card">
     <div class="card-header d-flex justify-content-between align-items-center">
         <span><i class="bi bi-table me-2"></i>Data Peminjaman</span>
@@ -184,19 +175,16 @@
         </div>
     </div>
 </div>
-
 <style>
     .stat-card {
         border: none;
         border-radius: 12px;
         padding: 1.25rem;
     }
-    
     .stat-icon {
         font-size: 2.5rem;
         opacity: 0.3;
     }
-    
     .user-avatar-sm {
         width: 36px;
         height: 36px;

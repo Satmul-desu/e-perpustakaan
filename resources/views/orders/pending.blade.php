@@ -1,7 +1,5 @@
 @extends('layouts.app')
-
 @section('title', 'Menunggu Pembayaran - Toko Online')
-
 @section('content')
 <style>
     .page-offset { margin-top: 90px; }
@@ -32,7 +30,6 @@
         padding: 20px;
     }
 </style>
-
 <div class="container py-5 page-offset">
     <div class="row justify-content-center">
         <div class="col-lg-6">
@@ -45,26 +42,21 @@
                     Silakan selesaikan pembayaran Anda untuk memproses pesanan.
                 </p>
             </div>
-
             <div class="card card-custom">
                 <div class="card-body p-4">
                     <div class="text-center mb-4">
                         <h4 class="fw-bold text-white mb-3">Order #{{ $order->order_number }}</h4>
-
                         <div class="alert alert-warning bg-warning bg-opacity-10 border-warning text-warning d-inline-block px-4 py-2 rounded-pill mb-4">
                             <i class="bi bi-clock-history me-2"></i>
                             Menunggu Pembayaran
                         </div>
-
                         <p class="text-secondary">
                             Total yang harus dibayar:
                         </p>
-
                         <h3 class="fw-bold text-custom mb-4">
                             Rp {{ number_format($order->total_amount, 0, ',', '.') }}
                         </h3>
                     </div>
-
                     <div class="info-box mb-4">
                         <h6 class="fw-bold text-white mb-3">
                             <i class="bi bi-info-circle me-2"></i>Cara Pembayaran:
@@ -75,7 +67,6 @@
                             <li>Pembayaran akan dikonfirmasi secara otomatis</li>
                         </ul>
                     </div>
-
                     <div class="d-flex gap-3 justify-content-center flex-wrap">
                         <a href="{{ route('orders.show', $order) }}" class="btn btn-outline-light btn-lg">
                             <i class="bi bi-arrow-left me-2"></i>Kembali ke Pesanan
@@ -88,7 +79,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="text-center mt-4 text-secondary small">
                 <p class="mb-1">Perlu bantuan? <a href="#" class="text-custom">Hubungi kami</a></p>
                 <p class="mb-0">Invoice telah dikirim ke email Anda</p>
@@ -96,20 +86,16 @@
         </div>
     </div>
 </div>
-
-{{-- Snap.js Integration untuk pembayaran --}}
 @if($order->snap_token)
 @push('scripts')
     <script src="{{ config('midtrans.snap_url') }}" data-client-key="{{ config('midtrans.client_key') }}"></script>
     <script type="text/javascript">
         document.addEventListener('DOMContentLoaded', function() {
             const payButton = document.getElementById('pay-button');
-
             if (payButton) {
                 payButton.addEventListener('click', function() {
                     payButton.disabled = true;
                     payButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Memproses...';
-
                     window.snap.pay('{{ $order->snap_token }}', {
                         onSuccess: function(result) {
                             console.log('Payment Success:', result);
@@ -135,4 +121,3 @@
 @endpush
 @endif
 @endsection
-

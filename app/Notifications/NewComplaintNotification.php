@@ -1,39 +1,22 @@
 <?php
-
 namespace App\Notifications;
-
 use App\Models\Complaint;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-
 class NewComplaintNotification extends Notification
 {
     use Queueable;
-
     protected $complaint;
-
-    /**
-     * Create a new notification instance.
-     */
     public function __construct(Complaint $complaint)
     {
         $this->complaint = $complaint;
     }
-
-    /**
-     * Get the notification's delivery channels.
-     */
     public function via($notifiable)
     {
-        // Use database only to avoid mail configuration issues
         return ['database'];
     }
-
-    /**
-     * Get the mail representation of the notification.
-     */
     public function toMail($notifiable)
     {
         return (new MailMessage)
@@ -53,10 +36,6 @@ class NewComplaintNotification extends Notification
             ->action('Lihat Aduan', route('admin.complaints.show', $this->complaint))
             ->line('Segera tindaklanjuti aduan ini.');
     }
-
-    /**
-     * Get the array representation of the notification.
-     */
     public function toArray($notifiable)
     {
         return [
@@ -73,4 +52,3 @@ class NewComplaintNotification extends Notification
         ];
     }
 }
-

@@ -1,36 +1,18 @@
-{{-- ================================================
-     FILE: resources/views/layouts/app.blade.php
-     FUNGSI: Master layout untuk halaman customer/publik
-     ================================================ --}}
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    {{-- CSRF Token untuk AJAX --}}
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
-    {{-- SEO Meta Tags --}}
     <title>@yield('title', 'Toko Online') - {{ config('app.name') }}</title>
     <meta name="description" content="@yield('meta_description', 'Toko online terpercaya dengan produk berkualitas')">
-
-    {{-- Favicon --}}
     <link rel="icon" href="{{ asset('favicon.ico') }}">
-
-    {{-- Google Fonts --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-    {{-- Bootstrap 5 CSS CDN --}}
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    
-    {{-- Bootstrap Icons CDN --}}
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
-    {{-- Custom CSS Styles --}}
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     <style>
         * {
             margin: 0;
@@ -45,7 +27,6 @@
             color: #e0e0e0;
         }
         
-        /* Global Dark Theme Styles */
         .bg-dark-custom {
             background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%) !important;
         }
@@ -94,7 +75,6 @@
             border-radius: 16px;
         }
         
-        /* Floating CS Button */
         .floating-cs-button {
             position: fixed;
             bottom: 30px;
@@ -143,12 +123,10 @@
             border: 2px solid #1e293b;
         }
         
-        /* Toast Container */
         #toast-container {
             z-index: 10000;
         }
         
-        /* Responsive adjustments */
         @media (max-width: 575.98px) {
             .floating-cs-button {
                 bottom: 20px;
@@ -165,29 +143,21 @@
             }
         }
     </style>
-    
-    {{-- Page-specific styles --}}
     @yield('styles')
 </head>
-
 <body>
-    {{-- NAVBAR --}}
     @include('partials.navbar')
-
-    {{-- FLASH MESSAGES --}}
+    
     <div class="container mt-3">
         @include('partials.flash-messages')
     </div>
-
-    {{-- MAIN CONTENT --}}
+    
     <main class="min-vh-100">
         @yield('content')
     </main>
-
-    {{-- FOOTER --}}
+    
     @include('partials.footer')
-
-    {{-- FLOATING CS BUTTON --}}
+    
     <div class="floating-cs-button" data-bs-toggle="tooltip" data-bs-placement="left" title="Customer Service">
         <a href="{{ route('cs.index') }}" class="floating-cs-link">
             <div class="floating-cs-icon">
@@ -198,20 +168,15 @@
             </div>
         </a>
     </div>
-
-    {{-- Bootstrap 5 JS CDN --}}
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-    {{-- Page-specific scripts --}}
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     @yield('scripts')
-
     <script>
-        // Toggle Wishlist Function
         async function toggleWishlist(productId) {
             try {
                 const token = document.querySelector('meta[name="csrf-token"]').content;
                 console.log('Toggle wishlist for product:', productId);
-
+                
                 const response = await fetch(`/wishlist/toggle/${productId}`, {
                     method: "POST",
                     headers: {
@@ -219,14 +184,14 @@
                         "X-CSRF-TOKEN": token,
                     },
                 });
-
+                
                 console.log('Response status:', response.status);
-
+                
                 if (response.status === 401) {
                     window.location.href = "/login";
                     return;
                 }
-
+                
                 const responseText = await response.text();
                 let data;
                 try {
@@ -235,7 +200,7 @@
                     console.error('JSON parse error:', e);
                     throw new Error('Server returned invalid JSON');
                 }
-
+                
                 if (data.status === "success") {
                     updateWishlistUI(productId, data.added);
                     updateWishlistCounter(data.count);
@@ -248,8 +213,7 @@
                 showToast("Terjadi kesalahan sistem: " + error.message, "error");
             }
         }
-
-        // Update Wishlist UI
+        
         function updateWishlistUI(productId, isAdded) {
             const buttons = document.querySelectorAll(`.wishlist-btn-${productId}`);
             buttons.forEach((btn) => {
@@ -263,8 +227,7 @@
                 }
             });
         }
-
-        // Update Wishlist Counter
+        
         function updateWishlistCounter(count) {
             const badge = document.getElementById("wishlist-count");
             if (badge) {
@@ -272,8 +235,7 @@
                 badge.style.display = count > 0 ? "inline-block" : "none";
             }
         }
-
-        // Show Toast Notification
+        
         function showToast(message, type = 'success') {
             let toastContainer = document.getElementById('toast-container');
             if (!toastContainer) {
@@ -282,11 +244,11 @@
                 toastContainer.className = 'position-fixed top-0 end-0 p-3';
                 document.body.appendChild(toastContainer);
             }
-
+            
             const toastId = 'toast-' + Date.now();
             const bgColor = type === 'success' ? 'success' : type === 'error' ? 'danger' : 'primary';
             const icon = type === 'success' ? 'bi-check-circle' : type === 'error' ? 'bi-x-circle' : 'bi-info-circle';
-
+            
             const toastHtml = `
                 <div id="${toastId}" class="toast align-items-center text-bg-${bgColor} border-0" role="alert">
                     <div class="d-flex">
@@ -298,19 +260,18 @@
                     </div>
                 </div>
             `;
-
+            
             toastContainer.insertAdjacentHTML('beforeend', toastHtml);
-
+            
             const toastEl = document.getElementById(toastId);
             const toast = new bootstrap.Toast(toastEl, { autohide: true, delay: 3000 });
             toast.show();
-
+            
             toastEl.addEventListener('hidden.bs.toast', function() {
                 toastEl.remove();
             });
         }
-
-        // Initialize Bootstrap Tooltips
+        
         document.addEventListener('DOMContentLoaded', function() {
             var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
             var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {

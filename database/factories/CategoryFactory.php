@@ -1,11 +1,7 @@
 <?php
-// database/seeders/CategorySeeder.php
-
 namespace Database\Seeders;
-
 use App\Models\Category;
 use Illuminate\Database\Seeder;
-
 class CategorySeeder extends Seeder
 {
     public function run(): void
@@ -48,11 +44,9 @@ class CategorySeeder extends Seeder
                 'is_active'   => true,
             ],
         ];
-
         foreach ($categories as $category) {
             Category::create($category);
         }
-
         $this->command->info('✅ Categories seeded successfully!');
     }
 }

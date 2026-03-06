@@ -1,16 +1,12 @@
 @extends('layouts.app')
-
 @section('title', 'Detail Pesanan #' . $order->order_number)
-
 @section('content')
 <style>
     .page-offset { margin-top: 90px; }
 </style>
-
 <div class="container py-5 page-offset">
     <div class="row justify-content-center">
         <div class="col-lg-10">
-            {{-- Header --}}
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <div>
                     <h1 class="h3 fw-bold mb-1">
@@ -22,8 +18,6 @@
                     <i class="bi bi-arrow-left me-1"></i> Kembali
                 </a>
             </div>
-
-            {{-- Status Cards --}}
             <div class="row g-3 mb-4">
                 <div class="col-md-6">
                     <div class="card card-custom h-100">
@@ -46,9 +40,7 @@
                     </div>
                 </div>
             </div>
-
             <div class="row g-4">
-                {{-- Order Items --}}
                 <div class="col-lg-8">
                     <div class="card card-custom">
                         <div class="card-header bg-secondary rounded-top-4">
@@ -71,7 +63,6 @@
                                 <span class="fw-bold text-custom">Rp {{ number_format($item->subtotal, 0, ',', '.') }}</span>
                             </div>
                             @endforeach
-                            
                             <div class="p-4 bg-light">
                                 <div class="d-flex justify-content-between mb-2">
                                     <span class="text-secondary">Subtotal Barang</span>
@@ -89,10 +80,7 @@
                         </div>
                     </div>
                 </div>
-
-                {{-- Shipping Info & Payment Action --}}
                 <div class="col-lg-4">
-                    {{-- Shipping Address --}}
                     <div class="card card-custom mb-4">
                         <div class="card-header bg-secondary rounded-top-4">
                             <h5 class="mb-0 text-white">
@@ -105,8 +93,6 @@
                             <p class="text-secondary mb-0" style="white-space: pre-line;">{{ $order->shipping_address }}</p>
                         </div>
                     </div>
-
-                    {{-- Payment Button (jika belum dibayar) --}}
                     @if($order->payment_status === 'pending' || $order->payment_status === 'unpaid')
                     <div class="card card-custom">
                         <div class="card-body text-center">
@@ -117,13 +103,9 @@
                             <p class="text-secondary small mb-4">
                                 Total: <strong class="text-custom">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</strong>
                             </p>
-                            
-                            {{-- Tombol utama: Bayar dengan Snap.js --}}
                             <button id="pay-button" class="btn btn-custom btn-lg w-100 fw-bold mb-3" data-order-number="{{ $order->order_number }}">
                                 <i class="bi bi-credit-card me-2"></i> Bayar Sekarang
                             </button>
-                            
-                            {{-- Fallback: Link ke invoice email jika Snap.js gagal --}}
                             <p class="text-secondary small mb-0 snap-unavailable" style="display: none;">
                                 <i class="bi bi-info-circle text-warning me-1"></i>
                                 Snap.js terblokir? 
@@ -131,7 +113,6 @@
                                     Cara pembayaran manual
                                 </a>
                             </p>
-                            
                             <p class="text-secondary small mt-3 mb-0">
                                 <i class="bi bi-shield-check text-success me-1"></i>
                                 Pembayaran aman dengan Midtrans
@@ -139,8 +120,6 @@
                         </div>
                     </div>
                     @endif
-
-                    {{-- Success Message (jika sudah dibayar) --}}
                     @if($order->payment_status === 'paid')
                     <div class="card card-custom bg-success bg-opacity-10 border-success">
                         <div class="card-body text-center">
@@ -157,33 +136,24 @@
         </div>
     </div>
 </div>
-
-{{-- Midtrans Snap.js sudah dimuat di layouts/app.blade.php head --}}
 @if($order->payment_status === 'pending' || $order->payment_status === 'unpaid')
     <script type="text/javascript">
         document.addEventListener('DOMContentLoaded', function() {
             const payButton = document.getElementById('pay-button');
             const orderNumber = payButton.getAttribute('data-order-number');
             const snapUnavailableMsg = document.querySelector('.snap-unavailable');
-
-            // Tampilkan fallback jika Snap.js tidak tersedia
             if (typeof snap === 'undefined' && snapUnavailableMsg) {
                 snapUnavailableMsg.style.display = 'block';
             }
-
             payButton.addEventListener('click', function() {
                 payButton.disabled = true;
                 payButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Memproses...';
-
-                // Verifikasi Snap.js tersedia
                 if (typeof snap === 'undefined') {
                     alert('Snap.js terblokir oleh browser/security. Silakan:\n\n1. Nonaktifkan adblocker\n2. Gunakan browser lain\n3. Atau hubungi admin untuk pembayaran manual');
                     payButton.disabled = false;
                     payButton.innerHTML = '<i class="bi bi-credit-card me-2"></i> Bayar Sekarang';
                     return;
                 }
-
-                // Ambil snap token dari server
                 fetch(`/orders/${orderNumber}/snap-token`)
                     .then(response => {
                         if (!response.ok) {
@@ -193,7 +163,6 @@
                     })
                     .then(data => {
                         if (data.token) {
-                            // Buka popup Midtrans
                             snap.pay(data.token, {
                                 onSuccess: function(result) {
                                     console.log('Payment Success:', result);
@@ -227,4 +196,3 @@
     </script>
 @endif
 @endsection
-

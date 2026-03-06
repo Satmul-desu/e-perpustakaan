@@ -1,15 +1,7 @@
-{{-- ================================================
-     FILE: resources/views/admin/complaints/show.blade.php
-     FUNGSI: Detail Aduan untuk Admin dengan fitur Reply
-     ================================================ --}}
-
 @extends('layouts.admin')
-
 @section('title', 'Detail Aduan #' . $complaint->id . ' - TokoBuku Admin')
 @section('page-title', 'Detail Aduan')
-
 @section('content')
-{{-- Breadcrumb --}}
 <nav aria-label="breadcrumb" class="mb-4">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
@@ -17,7 +9,6 @@
         <li class="breadcrumb-item active">#{{ $complaint->id }}</li>
     </ol>
 </nav>
-
 @if(session('success'))
     <div class="alert alert-success alert-dismissible fade show" role="alert">
         <i class="bi bi-check-circle me-2"></i>
@@ -25,7 +16,6 @@
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 @endif
-
 @if(session('error'))
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
         <i class="bi bi-exclamation-triangle me-2"></i>
@@ -33,11 +23,8 @@
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 @endif
-
 <div class="row g-4">
-    {{-- Detail Aduan --}}
     <div class="col-lg-8">
-        {{-- User Message --}}
         <div class="card mb-4">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <div>
@@ -68,8 +55,6 @@
                 @endif
             </div>
         </div>
-
-        {{-- Admin Response --}}
         @if($complaint->admin_response)
             <div class="card mb-4 border-success">
                 <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
@@ -95,8 +80,6 @@
                 </div>
             </div>
         @endif
-
-        {{-- Response Form --}}
         <div class="card">
             <div class="card-header">
                 <i class="bi bi-reply me-2"></i>
@@ -106,7 +89,6 @@
                 <form action="{{ route('admin.complaints.update', $complaint) }}" method="POST">
                     @csrf
                     @method('PUT')
-
                     <div class="row g-3 mb-3">
                         <div class="col-md-6">
                             <label class="form-label">Status</label>
@@ -127,7 +109,6 @@
                             </select>
                         </div>
                     </div>
-
                     <div class="mb-3">
                         <label class="form-label">Tanggapan <span class="text-danger">*</span></label>
                         <textarea name="admin_response" class="form-control @error('admin_response') is-invalid @enderror" 
@@ -138,7 +119,6 @@
                             <div class="form-text">Minimal 10 karakter</div>
                         @enderror
                     </div>
-
                     <div class="d-flex gap-2">
                         <button type="submit" class="btn btn-success">
                             <i class="bi bi-check-circle me-2"></i>
@@ -152,8 +132,6 @@
             </div>
         </div>
     </div>
-
-    {{-- Info Sidebar --}}
     <div class="col-lg-4">
         <div class="card mb-3">
             <div class="card-header">
@@ -188,8 +166,6 @@
                 @endif
             </div>
         </div>
-
-        {{-- Quick Actions --}}
         <div class="card mb-3">
             <div class="card-header">
                 <i class="bi bi-lightning me-2"></i>Aksi Cepat
@@ -223,8 +199,6 @@
                 </div>
             </div>
         </div>
-
-        {{-- User Info --}}
         <div class="card">
             <div class="card-header">
                 <i class="bi bi-person me-2"></i>Info Pengguna
@@ -258,7 +232,6 @@
     </div>
 </div>
 @endsection
-
 @push('styles')
 <style>
     .card.border-success {
@@ -266,4 +239,3 @@
     }
 </style>
 @endpush
-

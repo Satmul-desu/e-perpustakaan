@@ -1,9 +1,6 @@
 @extends('layouts.app')
-
 @section('title', 'Checkout')
-
 @section('content')
-
 <style>
     .page-offset {
         margin-top: 90px;
@@ -27,7 +24,6 @@
         color: #94a3b8;
     }
 </style>
-
 <div class="container py-5 page-offset">
     <div class="row justify-content-center">
         <div class="col-lg-11">
@@ -39,7 +35,6 @@
                     Lengkapi data pengiriman sebelum melanjutkan pembayaran
                 </p>
             </div>
-
             @if($cart->items->isEmpty())
                 <div class="text-center py-5">
                     <i class="bi bi-cart-x display-1 text-secondary"></i>
@@ -140,4 +135,3 @@
     </div>
 </div>
 @endsection
-

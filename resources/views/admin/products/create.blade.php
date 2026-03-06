@@ -1,13 +1,6 @@
-{{-- ================================================
-     FILE: resources/views/admin/products/create.blade.php
-     FUNGSI: Form untuk menambah buku baru
-     ================================================ --}}
-
 @extends('layouts.admin')
-
 @section('title', 'Tambah Buku')
 @section('page-title', 'Tambah Buku Baru')
-
 @section('content')
 <div class="row justify-content-center">
     <div class="col-lg-8">
@@ -18,8 +11,6 @@
             <div class="card-body">
                 <form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
-
-                    {{-- Nama Buku --}}
                     <div class="mb-3">
                         <label for="name" class="form-label">Nama Buku <span class="text-danger">*</span></label>
                         <input type="text" class="form-control @error('name') is-invalid @enderror"
@@ -28,8 +19,6 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-
-                    {{-- Kategori --}}
                     <div class="mb-3">
                         <label for="category_id" class="form-label">Kategori <span class="text-danger">*</span></label>
                         <select class="form-select @error('category_id') is-invalid @enderror"
@@ -45,8 +34,6 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-
-                    {{-- Deskripsi --}}
                     <div class="mb-3">
                         <label for="description" class="form-label">Deskripsi</label>
                         <textarea class="form-control @error('description') is-invalid @enderror"
@@ -55,8 +42,6 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-
-                    {{-- Stok --}}
                     <div class="mb-3">
                         <label for="stock" class="form-label">Stok <span class="text-danger">*</span></label>
                         <input type="number" class="form-control @error('stock') is-invalid @enderror"
@@ -65,8 +50,6 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-
-                    {{-- Status --}}
                     <div class="mb-3">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" id="is_active" name="is_active" value="1"
@@ -76,8 +59,6 @@
                             </label>
                         </div>
                     </div>
-
-                    {{-- Gambar Buku --}}
                     <div class="mb-3">
                         <label for="images" class="form-label">Gambar Buku</label>
                         <input type="file" class="form-control @error('images') is-invalid @enderror"
@@ -89,8 +70,6 @@
                             <div class="invalid-feedback d-block">{{ $message }}</div>
                         @enderror
                     </div>
-
-                    {{-- Tombol Aksi --}}
                     <div class="d-flex justify-content-between">
                         <a href="{{ route('admin.products.index') }}" class="btn btn-secondary">
                             <i class="bi bi-arrow-left me-1"></i> Kembali

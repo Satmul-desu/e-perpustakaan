@@ -1,9 +1,6 @@
 <?php
-
 namespace App\Models;
-
 use Illuminate\Database\Eloquent\Model;
-
 class Order extends Model
 {
     protected $fillable = [
@@ -20,25 +17,19 @@ class Order extends Model
         'payment_method',
         'notes',
     ];
-
     protected $with = ['user', 'orderItems', 'payment'];
-
     public function user()
     {
         return $this->belongsTo(User::class);
     }
-
     public function orderItems()
     {
         return $this->hasMany(OrderItem::class);
     }
-
     public function payment()
     {
         return $this->hasOne(Payment::class);
     }
-
-    // Accessors
     public function getStatusColorAttribute(): string
     {
         return match($this->status) {
@@ -49,7 +40,6 @@ class Order extends Model
             default => 'secondary',
         };
     }
-
     public function getPaymentStatusColorAttribute(): string
     {
         return match($this->payment_status) {
@@ -59,7 +49,6 @@ class Order extends Model
             default => 'secondary',
         };
     }
-
     public function getPaymentStatusTextAttribute(): string
     {
         return match($this->payment_status) {
@@ -69,7 +58,6 @@ class Order extends Model
             default => ucfirst($this->payment_status ?? 'Tidak diketahui'),
         };
     }
-
     public function getItemsSubtotalAttribute(): float
     {
         return $this->orderItems->sum('subtotal');

@@ -1,13 +1,6 @@
-{{-- ================================================
-     FILE: resources/views/admin/products/show.blade.php
-     FUNGSI: Halaman detail buku admin
-     ================================================ --}}
-
 @extends('layouts.admin')
-
 @section('title', 'Detail Buku')
 @section('page-title', 'Detail Buku: ' . $product->name)
-
 @section('content')
 <div class="row">
     <div class="col-lg-8">
@@ -19,7 +12,6 @@
                 <div class="row">
                     <div class="col-md-4">
                         @php
-                            // Try to get primary image or first image
                             $mainImage = $product->primaryImage ?? ($product->images->first() ?? null);
                         @endphp
                         @if($mainImage)
@@ -27,15 +19,13 @@
                                  alt="{{ $product->name }}"
                                  class="img-fluid rounded mb-3"
                                  style="max-height: 300px; object-fit: cover;"
-                                 onerror="this.onerror=null; this.src='https://via.placeholder.com/300x400?text=No+Image'">
+                                 onerror="this.onerror=null; this.src='https://via.placeholder.com/300x400?text=No+Image'" />
                         @else
                             <div class="bg-light rounded d-flex align-items-center justify-content-center mb-3"
                                  style="height: 200px;">
                                 <i class="bi bi-book text-muted fs-1"></i>
                             </div>
                         @endif
-
-                        {{-- Galeri Gambar --}}
                         @if($product->images && $product->images->count() > 1)
                             <div class="row g-2">
                                 @foreach($product->images as $image)
@@ -44,8 +34,7 @@
                                              alt="{{ $product->name }}"
                                              class="img-thumbnail"
                                              style="width: 100%; height: 60px; object-fit: cover; cursor: pointer;"
-                                             onerror="this.onerror=null; this.src='https://via.placeholder.com/60?text=No'"
-                                             onclick="changeMainImage('{{ $image->image_url }}')">
+                                             onerror="this.onerror=null; this.src='https://via.placeholder.com/100x60?text=No+Image'" />
                                     </div>
                                 @endforeach
                             </div>
@@ -92,7 +81,6 @@
                                 <td>{{ $product->updated_at->format('d/m/Y H:i') }}</td>
                             </tr>
                         </table>
-
                         <div class="d-flex gap-2 mt-3">
                             <a href="{{ route('admin.products.edit', $product) }}" class="btn btn-warning">
                                 <i class="bi bi-pencil me-2"></i>Edit Buku
@@ -103,9 +91,7 @@
                         </div>
                     </div>
                 </div>
-
                 <hr>
-
                 <div class="row">
                     <div class="col-12">
                         <h6>Deskripsi Buku</h6>
@@ -115,9 +101,7 @@
             </div>
         </div>
     </div>
-
     <div class="col-lg-4">
-        {{-- Statistik Buku --}}
         <div class="card border-0 shadow-sm mb-3">
             <div class="card-header bg-dark">
                 <h6 class="mb-0 text-white">Statistik</h6>
@@ -137,8 +121,6 @@
                 </div>
             </div>
         </div>
-
-        {{-- Riwayat Peminjaman --}}
         <div class="card border-0 shadow-sm">
             <div class="card-header bg-dark">
                 <h6 class="mb-0 text-white">Riwayat Peminjaman</h6>
@@ -174,7 +156,6 @@
     </div>
 </div>
 @endsection
-
 @push('scripts')
 <script>
 function changeMainImage(src) {

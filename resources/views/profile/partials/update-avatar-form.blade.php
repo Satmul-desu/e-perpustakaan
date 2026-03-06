@@ -1,11 +1,8 @@
-{{-- resources/views/profile/partials/update-avatar-form.blade.php --}}
-
 @php
     $isGoogleUser = $user->isGoogleUser();
     $isGoogleAvatar = $user->isGoogleAvatar();
     $avatarUrl = $user->avatar_url;
 @endphp
-
 <p class="text-muted small">
     Upload foto profil kamu. Format yang didukung: JPG, PNG, WebP. Maksimal 2MB.
     @if($isGoogleUser)
@@ -14,22 +11,16 @@
         </span>
     @endif
 </p>
-
 <form method="post" action="{{ route('profile.avatar.update') }}" enctype="multipart/form-data">
     @csrf
-
     <div class="d-flex align-items-center gap-4">
-        {{-- Avatar Preview (Image or Icon) --}}
         <div class="position-relative">
             @if($avatarUrl && filter_var($avatarUrl, FILTER_VALIDATE_URL))
-                {{-- Jika ada avatar (Google URL atau lokal), tampilkan gambar --}}
                 <img id="avatar-preview"
                      class="rounded-circle object-fit-cover border"
                      style="width: 100px; height: 100px;"
                      src="{{ $avatarUrl }}"
                      alt="{{ $user->name }}">
-                
-                {{-- Tombol hapus avatar (hanya untuk avatar lokal) --}}
                 @if(!$isGoogleUser || !$isGoogleAvatar)
                     <button type="button"
                             onclick="if(confirm('Hapus foto profil?')) document.getElementById('delete-avatar-form').submit()"
@@ -40,14 +31,11 @@
                     </button>
                 @endif
             @else
-                {{-- Jika tidak ada avatar, tampilkan icon Bootstrap --}}
                 <div id="avatar-preview" class="rounded-circle d-flex align-items-center justify-content-center border"
                      style="width: 100px; height: 100px; background: rgba(59, 130, 246, 0.1); border: 3px solid #3b82f6;">
                     <i class="bi bi-person-fill" style="color: #60a5fa; font-size: 3rem;"></i>
                 </div>
             @endif
-
-            {{-- Badge untuk Google Avatar --}}
             @if($isGoogleUser && $isGoogleAvatar)
                 <div class="position-absolute bottom-0 start-100 translate-middle">
                     <span class="badge bg-primary rounded-pill" style="font-size: 0.65rem;">
@@ -56,8 +44,6 @@
                 </div>
             @endif
         </div>
-
-        {{-- Upload Input --}}
         <div class="flex-grow-1">
             <input type="file"
                    name="avatar"
@@ -70,7 +56,6 @@
             @enderror
         </div>
     </div>
-
     <div class="mt-3">
         <button type="submit" class="btn btn-primary">
             <i class="bi bi-upload me-2"></i>Simpan Foto
@@ -82,13 +67,10 @@
         @endif
     </div>
 </form>
-
-{{-- Hidden Form Delete Avatar --}}
 <form id="delete-avatar-form" action="{{ route('profile.avatar.destroy') }}" method="POST" class="d-none">
     @csrf
     @method('DELETE')
 </form>
-
 <script>
     function previewAvatar(event) {
         const file = event.target.files[0];
@@ -96,11 +78,9 @@
             const reader = new FileReader();
             reader.onload = function(e) {
                 const preview = document.getElementById('avatar-preview');
-                // Cek apakah preview adalah img atau div (icon)
                 if (preview.tagName === 'IMG') {
                     preview.src = e.target.result;
                 } else {
-                    // Ganti div dengan img saat preview
                     preview.outerHTML = `<img id="avatar-preview"
                         class="rounded-circle object-fit-cover border position-relative"
                         style="width: 100px; height: 100px;"
@@ -112,14 +92,11 @@
         }
     }
 </script>
-
 <style>
     #avatar-preview {
         transition: all 0.3s ease;
     }
-    
     #avatar-preview:hover {
         box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
     }
 </style>
-

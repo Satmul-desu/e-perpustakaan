@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http:
 <head>
     <meta charset="utf-8">
     <title>Laporan Penjualan</title>
@@ -83,7 +83,6 @@
 <body>
     <h1>LAPORAN PENJUALAN</h1>
     <p class="subtitle">Periode: {{ \Carbon\Carbon::parse($dateFrom)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse($dateTo)->format('d/m/Y') }}</p>
-
     <h2>1. RINGKASAN</h2>
     <table class="summary-table">
         <tr>
@@ -107,7 +106,6 @@
             <td>Rp {{ number_format($summary->total_shipping ?? 0, 0, ',', '.') }}</td>
         </tr>
     </table>
-
     <h2>2. PENJUALAN PER KATEGORI</h2>
     <table>
         <thead>
@@ -134,9 +132,7 @@
             @endforelse
         </tbody>
     </table>
-
     <div class="page-break"></div>
-
     <h2>3. DAFTAR PESANAN</h2>
     <table>
         <thead>
@@ -166,11 +162,9 @@
             @endforelse
         </tbody>
     </table>
-
     <div class="footer">
         <p>Dicetak pada: {{ now()->format('d/m/Y H:i') }}</p>
         <p>Toko Online Raihan</p>
     </div>
 </body>
 </html>
-

@@ -1,13 +1,6 @@
-{{-- ================================================
-     FILE: resources/views/admin/categories/create.blade.php
-     FUNGSI: Form tambah kategori baru
-     ================================================ --}}
-
 @extends('layouts.admin')
-
 @section('title', 'Tambah Kategori')
 @section('page-title', 'Tambah Kategori Baru')
-
 @section('content')
 <div class="row justify-content-center">
     <div class="col-lg-8">
@@ -18,7 +11,6 @@
             <div class="card-body">
                 <form action="{{ route('admin.categories.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
-
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="name" class="form-label">Nama Kategori <span class="text-danger">*</span></label>
@@ -32,7 +24,6 @@
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
-
                         <div class="col-md-6 mb-3">
                             <label for="is_active" class="form-label">Status</label>
                             <div class="form-check form-switch">
@@ -48,7 +39,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="mb-3">
                         <label for="description" class="form-label">Deskripsi</label>
                         <textarea class="form-control @error('description') is-invalid @enderror"
@@ -59,7 +49,6 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-
                     <div class="mb-3">
                         <label for="icon" class="form-label">Icon Kategori</label>
                         <select class="form-select @error('icon') is-invalid @enderror" id="icon" name="icon">
@@ -91,7 +80,6 @@
                             Pilih icon yang mewakili kategori produk Anda.
                         </div>
                     </div>
-
                     <div class="d-flex gap-2">
                         <button type="submit" class="btn btn-primary">
                             <i class="bi bi-check-circle me-2"></i>Simpan

@@ -1,12 +1,8 @@
-{{-- resources/views/admin/categories/index.blade.php --}}
 @extends('layouts.admin')
-
 @section('title', 'Manajemen Kategori')
-
 @section('content')
 <div class="row">
     <div class="col-lg-8">
-        {{-- Flash Message --}}
         @if(session('success'))
             <div class="alert alert-success alert-dismissible fade show">
                 {{ session('success') }}
@@ -19,7 +15,6 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         @endif
-
         <div class="card shadow-sm mb-4">
             <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
                 <h5 class="mb-0 text-primary fw-bold">Daftar Kategori</h5>
@@ -82,8 +77,6 @@
                                         </form>
                                     </td>
                                 </tr>
-
-                                {{-- EDIT MODAL per Loop Item --}}
                                 <div class="modal fade" id="editModal{{ $category->id }}" tabindex="-1">
                                     <div class="modal-dialog">
                                         <form class="modal-content" action="{{ route('admin.categories.update', $category) }}" method="POST" enctype="multipart/form-data">
@@ -130,8 +123,6 @@
         </div>
     </div>
 </div>
-
-{{-- CREATE MODAL --}}
 <div class="modal fade" id="createModal" tabindex="-1">
     <div class="modal-dialog">
         <form class="modal-content" action="{{ route('admin.categories.store') }}" method="POST" enctype="multipart/form-data">

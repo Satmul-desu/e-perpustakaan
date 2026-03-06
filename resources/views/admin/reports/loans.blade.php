@@ -1,10 +1,7 @@
 @extends('layouts.admin')
-
 @section('title', 'Laporan Peminjaman')
 @section('page-title', 'Laporan Peminjaman')
-
 @section('content')
-{{-- Header Actions --}}
 <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
         <h4 class="mb-1">Laporan Peminjaman Perpustakaan</h4>
@@ -14,8 +11,6 @@
         <i class="bi bi-download me-2"></i>Export CSV
     </a>
 </div>
-
-{{-- Statistics Cards - Full Width 4 Kolom --}}
 <div class="row g-3 mb-4">
     <div class="col-xl-3 col-md-6">
         <div class="stat-card">
@@ -66,8 +61,6 @@
         </div>
     </div>
 </div>
-
-{{-- Filter Card --}}
 <div class="card mb-4">
     <div class="card-header">
         <i class="bi bi-funnel me-2"></i>Filter Laporan
@@ -101,8 +94,6 @@
         </form>
     </div>
 </div>
-
-{{-- Loans Table --}}
 <div class="card">
     <div class="card-header d-flex justify-content-between align-items-center">
         <span><i class="bi bi-table me-2"></i>Data Peminjaman</span>
@@ -193,4 +184,3 @@
     </div>
 </div>
 @endsection
-

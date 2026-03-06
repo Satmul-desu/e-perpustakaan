@@ -1,10 +1,8 @@
-{{-- resources/views/emails/admin/new-order.blade.php --}}
 @php
 $primaryColor = '#6366f1';
 $dangerColor = '#ef4444';
 $successColor = '#22c55e';
 @endphp
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -17,7 +15,6 @@ $successColor = '#22c55e';
         img { -ms-interpolation-mode: bicubic; border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; }
         table { border-collapse: collapse !important; }
         body { height: 100% !important; margin: 0 !important; padding: 0 !important; width: 100% !important; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        
         @media screen and (max-width: 600px) {
             .email-container { width: 100% !important; }
             .mobile-padding { padding: 20px !important; }
@@ -25,12 +22,9 @@ $successColor = '#22c55e';
     </style>
 </head>
 <body style="margin: 0; padding: 0; background-color: #f4f4f5;">
-    
     <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #f4f4f5;">
         <tr>
             <td align="center" style="padding: 30px 10px;">
-                
-                <!-- Warning Banner -->
                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" style="background-color: #ffffff; border-radius: 12px; overflow: hidden; margin-bottom: 15px;">
                     <tr>
                         <td style="background: linear-gradient(135deg, #ef4444, #dc2626); padding: 20px 40px; text-align: center;">
@@ -43,20 +37,13 @@ $successColor = '#22c55e';
                         </td>
                     </tr>
                 </table>
-
-                <!-- Main Content -->
                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" style="background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
-                    
-                    <!-- Order Info -->
                     <tr>
                         <td style="padding: 30px 40px;">
-                            
                             <p style="color: #334155; font-size: 16px; margin: 0 0 20px 0;">
                                 Halo Admin,<br>
                                 Ada pesanan baru yang sudah dibayar. Segera proses pesanan ini.
                             </p>
-
-                            <!-- Order Summary -->
                             <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #f1f5f9; border-radius: 8px; margin-bottom: 25px;">
                                 <tr>
                                     <td style="padding: 20px;">
@@ -88,12 +75,9 @@ $successColor = '#22c55e';
                                     </td>
                                 </tr>
                             </table>
-
-                            <!-- Order Items -->
                             <h3 style="color: #334155; font-size: 16px; margin: 0 0 15px 0; border-bottom: 2px solid #f1f5f9; padding-bottom: 10px;">
                                 Items
                             </h3>
-                            
                             <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin-bottom: 20px;">
                                 <thead>
                                     <tr style="background-color: #f1f5f9;">
@@ -118,19 +102,14 @@ $successColor = '#22c55e';
                                     @endforeach
                                 </tbody>
                             </table>
-
-                            <!-- Shipping Address -->
                             <h3 style="color: #334155; font-size: 16px; margin: 0 0 15px 0; border-bottom: 2px solid #f1f5f9; padding-bottom: 10px;">
                                 Alamat Pengiriman
                             </h3>
-                            
                             <div style="background-color: #fef3c7; padding: 15px 20px; border-radius: 8px; margin-bottom: 25px; border-left: 4px solid #f59e0b;">
                                 <p style="margin: 0 0 5px 0; color: #92400e; font-weight: 600;">{{ $order->shipping_name }}</p>
                                 <p style="margin: 0 0 5px 0; color: #78350f; font-size: 14px;">{{ $order->shipping_phone }}</p>
                                 <p style="margin: 0; color: #78350f; font-size: 14px; line-height: 1.5;">{{ $order->shipping_address }}</p>
                             </div>
-
-                            <!-- CTA Button -->
                             <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin-bottom: 20px;">
                                 <tr>
                                     <td align="center">
@@ -140,11 +119,8 @@ $successColor = '#22c55e';
                                     </td>
                                 </tr>
                             </table>
-
                         </td>
                     </tr>
-
-                    <!-- Footer -->
                     <tr>
                         <td style="background-color: #1e293b; padding: 20px 40px; text-align: center;">
                             <p style="color: #ffffff; font-size: 14px; font-weight: 600; margin: 0 0 5px 0;">
@@ -155,12 +131,9 @@ $successColor = '#22c55e';
                             </p>
                         </td>
                     </tr>
-
                 </table>
-
             </td>
         </tr>
     </table>
-
 </body>
 </html>

@@ -1,9 +1,7 @@
-{{-- resources/views/emails/orders/paid.blade.php --}}
 @php
 $primaryColor = '#6366f1';
 $secondaryColor = '#f1f5f9';
 @endphp
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -11,14 +9,11 @@ $secondaryColor = '#f1f5f9';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pembayaran Diterima - {{ config('app.name') }}</title>
     <style>
-        /* Reset */
         body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
         table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
         img { -ms-interpolation-mode: bicubic; border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; }
         table { border-collapse: collapse !important; }
         body { height: 100% !important; margin: 0 !important; padding: 0 !important; width: 100% !important; }
-
-        /* Mobile Responsive */
         @media screen and (max-width: 600px) {
             .email-container { width: 100% !important; }
             .mobile-padding { padding: 20px !important; }
@@ -27,21 +22,13 @@ $secondaryColor = '#f1f5f9';
     </style>
 </head>
 <body style="margin: 0; padding: 0; background-color: #f4f4f5; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
-    
-    <!-- Preheader -->
     <div style="display: none; max-height: 0; overflow: hidden;">
         Pembayaran pesanan Anda telah kami terima. Pesanan Anda sedang kami proses.
     </div>
-
-    <!-- Main Container -->
     <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #f4f4f5;">
         <tr>
             <td align="center" style="padding: 30px 10px;">
-                
-                <!-- Email Container -->
                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" class="email-container" width="600" style="background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
-                    
-                    <!-- Header -->
                     <tr>
                         <td style="background: linear-gradient(135deg, {{ $primaryColor }}, #8b5cf6); padding: 30px 40px; text-align: center;">
                             <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 700;">
@@ -52,21 +39,14 @@ $secondaryColor = '#f1f5f9';
                             </p>
                         </td>
                     </tr>
-
-                    <!-- Content -->
                     <tr>
                         <td class="mobile-padding" style="padding: 30px 40px;">
-                            
-                            <!-- Greeting -->
                             <p style="color: #334155; font-size: 16px; margin: 0 0 20px 0;">
                                 Halo <strong>{{ $order->user->name }}</strong>,
                             </p>
-                            
                             <p style="color: #64748b; font-size: 14px; line-height: 1.6; margin: 0 0 25px 0;">
                                 Selamat! Pembayaran untuk pesanan Anda telah kami terima. Pesanan Anda sekarang sedang kami proses dan akan segera dikirim.
                             </p>
-
-                            <!-- Order Summary Card -->
                             <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: {{ $secondaryColor }}; border-radius: 8px; margin-bottom: 25px;">
                                 <tr>
                                     <td style="padding: 20px;">
@@ -91,12 +71,9 @@ $secondaryColor = '#f1f5f9';
                                     </td>
                                 </tr>
                             </table>
-
-                            <!-- Order Items -->
                             <h3 style="color: #334155; font-size: 16px; margin: 0 0 15px 0; border-bottom: 2px solid {{ $secondaryColor }}; padding-bottom: 10px;">
                                 Rincian Pesanan
                             </h3>
-                            
                             <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin-bottom: 20px;">
                                 <thead>
                                     <tr style="background-color: {{ $secondaryColor }};">
@@ -135,19 +112,14 @@ $secondaryColor = '#f1f5f9';
                                     </tr>
                                 </tfoot>
                             </table>
-
-                            <!-- Shipping Address -->
                             <h3 style="color: #334155; font-size: 16px; margin: 0 0 15px 0; border-bottom: 2px solid {{ $secondaryColor }}; padding-bottom: 10px;">
                                 Alamat Pengiriman
                             </h3>
-                            
                             <div style="background-color: {{ $secondaryColor }}; padding: 15px 20px; border-radius: 8px; margin-bottom: 25px;">
                                 <p style="margin: 0 0 5px 0; color: #334155; font-weight: 600;">{{ $order->shipping_name }}</p>
                                 <p style="margin: 0 0 5px 0; color: #64748b; font-size: 14px;">{{ $order->shipping_phone }}</p>
                                 <p style="margin: 0; color: #64748b; font-size: 14px; line-height: 1.5;">{{ $order->shipping_address }}</p>
                             </div>
-
-                            <!-- Status Badge -->
                             <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin-bottom: 25px;">
                                 <tr>
                                     <td align="center">
@@ -157,8 +129,6 @@ $secondaryColor = '#f1f5f9';
                                     </td>
                                 </tr>
                             </table>
-
-                            <!-- CTA Button -->
                             <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin-bottom: 25px;">
                                 <tr>
                                     <td align="center">
@@ -168,15 +138,11 @@ $secondaryColor = '#f1f5f9';
                                     </td>
                                 </tr>
                             </table>
-
                             <p style="color: #64748b; font-size: 14px; line-height: 1.6; margin: 0;">
                                 Anda akan menerima nomor resi pengiriman melalui email terpisah begitu pesanan dikirim.
                             </p>
-
                         </td>
                     </tr>
-
-                    <!-- Footer -->
                     <tr>
                         <td style="background-color: #1e293b; padding: 25px 40px; text-align: center;">
                             <p style="color: #ffffff; font-size: 16px; font-weight: 600; margin: 0 0 10px 0;">
@@ -190,18 +156,12 @@ $secondaryColor = '#f1f5f9';
                             </p>
                         </td>
                     </tr>
-
                 </table>
-                <!-- End Email Container -->
-
-                <!-- Unsub Link -->
                 <p style="color: #94a3b8; font-size: 12px; margin-top: 20px;">
                     Email ini dikirim ke <a href="mailto:{{ $order->user->email }}" style="color: {{ $primaryColor }};">{{ $order->user->email }}</a>
                 </p>
-
             </td>
         </tr>
     </table>
-
 </body>
 </html>

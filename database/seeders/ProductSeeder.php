@@ -1,28 +1,18 @@
 <?php
-
 namespace Database\Seeders;
-
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-
 class ProductSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        // Ambil kategori yang ada
         $categories = Category::all();
-
         if ($categories->isEmpty()) {
             $this->command->warn('Tidak ada kategori ditemukan. Jalankan CategorySeeder terlebih dahulu.');
             return;
         }
-
-        // Mapping genre ke category slug
         $genreToCategory = [
             'romance' => $categories->where('slug', 'romance')->first()?->id ?? $categories->first()->id,
             'drama' => $categories->where('slug', 'drama')->first()?->id ?? $categories->first()->id,
@@ -33,9 +23,7 @@ class ProductSeeder extends Seeder
             'agama' => $categories->where('slug', 'agama')->first()?->id ?? $categories->first()->id,
             'inspiratif' => $categories->where('slug', 'inspiratif')->first()?->id ?? $categories->first()->id,
         ];
-
         $products = [
-            // === ROMANCE ===
             [
                 'category_id' => $genreToCategory['romance'],
                 'name' => 'Twisted Love',
@@ -114,8 +102,6 @@ class ProductSeeder extends Seeder
                 'is_featured' => true,
                 'image' => 'books/book15.jpeg',
             ],
-
-            // === DRAMA ===
             [
                 'category_id' => $genreToCategory['drama'],
                 'name' => 'Bandung After Rain',
@@ -181,8 +167,6 @@ class ProductSeeder extends Seeder
                 'is_featured' => true,
                 'image' => 'books/book11.jpeg',
             ],
-
-            // === FIKSI REMAJA ===
             [
                 'category_id' => $genreToCategory['fiksi-remaja'],
                 'name' => 'they both die at the end',
@@ -209,8 +193,6 @@ class ProductSeeder extends Seeder
                 'is_featured' => true,
                 'image' => 'books/book4.jpeg',
             ],
-
-            // === FANTASI ===
             [
                 'category_id' => $genreToCategory['fantasi'],
                 'name' => 'Bumi',
@@ -289,8 +271,6 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'image' => 'books/book23.jpeg',
             ],
-
-            // === HOROR FANTASI ===
             [
                 'category_id' => $genreToCategory['horor-fantasi'],
                 'name' => 'Night Books',
@@ -304,8 +284,6 @@ class ProductSeeder extends Seeder
                 'is_featured' => true,
                 'image' => 'books/book1.jpeg',
             ],
-
-            // === POLITIK ===
             [
                 'category_id' => $genreToCategory['politik'],
                 'name' => 'Negeri Para Bedebah',
@@ -332,8 +310,6 @@ class ProductSeeder extends Seeder
                 'is_featured' => true,
                 'image' => 'books/book9.jpeg',
             ],
-
-            // === AGAMA ===
             [
                 'category_id' => $genreToCategory['agama'],
                 'name' => 'Kau, Aku dan Sepucuk Angpau Merah',
@@ -347,8 +323,6 @@ class ProductSeeder extends Seeder
                 'is_featured' => true,
                 'image' => 'books/book8.jpeg',
             ],
-
-            // === INSPIRATIF ===
             [
                 'category_id' => $genreToCategory['inspiratif'],
                 'name' => 'Ranah 3 Warna',
@@ -375,7 +349,6 @@ class ProductSeeder extends Seeder
                 'is_featured' => true,
                 'image' => 'books/book22.jpeg',
             ],
-            // New books from book26 to book50
             [
                 'category_id' => $genreToCategory['romance'],
                 'name' => 'Binding',
@@ -702,18 +675,13 @@ class ProductSeeder extends Seeder
                 'image' => 'books/book50.jpg',
             ],
         ];
-
         foreach ($products as $productData) {
-            // Extract image path before creating product
             $imagePath = $productData['image'] ?? 'products/placeholder.jpg';
             unset($productData['image']);
-            
             $product = Product::updateOrCreate(
                 ['slug' => $productData['slug']],
                 $productData
             );
-
-            // Update gambar produk
             \App\Models\ProductImage::updateOrCreate(
                 ['product_id' => $product->id, 'is_primary' => true],
                 [
@@ -722,7 +690,6 @@ class ProductSeeder extends Seeder
                 ]
             );
         }
-
         $this->command->info('Berhasil membuat ' . count($products) . ' produk buku dengan gambar yang benar.');
     }
 }

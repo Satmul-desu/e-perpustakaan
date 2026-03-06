@@ -1,6 +1,4 @@
-{{-- components/order-status-badge.blade.php --}}
 @props(['status'])
-
 @php
 $colors = [
     'pending' => 'bg-warning text-dark',
@@ -14,8 +12,6 @@ $colors = [
 ];
 $colorClass = $colors[$status] ?? 'bg-secondary';
 @endphp
-
 <span class="badge {{ $colorClass }}">
     {{ ucfirst($status) }}
 </span>
-

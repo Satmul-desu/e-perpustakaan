@@ -1,17 +1,7 @@
-{{-- ================================================
-     FILE: resources/views/admin/reports/sales.blade.php
-     FUNGSI: Laporan penjualan dengan filter, charts, dan analisis lengkap
-     ================================================ --}}
-
 @extends('layouts.admin')
-
 @section('title', 'Laporan Penjualan')
 @section('page-title', 'Laporan Penjualan')
-
 @section('content')
-{{-- ================================================
-     1. FILTER SECTION
-     ================================================ --}}
 <div class="card mb-4">
     <div class="card-header">
         <i class="bi bi-funnel me-2"></i>Filter Laporan
@@ -49,8 +39,6 @@
                 </div>
             </div>
         </form>
-        
-        {{-- Quick Date Filters --}}
         <div class="mt-3">
             <span class="text-muted me-2">Filter Cepat:</span>
             <div class="btn-group btn-group-sm">
@@ -78,10 +66,6 @@
         </div>
     </div>
 </div>
-
-{{-- ================================================
-     2. SUMMARY STATISTICS CARDS
-     ================================================ --}}
 <div class="row g-4 mb-4">
     <div class="col-md-3">
         <div class="stat-card">
@@ -95,7 +79,6 @@
             </div>
         </div>
     </div>
-    
     <div class="col-md-3">
         <div class="stat-card">
             <div class="stat-icon primary">
@@ -108,7 +91,6 @@
             </div>
         </div>
     </div>
-    
     <div class="col-md-3">
         <div class="stat-card">
             <div class="stat-icon info">
@@ -121,7 +103,6 @@
             </div>
         </div>
     </div>
-    
     <div class="col-md-3">
         <div class="stat-card">
             <div class="stat-icon warning">
@@ -135,12 +116,7 @@
         </div>
     </div>
 </div>
-
-{{-- ================================================
-     3. CHARTS SECTION
-     ================================================ --}}
 <div class="row g-4 mb-4">
-    {{-- Daily Trend Chart --}}
     <div class="col-lg-8">
         <div class="card h-100">
             <div class="card-header">
@@ -151,8 +127,6 @@
             </div>
         </div>
     </div>
-    
-    {{-- Category Distribution --}}
     <div class="col-lg-4">
         <div class="card h-100">
             <div class="card-header">
@@ -171,10 +145,6 @@
         </div>
     </div>
 </div>
-
-{{-- ================================================
-     4. CATEGORY ANALYSIS TABLE
-     ================================================ --}}
 <div class="row g-4 mb-4">
     <div class="col-lg-6">
         <div class="card">
@@ -224,8 +194,6 @@
             </div>
         </div>
     </div>
-    
-    {{-- Top Products --}}
     <div class="col-lg-6">
         <div class="card">
             <div class="card-header">
@@ -267,28 +235,14 @@
         </div>
     </div>
 </div>
-
-{{-- ================================================
-     5. DETAILED ORDERS TABLE
-     ================================================ --}}
 <div class="card">
     <div class="card-header d-flex justify-content-between align-items-center">
         <span><i class="bi bi-table me-2"></i>Detail Pesanan</span>
         <div class="d-flex gap-2">
-            {{-- Export Word --}}
             <a href="{{ route('admin.reports.export-word', ['date_from' => $dateFrom, 'date_to' => $dateTo]) }}" 
                class="btn btn-primary btn-sm">
                 <i class="bi bi-file-earmark-word me-1"></i> Export Word
             </a>
-            
-            {{-- Export Excel button disabled - maatwebsite/excel not installed --}}
-            {{--
-            <a href="{{ route('admin.reports.export-sales', ['date_from' => $dateFrom, 'date_to' => $dateTo]) }}" 
-               class="btn btn-success btn-sm">
-                <i class="bi bi-download me-1"></i> Export Excel
-            </a>
-            --}}
-            {{-- Temporarily disabled until package installed --}}
             @if(false)
             <a href="{{ route('admin.reports.export-sales', ['date_from' => $dateFrom, 'date_to' => $dateTo]) }}" 
                class="btn btn-success btn-sm">
@@ -352,8 +306,6 @@
             </table>
         </div>
     </div>
-    
-    {{-- Pagination --}}
     @if($orders->hasPages())
         <div class="card-footer d-flex justify-content-center">
             {{ $orders->appends(request()->query())->links() }}
@@ -361,7 +313,6 @@
     @endif
 </div>
 @endsection
-
 @push('styles')
 <style>
 .category-dot {
@@ -370,7 +321,6 @@
     border-radius: 50%;
     flex-shrink: 0;
 }
-
 .user-avatar-sm {
     width: 32px;
     height: 32px;
@@ -385,19 +335,14 @@
 }
 </style>
 @endpush
-
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Shared Chart Options
     Chart.defaults.color = '#94a3b8';
     Chart.defaults.borderColor = '#334155';
-    
     const dailyData = @json($dailyTrend);
     const categoryData = @json($byCategory);
-    
-    // Daily Trend Chart
     const dailyCtx = document.getElementById('dailyTrendChart').getContext('2d');
     new Chart(dailyCtx, {
         type: 'bar',
@@ -481,14 +426,11 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
-    
-    // Category Doughnut Chart
     @if($byCategory->count() > 0)
     const categoryCtx = document.getElementById('categoryChart').getContext('2d');
     const categoryColors = [
         '#6366f1', '#22c55e', '#f59e0b', '#ef4444', '#06b6d4', '#8b5cf6', '#ec4899', '#14b8a6'
     ];
-    
     new Chart(categoryCtx, {
         type: 'doughnut',
         data: {

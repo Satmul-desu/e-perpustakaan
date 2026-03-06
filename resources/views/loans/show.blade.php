@@ -1,10 +1,7 @@
 @extends('layouts.app')
-
 @section('title', 'Detail Peminjaman')
-
 @section('content')
 <div class="container-fluid py-4 px-4">
-    {{-- Header --}}
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="text-white mb-0">
             <i class="bi bi-book me-2"></i>Detail Peminjaman
@@ -13,9 +10,7 @@
             <i class="bi bi-arrow-left me-1"></i>Kembali
         </a>
     </div>
-
     <div class="row g-4">
-        {{-- Main Content - Book Info --}}
         <div class="col-lg-8">
             <div class="card mb-4" style="background: rgba(30, 41, 59, 0.95); border: 1px solid #334155; border-radius: 16px;">
                 <div class="card-header" style="background: rgba(15, 23, 42, 0.5); border-bottom: 1px solid #334155; border-radius: 16px 16px 0 0;">
@@ -40,8 +35,6 @@
                     </div>
                 </div>
             </div>
-
-            {{-- Timeline --}}
             <div class="card" style="background: rgba(30, 41, 59, 0.95); border: 1px solid #334155; border-radius: 16px;">
                 <div class="card-header" style="background: rgba(15, 23, 42, 0.5); border-bottom: 1px solid #334155; border-radius: 16px 16px 0 0;">
                     <h5 class="mb-0 text-white"><i class="bi bi-clock-history me-2"></i>Riwayat Peminjaman</h5>
@@ -61,7 +54,6 @@
                                 </div>
                             </div>
                         </div>
-                        
                         @if($loan->status != 'pending' && $loan->status != 'cancelled')
                         <div class="timeline-item mb-4">
                             <div class="d-flex align-items-start">
@@ -77,7 +69,6 @@
                             </div>
                         </div>
                         @endif
-                        
                         @if($loan->status == 'borrowed' || $loan->status == 'returned' || $loan->status == 'overdue')
                         <div class="timeline-item mb-4">
                             <div class="d-flex align-items-start">
@@ -93,7 +84,6 @@
                             </div>
                         </div>
                         @endif
-                        
                         @if($loan->status == 'returned')
                         <div class="timeline-item">
                             <div class="d-flex align-items-start">
@@ -113,8 +103,6 @@
                 </div>
             </div>
         </div>
-
-        {{-- Sidebar - Status & Actions --}}
         <div class="col-lg-4">
             <div class="card mb-4" style="background: rgba(30, 41, 59, 0.95); border: 1px solid #334155; border-radius: 16px;">
                 <div class="card-header" style="background: rgba(15, 23, 42, 0.5); border-bottom: 1px solid #334155; border-radius: 16px 16px 0 0;">
@@ -147,13 +135,11 @@
                             'cancelled' => 'Dibatalkan'
                         ];
                     @endphp
-                    
                     <div class="text-center mb-4">
                         <span class="badge d-inline-flex px-4 py-3" style="{{ $statusBgColors[$loan->status] ?? 'background: rgba(107, 114, 128, 0.2); border: 1px solid #6b7280; color: #9ca3af !important;' }}; font-size: 1rem; border-radius: 10px;">
                             {{ $statusText[$loan->status] ?? ucfirst($loan->status) }}
                         </span>
                     </div>
-
                     <div class="table-responsive">
                         <table class="table table-borderless" style="color: #94a3b8;">
                             <tr>
@@ -187,20 +173,16 @@
                             </tr>
                         </table>
                     </div>
-
                     @if($loan->notes)
                         <div class="alert mb-3" style="background: rgba(59, 130, 246, 0.1); border: 1px solid #3b82f6; border-radius: 10px;">
                             <small><strong><i class="bi bi-chat-left-text me-1"></i>Catatan:</strong> {{ $loan->notes }}</small>
                         </div>
                     @endif
-
                     @if($loan->admin_notes)
                         <div class="alert mb-3" style="background: rgba(245, 158, 11, 0.1); border: 1px solid #f59e0b; border-radius: 10px;">
                             <small><strong><i class="bi bi-shield-check me-1"></i>Catatan Admin:</strong> {{ $loan->admin_notes }}</small>
                         </div>
                     @endif
-
-                    {{-- Action Buttons --}}
                     @if(in_array($loan->status, ['pending', 'approved']))
                         <form method="POST" action="{{ route('loans.cancel', $loan) }}" class="d-grid gap-2 mt-4">
                             @csrf
@@ -210,7 +192,6 @@
                             </button>
                         </form>
                     @endif
-
                     @if($loan->status == 'borrowed')
                         <form method="POST" action="{{ route('loans.process-return', $loan) }}" class="d-grid gap-2 mt-4">
                             @csrf
@@ -225,13 +206,11 @@
         </div>
     </div>
 </div>
-
 <style>
     .timeline {
         position: relative;
         padding-left: 1rem;
     }
-    
     .timeline::before {
         content: '';
         position: absolute;
@@ -241,43 +220,34 @@
         width: 2px;
         background: linear-gradient(to bottom, #334155, transparent);
     }
-    
     .timeline-item:last-child::before {
         display: none;
     }
-    
     .btn-primary {
         background: linear-gradient(135deg, #6366f1, #4f46e5);
         border: none;
     }
-    
     .btn-primary:hover {
         background: linear-gradient(135deg, #4f46e5, #4338ca);
     }
-    
     .btn-success {
         background: linear-gradient(135deg, #22c55e, #16a34a);
         border: none;
     }
-    
     .btn-success:hover {
         background: linear-gradient(135deg, #16a34a, #15803d);
     }
-    
     .btn-outline-danger {
         border-color: #ef4444;
         color: #ef4444;
     }
-    
     .btn-outline-danger:hover {
         background: #ef4444;
         border-color: #ef4444;
     }
-    
     .btn-lg {
         padding: 0.75rem 1.5rem;
         font-weight: 600;
     }
 </style>
 @endsection
-

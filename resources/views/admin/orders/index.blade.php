@@ -1,20 +1,12 @@
-{{-- ================================================
-     FILE: resources/views/admin/orders/index.blade.php
-     FUNGSI: Menampilkan daftar pesanan untuk admin
-     ================================================ --}}
-
 @extends('layouts.admin')
-
 @section('title', 'Kelola Pesanan')
 @section('page-title', 'Daftar Pesanan')
-
 @section('content')
 <div class="card border-0 shadow-sm">
     <div class="card-header bg-black">
         <h6 class="mb-0">Kelola Pesanan Pelanggan</h6>
     </div>
     <div class="card-body">
-        {{-- Filter & Search --}}
         <div class="row mb-3">
             <div class="col-md-4">
                 <form method="GET" class="d-flex">
@@ -37,8 +29,6 @@
                 </form>
             </div>
         </div>
-
-        {{-- Tabel Pesanan --}}
         <div class="table-responsive">
             <table class="table table-hover">
                 <thead class="table-light">
@@ -100,8 +90,6 @@
                 </tbody>
             </table>
         </div>
-
-        {{-- Pagination --}}
         @if(isset($orders) && $orders->hasPages())
             <div class="d-flex justify-content-center mt-4">
                 {{ $orders->links() }}
@@ -110,7 +98,6 @@
     </div>
 </div>
 @endsection
-
 @push('scripts')
 <script>
 function updateStatus(orderId, status) {

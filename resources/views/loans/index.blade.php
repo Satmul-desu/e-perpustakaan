@@ -1,17 +1,12 @@
 @extends('layouts.app')
-
 @section('title', 'Peminjaman Saya')
-
 @section('content')
 <div class="container-fluid py-4 px-4">
-    {{-- Header Section --}}
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="text-white mb-0">
             <i class="bi bi-book me-2"></i>Peminjaman Saya
         </h2>
     </div>
-
-    {{-- Stats Cards --}}
     <div class="row g-3 mb-4">
         <div class="col-md-3">
             <div class="card stat-card h-100" style="background: linear-gradient(135deg, #f59e0b, #d97706); border: none;">
@@ -66,8 +61,6 @@
             </div>
         </div>
     </div>
-
-    {{-- Filter --}}
     <div class="card mb-4" style="background: rgba(30, 41, 59, 0.95); border: 1px solid #334155; border-radius: 16px;">
         <div class="card-body py-3">
             <form method="GET" class="row g-3 align-items-center">
@@ -91,9 +84,7 @@
             </form>
         </div>
     </div>
-
     @if($loans->count() > 0)
-        {{-- Loans Table --}}
         <div class="card" style="background: rgba(30, 41, 59, 0.95); border: 1px solid #334155; border-radius: 16px;">
             <div class="card-body p-0">
                 <div class="table-responsive">
@@ -184,8 +175,6 @@
                 </div>
             </div>
         </div>
-        
-        {{-- Pagination --}}
         <div class="d-flex justify-content-center mt-4">
             {{ $loans->links() }}
         </div>
@@ -200,64 +189,51 @@
         </div>
     @endif
 </div>
-
 <style>
     .stat-card {
         border: none;
         border-radius: 16px;
     }
-    
     .stat-card .card-body {
         padding: 1.5rem;
     }
-    
     .stat-icon {
         font-size: 2.5rem;
         opacity: 0.3;
     }
-    
     .table tbody tr:hover {
         background: rgba(99, 102, 241, 0.1) !important;
     }
-    
     .form-select option {
         background: #1e293b;
         color: white;
     }
-    
     .btn-primary {
         background: linear-gradient(135deg, #6366f1, #4f46e5);
         border: none;
     }
-    
     .btn-primary:hover {
         background: linear-gradient(135deg, #4f46e5, #4338ca);
     }
-    
     .btn-outline-primary {
         border-color: #6366f1;
         color: #6366f1;
     }
-    
     .btn-outline-primary:hover {
         background: #6366f1;
         border-color: #6366f1;
     }
-    
     .btn-success {
         background: linear-gradient(135deg, #22c55e, #16a34a);
         border: none;
     }
-    
     .btn-outline-danger {
         border-color: #ef4444;
         color: #ef4444;
     }
-    
     .btn-outline-danger:hover {
         background: #ef4444;
         border-color: #ef4444;
     }
 </style>
 @endsection
-

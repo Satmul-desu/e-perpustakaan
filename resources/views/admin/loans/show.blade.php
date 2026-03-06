@@ -1,7 +1,5 @@
 @extends('layouts.app')
-
 @section('title', 'Detail Peminjaman')
-
 @section('content')
 <div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -12,10 +10,8 @@
             <i class="bi bi-arrow-left me-1"></i>Kembali
         </a>
     </div>
-
     <div class="row">
         <div class="col-md-8">
-            {{-- Book Info --}}
             <div class="card mb-4" style="background: rgba(30, 41, 59, 0.95); border: 1px solid #334155;">
                 <div class="card-header" style="background: rgba(15, 23, 42, 0.5); border-bottom: 1px solid #334155;">
                     <h5 class="mb-0 text-white">Informasi Buku</h5>
@@ -37,8 +33,6 @@
                             </p>
                         </div>
                 </div>
-
-            {{-- User Info --}}
             <div class="card mb-4" style="background: rgba(30, 41, 59, 0.95); border: 1px solid #334155;">
                 <div class="card-header" style="background: rgba(15, 23, 42, 0.5); border-bottom: 1px solid #334155;">
                     <h5 class="mb-0 text-white">Informasi Peminjam</h5>
@@ -55,8 +49,6 @@
                             <p class="text-secondary mb-0">{{ $loan->user->email }}</p>
                         </div>
                 </div>
-
-            {{-- Notes --}}
             @if($loan->notes || $loan->admin_notes)
             <div class="card" style="background: rgba(30, 41, 59, 0.95); border: 1px solid #334155;">
                 <div class="card-header" style="background: rgba(15, 23, 42, 0.5); border-bottom: 1px solid #334155;">
@@ -78,9 +70,7 @@
                 </div>
             @endif
         </div>
-
         <div class="col-md-4">
-            {{-- Status Card --}}
             <div class="card mb-4" style="background: rgba(30, 41, 59, 0.95); border: 1px solid #334155;">
                 <div class="card-header" style="background: rgba(15, 23, 42, 0.5); border-bottom: 1px solid #334155;">
                     <h5 class="mb-0 text-white">Status</h5>
@@ -104,13 +94,11 @@
                             'cancelled' => 'Dibatalkan'
                         ];
                     @endphp
-                    
                     <div class="text-center mb-3">
                         <span class="badge bg-{{ $statusColors[$loan->status] ?? 'secondary' }} p-3" style="font-size: 1rem;">
                             {{ $statusText[$loan->status] ?? ucfirst($loan->status) }}
                         </span>
                     </div>
-
                     <table class="table table-borderless" style="color: #94a3b8;">
                         <tr>
                             <td>Tgl Pinjam</td>
@@ -139,10 +127,6 @@
                             </td>
                         </tr>
                     </table>
-
-                    {{-- Action Buttons based on status --}}
-                    
-                    {{-- Pending: Approve or Reject --}}
                     @if($loan->status == 'pending')
                         <div class="alert alert-info mb-3">
                             <i class="bi bi-info-circle me-1"></i>
@@ -154,13 +138,10 @@
                                 <i class="bi bi-check me-1"></i>Setuju & Berikan Buku (45 Jam)
                             </button>
                         </form>
-                        
                         <button type="button" class="btn btn-danger w-100" data-bs-toggle="modal" data-bs-target="#rejectModal">
                             <i class="bi bi-x me-1"></i>Tolak Peminjaman
                         </button>
                     @endif
-
-                    {{-- Approved (Legacy - untuk peminjaman lama): Mark as Borrowed --}}
                     @if($loan->status == 'approved')
                         <div class="alert alert-warning mb-3">
                             <i class="bi bi-exclamation-triangle me-1"></i>
@@ -172,7 +153,6 @@
                                 <i class="bi bi-book me-1"></i>Berikan Buku ke Peminjam
                             </button>
                         </form>
-                        
                         <form method="POST" action="{{ route('admin.loans.reject', $loan) }}" class="d-grid">
                             @csrf
                             <input type="hidden" name="reason" value="Dibatalkan oleh admin">
@@ -181,8 +161,6 @@
                             </button>
                         </form>
                     @endif
-
-                    {{-- Borrowed: Process Return --}}
                     @if($loan->status == 'borrowed')
                         <form method="POST" action="{{ route('admin.loans.process-return', $loan) }}" class="d-grid mb-2">
                             @csrf
@@ -190,7 +168,6 @@
                                 <i class="bi bi-check2-circle me-1"></i>Terima Pengembalian Buku
                             </button>
                         </form>
-                        
                         <button type="button" class="btn btn-warning w-100" data-bs-toggle="modal" data-bs-target="#extendModal">
                             <i class="bi bi-clock me-1"></i>Perpanjang Durasi
                         </button>
@@ -198,8 +175,6 @@
                 </div>
         </div>
 </div>
-
-{{-- Reject Modal --}}
 <div class="modal fade" id="rejectModal" tabindex="-1" style="display: none;">
     <div class="modal-dialog">
         <div class="modal-content" style="background: #1e293b; color: white;">
@@ -222,8 +197,6 @@
             </form>
         </div>
 </div>
-
-{{-- Extend Modal --}}
 <div class="modal fade" id="extendModal" tabindex="-1" style="display: none;">
     <div class="modal-dialog">
         <div class="modal-content" style="background: #1e293b; color: white;">
@@ -256,7 +229,6 @@
             </form>
         </div>
 </div>
-
 <style>
     .avatar-lg {
         width: 60px;
@@ -265,7 +237,6 @@
         align-items: center;
         justify-content: center;
     }
-    
     .avatar-title {
         font-weight: 600;
     }

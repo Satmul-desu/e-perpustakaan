@@ -8,7 +8,7 @@
             <div class="col-lg-3 d-none d-lg-block">
                 <div class="filter-sidebar card border-0" style="background: rgba(30, 41, 59, 0.95); border: 1px solid #334155 !important; position: sticky; top: 80px;">
                     <div class="card-header bg-transparent border-bottom border-secondary fw-bold py-3">
-                        <i class="bi bi-funnel me-2" ></i>Filter Produk
+                        <i class="bi bi-funnel me-2 text-white" ></i><h6 class="text-white">Filter Buku</h6>
                     </div>
                     <div class="card-body">
                         <form action="{{ route('catalog.index') }}" method="GET" id="filter-form">
@@ -70,26 +70,7 @@
 
                             <hr class="border-secondary">
 
-                            {{-- Price Filter --}}
-                            <div class="filter-group mb-4">
-                                <h6 class="fw-bold mb-3 text-white d-flex align-items-center">
-                                    <i class="bi bi-currency-dollar me-2" style="color: #60a5fa;"></i>
-                                    Rentang Harga
-                                </h6>
-                                <div class="price-inputs d-flex gap-2 align-items-center">
-                                    <div class="input-group input-group-sm">
-                                        <span class="input-group-text bg-dark border-secondary text-secondary">Rp</span>
-                                        <input type="number" name="min_price" class="form-control" 
-                                            placeholder="Min" value="{{ request('min_price') }}">
-                                    </div>
-                                    <span class="text-secondary">-</span>
-                                    <div class="input-group input-group-sm">
-                                        <span class="input-group-text bg-dark border-secondary text-secondary">Rp</span>
-                                        <input type="number" name="max_price" class="form-control" 
-                                            placeholder="Max" value="{{ request('max_price') }}">
-                                    </div>
-                                </div>
-                            </div>
+                           
 
                             <div class="filter-actions">
                                 <button type="submit" class="btn btn-custom w-100 mb-2">
@@ -603,4 +584,3 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 </style>
 @endsection
-

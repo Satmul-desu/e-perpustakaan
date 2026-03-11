@@ -1,8 +1,10 @@
 <?php
+
 use Monolog\Handler\NullHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\SyslogUdpHandler;
 use Monolog\Processor\PsrLogMessageProcessor;
+
 return [
     'default' => env('LOG_CHANNEL', 'stack'),
     'deprecations' => [
@@ -43,7 +45,7 @@ return [
             'handler_with' => [
                 'host' => env('PAPERTRAIL_URL'),
                 'port' => env('PAPERTRAIL_PORT'),
-                'connectionString' => 'tls://' . env('PAPERTRAIL_URL'),
+                'connectionString' => 'tls://'.env('PAPERTRAIL_URL'),
             ],
             'processors' => [PsrLogMessageProcessor::class],
         ],

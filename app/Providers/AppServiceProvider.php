@@ -1,14 +1,15 @@
 <?php
+
 namespace App\Providers;
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Route;
+
 use App\Models\Product;
-use App\Observers\ProductObserver;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\ServiceProvider;
+
 class AppServiceProvider extends ServiceProvider
 {
-    public function register(): void
-    {
-    }
+    public function register(): void {}
+
     public function boot(): void
     {
         Route::model('product', Product::class);

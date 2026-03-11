@@ -1,17 +1,19 @@
 <?php
+
 require 'vendor/autoload.php';
 $app = require 'bootstrap/app.php';
 $kernel = $app->make(Illuminate\Contracts\Console\Kernel::class);
 $kernel->bootstrap();
-use App\Models\Product;
 use App\Models\OrderItem;
+use App\Models\Product;
+
 $productsToDelete = [
     'Kisah Teladan Anak',
     'Laskar Pelangi',
     'The Hobbit',
     'Sang Penulis',
     'Sherlock Holmes',
-    'Naruto Volume 1'
+    'Naruto Volume 1',
 ];
 echo "=== MENGHAPUS PRODUK LAMA ===\n\n";
 foreach ($productsToDelete as $name) {

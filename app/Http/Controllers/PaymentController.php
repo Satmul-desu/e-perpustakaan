@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Http\Controllers;
+
 use App\Events\OrderPaidEvent;
 use App\Models\Order;
 use App\Models\Payment;
@@ -8,6 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
+
 class PaymentController extends Controller
 {
     public function getSnapToken(string $orderNumber, MidtransService $midtrans): JsonResponse
@@ -23,18 +26,24 @@ class PaymentController extends Controller
         }
         $snapToken = $midtrans->createSnapToken($order);
         $order->update(['snap_token' => $snapToken]);
+
         return response()->json(['token' => $snapToken]);
     }
+
     public function success(Order $order): View
     {
         $this->updatePaymentStatus($order, 'success');
+
         return view('orders.success', compact('order'));
     }
+
     public function pending(Order $order): View
     {
         $this->updatePaymentStatus($order, 'pending');
+
         return view('orders.pending', compact('order'));
     }
+
     public function result(Order $order, string $status = 'unknown'): View
     {
         if ($status === 'success') {
@@ -44,8 +53,10 @@ class PaymentController extends Controller
         } elseif ($status === 'failed') {
             $this->updatePaymentStatus($order, 'failed');
         }
+
         return view('orders.result', compact('order', 'status'));
     }
+
     protected function updatePaymentStatus(Order $order, string $paymentStatus): void
     {
         if ($order->payment_status === 'paid' && $paymentStatus !== 'failed') {
@@ -89,11 +100,13 @@ class PaymentController extends Controller
             }
         }
     }
+
     public function checkStatus(Request $request, Order $order)
     {
         if ($order->user_id !== auth()->id()) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
+
         return response()->json([
             'order_id' => $order->id,
             'order_number' => $order->order_number,

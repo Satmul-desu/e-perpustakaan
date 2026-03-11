@@ -1,11 +1,16 @@
 <?php
+
 namespace App\Console\Commands;
+
 use App\Models\Product;
 use Illuminate\Console\Command;
+
 class DeleteProductsWithoutImages extends Command
 {
     protected $signature = 'products:delete-without-images';
+
     protected $description = 'Hapus produk yang tidak memiliki gambar';
+
     public function handle(): int
     {
         $productsWithoutImages = Product::whereDoesntHave('images', function ($query) {
@@ -13,6 +18,7 @@ class DeleteProductsWithoutImages extends Command
         })->get();
         if ($productsWithoutImages->isEmpty()) {
             $this->info('Tidak ada produk tanpa gambar.');
+
             return Command::SUCCESS;
         }
         $this->warn('Produk yang akan dihapus (tanpa gambar):');
@@ -25,9 +31,11 @@ class DeleteProductsWithoutImages extends Command
                 $query->where('is_primary', true);
             })->delete();
             $this->info("Berhasil menghapus {$deleted} produk tanpa gambar.");
+
             return Command::SUCCESS;
         }
         $this->info('Operasi dibatalkan.');
+
         return Command::SUCCESS;
     }
 }

@@ -1,10 +1,12 @@
 <?php
+
 namespace App\Http\Controllers;
+
 use App\Models\Loan;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
+
 class LoanController extends Controller
 {
     public function index(Request $request)
@@ -21,14 +23,18 @@ class LoanController extends Controller
             'returned' => $user->loans()->where('status', Loan::STATUS_RETURNED)->count(),
             'overdue' => $user->loans()->overdue()->count(),
         ];
+
         return view('loans.index', compact('loans', 'stats'));
     }
-       public function show(Loan $loan)
+
+    public function show(Loan $loan)
     {
         $this->authorizeLoanAccess($loan);
         $loan->load('book.category', 'approver', 'returnHandler');
+
         return view('loans.show', compact('loan'));
     }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -43,14 +49,14 @@ class LoanController extends Controller
             ->whereIn('status', [
                 Loan::STATUS_PENDING,
                 Loan::STATUS_APPROVED,
-                Loan::STATUS_BORROWED
+                Loan::STATUS_BORROWED,
             ])
             ->first();
         if ($existingLoan) {
             return redirect()->back()
                 ->with('error', 'Anda sudah memiliki peminjaman aktif untuk buku ini.');
         }
-        if (!$user->canBorrowBooks()) {
+        if (! $user->canBorrowBooks()) {
             return redirect()->back()
                 ->with('error', 'Anda sudah mencapai batas maksimal peminjaman buku.');
         }
@@ -68,21 +74,25 @@ class LoanController extends Controller
             'notes' => $request->notes,
         ]);
         $book->decrementStock(1);
+
         return redirect()->route('loans.show', $loan)
             ->with('success', 'Permintaan peminjaman berhasil! Menunggu persetujuan admin.');
     }
+
     public function cancel(Request $request, Loan $loan)
     {
         $this->authorizeLoanAccess($loan);
-        if (!in_array($loan->status, [Loan::STATUS_PENDING, Loan::STATUS_APPROVED])) {
+        if (! in_array($loan->status, [Loan::STATUS_PENDING, Loan::STATUS_APPROVED])) {
             return redirect()->back()
                 ->with('error', 'Peminjaman tidak dapat dibatalkan.');
         }
         $loan->cancel($request->reason ?? 'Dibatalkan oleh peminjam');
         $loan->book->incrementStock(1);
+
         return redirect()->route('loans.index')
             ->with('success', 'Peminjaman berhasil dibatalkan.');
     }
+
     public function requestReturn(Loan $loan)
     {
         $this->authorizeLoanAccess($loan);
@@ -90,8 +100,10 @@ class LoanController extends Controller
             return redirect()->back()
                 ->with('error', 'Buku ini tidak dalam status dipinjam.');
         }
+
         return view('loans.return', compact('loan'));
     }
+
     public function processReturn(Request $request, Loan $loan)
     {
         $this->authorizeLoanAccess($loan);
@@ -100,14 +112,16 @@ class LoanController extends Controller
                 ->with('error', 'Buku ini tidak dalam status dipinjam.');
         }
         $loan->update([
-            'notes' => ($loan->notes ?? '') . "\n" . 'Peminjam mengajukan pengembalian: ' . now()->format('Y-m-d H:i'),
+            'notes' => ($loan->notes ?? '')."\n".'Peminjam mengajukan pengembalian: '.now()->format('Y-m-d H:i'),
         ]);
+
         return redirect()->route('loans.index')
             ->with('success', 'Pengajuan pengembalian buku berhasil! Harap serahkan buku ke perpustakaan.');
     }
+
     private function authorizeLoanAccess(Loan $loan)
     {
-        if (Auth::user()->id !== $loan->user_id && !Auth::user()->isAdmin()) {
+        if (Auth::user()->id !== $loan->user_id && ! Auth::user()->isAdmin()) {
             abort(403, 'Unauthorized access to this loan.');
         }
     }

@@ -121,7 +121,7 @@ class ReportController extends Controller
         ];
         return view('admin.reports.loans', compact('loans', 'stats'));
     }
-    public function exportLoans(Request $request)
+    public function exportLoansExcel(Request $request)
     {
         $query = Loan::with(['user', 'book']);
         if ($request->has('date_from') && $request->date_from) {
@@ -131,8 +131,20 @@ class ReportController extends Controller
             $query->whereDate('loan_date', '<=', $request->date_to);
         }
         $loans = $query->get();
-        $csvData = [];
-        $csvData[] = ['No', 'Peminjam', 'Email', 'Buku', 'Kategori', 'Tgl Pinjam', 'Jatuh Tempo', 'Tgl Kembali', 'Status', 'Durasi (hari)'];
+
+        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setCellValue('A1', 'No')
+              ->setCellValue('B1', 'Peminjam')
+              ->setCellValue('C1', 'Email')
+              ->setCellValue('D1', 'Buku')
+              ->setCellValue('E1', 'Kategori')
+              ->setCellValue('F1', 'Tgl Pinjam')
+              ->setCellValue('G1', 'Jatuh Tempo')
+              ->setCellValue('H1', 'Tgl Kembali')
+              ->setCellValue('I1', 'Status')
+              ->setCellValue('J1', 'Durasi (hari)');
+              
         $statusText = [
             'pending' => 'Menunggu',
             'approved' => 'Disetujui',
@@ -141,30 +153,93 @@ class ReportController extends Controller
             'overdue' => 'Terlambat',
             'cancelled' => 'Dibatalkan'
         ];
+
+        $row = 2;
         foreach ($loans as $index => $loan) {
-            $csvData[] = [
-                $index + 1,
-                $loan->user->name,
-                $loan->user->email,
-                $loan->book->name,
-                $loan->book->category->name ?? '-',
-                $loan->loan_date->format('Y-m-d'),
-                $loan->due_date->format('Y-m-d'),
-                $loan->return_date ? $loan->return_date->format('Y-m-d') : '-',
-                $statusText[$loan->status] ?? $loan->status,
-                $loan->loan_duration
-            ];
+            $sheet->setCellValue("A{$row}", $index + 1)
+                  ->setCellValue("B{$row}", $loan->user->name ?? '-')
+                  ->setCellValue("C{$row}", $loan->user->email ?? '-')
+                  ->setCellValue("D{$row}", $loan->book->name ?? '-')
+                  ->setCellValue("E{$row}", $loan->book->category->name ?? '-')
+                  ->setCellValue("F{$row}", $loan->loan_date ? $loan->loan_date->format('Y-m-d') : '-')
+                  ->setCellValue("G{$row}", $loan->due_date ? $loan->due_date->format('Y-m-d') : '-')
+                  ->setCellValue("H{$row}", $loan->return_date ? $loan->return_date->format('Y-m-d') : '-')
+                  ->setCellValue("I{$row}", $statusText[$loan->status] ?? $loan->status)
+                  ->setCellValue("J{$row}", $loan->loan_duration ?? '-');
+            $row++;
         }
-        $filename = 'laporan_peminjaman_' . date('Y-m-d_His') . '.csv';
-        $handle = fopen('php:
-        foreach ($csvData as $line) {
-            fputcsv($handle, $line);
-        }
-        rewind($handle);
-        $content = stream_get_contents($handle);
-        fclose($handle);
+
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+        $filename = 'laporan_peminjaman_' . date('Y-m-d_His') . '.xlsx';
+        
+        ob_start();
+        $writer->save('php://output');
+        $content = ob_get_clean();
+        
         return response($content)
-            ->header('Content-Type', 'text/csv')
+            ->header('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+            ->header('Content-Disposition', "attachment; filename=\"{$filename}\"");
+    }
+
+    public function exportLoansWord(Request $request)
+    {
+        $query = Loan::with(['user', 'book']);
+        if ($request->has('date_from') && $request->date_from) {
+            $query->whereDate('loan_date', '>=', $request->date_from);
+        }
+        if ($request->has('date_to') && $request->date_to) {
+            $query->whereDate('loan_date', '<=', $request->date_to);
+        }
+        $loans = $query->get();
+
+        $phpWord = new \PhpOffice\PhpWord\PhpWord();
+        $section = $phpWord->addSection(['orientation' => 'landscape']);
+        
+        $section->addTitle('Laporan Peminjaman', 1);
+        
+        $tableStyle = [
+            'borderSize' => 6,
+            'borderColor' => '000000',
+            'cellMargin' => 50
+        ];
+        $phpWord->addTableStyle('Loans Table', $tableStyle);
+        $table = $section->addTable('Loans Table');
+        
+        $table->addRow();
+        $headers = ['No', 'Peminjam', 'Buku', 'Kategori', 'Tgl Pinjam', 'Jatuh Tempo', 'Status'];
+        foreach ($headers as $header) {
+            $table->addCell(2000)->addText($header, ['bold' => true]);
+        }
+        
+        $statusText = [
+            'pending' => 'Menunggu',
+            'approved' => 'Disetujui',
+            'borrowed' => 'Dipinjam',
+            'returned' => 'Dikembalikan',
+            'overdue' => 'Terlambat',
+            'cancelled' => 'Dibatalkan'
+        ];
+
+        foreach ($loans as $index => $loan) {
+            $table->addRow();
+            $table->addCell(500)->addText($index + 1);
+            $table->addCell(2000)->addText($loan->user->name ?? '-');
+            $table->addCell(2500)->addText(substr($loan->book->name ?? '-', 0, 30));
+            $table->addCell(1500)->addText($loan->book->category->name ?? '-');
+            $table->addCell(1500)->addText($loan->loan_date ? $loan->loan_date->format('Y-m-d') : '-');
+            $table->addCell(1500)->addText($loan->due_date ? $loan->due_date->format('Y-m-d') : '-');
+            $table->addCell(1500)->addText($statusText[$loan->status] ?? $loan->status);
+        }
+
+        $filename = 'laporan_peminjaman_' . date('Y-m-d_His') . '.docx';
+        $writer = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
+        
+        ob_start();
+        $writer->save('php://output');
+        $content = ob_get_clean();
+        
+        return response($content)
+            ->header('Content-Type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document')
             ->header('Content-Disposition', "attachment; filename=\"{$filename}\"");
     }
 }

@@ -1,10 +1,13 @@
 <?php
+
 namespace App\Services;
+
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+
 class CartService
 {
     public function getCart(): Cart
@@ -13,9 +16,11 @@ class CartService
             return Cart::firstOrCreate(['user_id' => Auth::id()]);
         } else {
             $sessionId = Session::getId();
+
             return Cart::firstOrCreate(['session_id' => $sessionId]);
         }
     }
+
     public function addProduct(Product $product, int $quantity = 1): void
     {
         $cart = $this->getCart();
@@ -28,35 +33,38 @@ class CartService
             $existingItem->update(['quantity' => $newQuantity]);
         } else {
             if ($quantity > $product->stock) {
-                throw new \Exception("Stok tidak mencukupi.");
+                throw new \Exception('Stok tidak mencukupi.');
             }
             $cart->items()->create([
                 'product_id' => $product->id,
-                'quantity'   => $quantity,
+                'quantity' => $quantity,
             ]);
         }
         $cart->touch();
     }
+
     public function updateQuantity(int $itemId, int $quantity): void
     {
-        $item    = CartItem::findOrFail($itemId);
+        $item = CartItem::findOrFail($itemId);
         $product = $item->product;
         $this->verifyCartOwnership($item->cart);
         if ($quantity > $product->stock) {
             throw new \Exception("Stok tidak mencukupi. Tersisa: {$product->stock}");
         }
         if ($quantity <= 0) {
-            $item->delete(); 
+            $item->delete();
         } else {
             $item->update(['quantity' => $quantity]);
         }
     }
+
     public function removeItem(int $itemId): void
     {
         $item = CartItem::findOrFail($itemId);
         $this->verifyCartOwnership($item->cart);
         $item->delete();
     }
+
     public function mergeCartOnLogin(): void
     {
         $sessionId = Session::getId();
@@ -77,6 +85,7 @@ class CartService
         }
         $guestCart->delete();
     }
+
     private function verifyCartOwnership(Cart $cart): void
     {
         $currentCart = $this->getCart();

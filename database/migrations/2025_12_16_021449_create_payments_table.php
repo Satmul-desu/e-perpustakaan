@@ -1,7 +1,9 @@
 <?php
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+
 return new class extends Migration
 {
     public function up(): void
@@ -15,11 +17,11 @@ return new class extends Migration
             $table->string('midtrans_order_id')->nullable();
             $table->string('payment_type', 50)->nullable();
             $table->enum('status', [
-                'pending',  
-                'success',  
-                'failed',   
-                'expired',  
-                'refunded', 
+                'pending',
+                'success',
+                'failed',
+                'expired',
+                'refunded',
             ])->default('pending');
             $table->decimal('gross_amount', 15, 2);
             $table->string('snap_token')->nullable();
@@ -32,6 +34,7 @@ return new class extends Migration
             $table->index('status');
         });
     }
+
     public function down(): void
     {
         Schema::dropIfExists('payments');

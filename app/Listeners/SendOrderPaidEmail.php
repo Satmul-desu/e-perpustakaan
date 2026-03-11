@@ -1,20 +1,27 @@
 <?php
+
 namespace App\Listeners;
+
 use App\Events\OrderPaidEvent;
 use App\Mail\AdminNewOrderNotification;
 use App\Mail\OrderPaid;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+
 class SendOrderPaidEmail implements ShouldQueue
 {
     public int $tries = 3;
+
     public int $maxExceptions = 3;
+
     public int $backoff = 30;
+
     public function retryUntil(): \DateTime
     {
         return now()->addMinutes(10);
     }
+
     public function handle(OrderPaidEvent $event): void
     {
         $order = $event->order;
@@ -42,6 +49,7 @@ class SendOrderPaidEmail implements ShouldQueue
             throw $e;
         }
     }
+
     public function failed(OrderPaidEvent $event, \Throwable $e): void
     {
         Log::error('Order email job permanently failed', [

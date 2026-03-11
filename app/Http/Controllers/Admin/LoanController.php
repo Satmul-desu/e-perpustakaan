@@ -1,10 +1,12 @@
 <?php
+
 namespace App\Http\Controllers\Admin;
+
 use App\Http\Controllers\Controller;
 use App\Models\Loan;
-use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+
 class LoanController extends Controller
 {
     public function index(Request $request)
@@ -23,7 +25,7 @@ class LoanController extends Controller
             $search = $request->search;
             $query->whereHas('user', function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%");
+                    ->orWhere('email', 'like', "%{$search}%");
             })->orWhereHas('book', function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%");
             });
@@ -36,13 +38,17 @@ class LoanController extends Controller
             'returned' => Loan::where('status', Loan::STATUS_RETURNED)->count(),
             'overdue' => Loan::overdue()->count(),
         ];
+
         return view('admin.loans.index', compact('loans', 'stats'));
     }
+
     public function show(Loan $loan)
     {
         $loan->load('user', 'book.category', 'approver', 'returnHandler');
+
         return view('admin.loans.show', compact('loan'));
     }
+
     public function approve(Request $request, Loan $loan)
     {
         if ($loan->status !== Loan::STATUS_PENDING) {
@@ -56,12 +62,14 @@ class LoanController extends Controller
         if ($request->notes) {
             $loan->update(['admin_notes' => $request->notes]);
         }
+
         return redirect()->back()
             ->with('success', 'Peminjaman disetujui. Status: Dipinjam (Durasi: 45 jam)');
     }
+
     public function reject(Request $request, Loan $loan)
     {
-        if (!in_array($loan->status, [Loan::STATUS_PENDING, Loan::STATUS_APPROVED])) {
+        if (! in_array($loan->status, [Loan::STATUS_PENDING, Loan::STATUS_APPROVED])) {
             return redirect()->back()
                 ->with('error', 'Peminjaman tidak dapat ditolak.');
         }
@@ -70,9 +78,11 @@ class LoanController extends Controller
         ]);
         $loan->cancel($request->reason);
         $loan->book->incrementStock(1);
+
         return redirect()->back()
             ->with('success', 'Peminjaman berhasil ditolak.');
     }
+
     public function markBorrowed(Loan $loan)
     {
         if ($loan->status !== Loan::STATUS_APPROVED) {
@@ -80,10 +90,12 @@ class LoanController extends Controller
                 ->with('error', 'Hanya peminjaman yang disetujui yang dapat ditandai sebagai dipinjam.');
         }
         $loan->markAsBorrowed();
+
         return redirect()->back()
             ->with('success', 'Buku ditandai sebagai dipinjam.');
     }
-       public function processReturn(Request $request, Loan $loan)
+
+    public function processReturn(Request $request, Loan $loan)
     {
         if ($loan->status !== Loan::STATUS_BORROWED) {
             return redirect()->back()
@@ -96,12 +108,14 @@ class LoanController extends Controller
         if ($request->condition) {
             $loan->update(['admin_notes' => $request->condition]);
         }
+
         return redirect()->back()
             ->with('success', 'Buku berhasil dikembalikan.');
     }
-       public function extend(Request $request, Loan $loan)
+
+    public function extend(Request $request, Loan $loan)
     {
-        if (!in_array($loan->status, [Loan::STATUS_APPROVED, Loan::STATUS_BORROWED])) {
+        if (! in_array($loan->status, [Loan::STATUS_APPROVED, Loan::STATUS_BORROWED])) {
             return redirect()->back()
                 ->with('error', 'Peminjaman tidak dapat diperpanjang.');
         }
@@ -112,12 +126,14 @@ class LoanController extends Controller
         $newDueDate = $loan->due_date->addDays($request->days);
         $loan->update([
             'due_date' => $newDueDate,
-            'admin_notes' => ($loan->admin_notes ?? '') . "\n" . 
-                'Perpanjangan: +' . $request->days . ' hari oleh ' . Auth::user()->name . ' pada ' . now()->format('Y-m-d'),
+            'admin_notes' => ($loan->admin_notes ?? '')."\n".
+                'Perpanjangan: +'.$request->days.' hari oleh '.Auth::user()->name.' pada '.now()->format('Y-m-d'),
         ]);
+
         return redirect()->back()
-            ->with('success', 'Peminjaman berhasil diperpanjang hingga ' . $newDueDate->format('d M Y'));
+            ->with('success', 'Peminjaman berhasil diperpanjang hingga '.$newDueDate->format('d M Y'));
     }
+
     public function markOverdue()
     {
         $overdueLoans = Loan::whereIn('status', [Loan::STATUS_APPROVED, Loan::STATUS_BORROWED])
@@ -129,9 +145,11 @@ class LoanController extends Controller
                 $count++;
             }
         }
+
         return redirect()->back()
             ->with('success', "{$count} peminjaman ditandai sebagai terlambat.");
     }
+
     public function getStats()
     {
         return response()->json([

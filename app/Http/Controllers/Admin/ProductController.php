@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Http\Controllers\Admin;
+
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
@@ -11,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
+
 class ProductController extends Controller
 {
     public function index(Request $request): View
@@ -18,28 +21,32 @@ class ProductController extends Controller
         $products = Product::query()
             ->with(['category', 'primaryImage', 'images'])
             ->when($request->search, function ($query, $search) {
-                $query->search($search); 
+                $query->search($search);
             })
-          ->when($request->category, function ($query, $categoryId) {
+            ->when($request->category, function ($query, $categoryId) {
                 $query->where('category_id', $categoryId);
             })
-            ->latest()          
-            ->paginate(15)       
-            ->withQueryString(); 
+            ->latest()
+            ->paginate(15)
+            ->withQueryString();
         $categories = Category::active()->orderBy('name')->get();
+
         return view('admin.products.index', compact('products', 'categories'));
     }
+
     public function create(): View
     {
         $categories = Category::active()->orderBy('name')->get();
+
         return view('admin.products.create', compact('categories'));
     }
+
     public function store(StoreProductRequest $request): RedirectResponse
     {
         try {
             DB::beginTransaction();
             $validatedData = $request->validated();
-            if (!isset($validatedData['price'])) {
+            if (! isset($validatedData['price'])) {
                 $validatedData['price'] = 0;
             }
             $product = Product::create($validatedData);
@@ -47,38 +54,45 @@ class ProductController extends Controller
                 $this->uploadImages($request->file('images'), $product);
             }
             DB::commit();
+
             return redirect()
                 ->route('admin.products.index')
                 ->with('success', 'Buku berhasil ditambahkan!');
         } catch (\Exception $e) {
             DB::rollBack();
+
             return back()
                 ->withInput()
-                ->with('error', 'Gagal menyimpan buku: ' . $e->getMessage());
+                ->with('error', 'Gagal menyimpan buku: '.$e->getMessage());
         }
     }
+
     public function show(Product $product): View
     {
         $product->load([
-            'category', 
-            'images', 
+            'category',
+            'images',
             'primaryImage',
-            'orderItems.order.user' 
+            'orderItems.order.user',
         ]);
+
         return view('admin.products.show', compact('product'));
     }
+
     public function edit(Product $product): View
     {
         $categories = Category::active()->orderBy('name')->get();
         $product->load(['images', 'primaryImage', 'category']);
+
         return view('admin.products.edit', compact('product', 'categories'));
     }
+
     public function update(UpdateProductRequest $request, Product $product): RedirectResponse
     {
         try {
             DB::beginTransaction();
             $validatedData = $request->validated();
-            if (!isset($validatedData['price'])) {
+            if (! isset($validatedData['price'])) {
                 $validatedData['price'] = $product->price ?? 0;
             }
             $product->update($validatedData);
@@ -88,18 +102,21 @@ class ProductController extends Controller
             if ($request->has('delete_images')) {
                 $this->deleteImages($request->delete_images);
             }
-               if ($request->has('primary_image')) {
+            if ($request->has('primary_image')) {
                 $this->setPrimaryImage($product, $request->primary_image);
             }
             DB::commit();
+
             return redirect()
                 ->route('admin.products.index')
                 ->with('success', 'Buku berhasil diperbarui!');
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->withInput()->with('error', 'Gagal update: ' . $e->getMessage());
+
+            return back()->withInput()->with('error', 'Gagal update: '.$e->getMessage());
         }
     }
+
     public function destroy(Product $product): RedirectResponse
     {
         try {
@@ -110,16 +127,18 @@ class ProductController extends Controller
                 Storage::disk('public')->delete($image->image_path);
             }
             $product->delete();
+
             return redirect()->route('admin.products.index')->with('success', 'Produk dihapus!');
         } catch (\Exception $e) {
-            return back()->with('error', 'Gagal menghapus: ' . $e->getMessage());
+            return back()->with('error', 'Gagal menghapus: '.$e->getMessage());
         }
     }
+
     protected function uploadImages(array $files, Product $product): void
     {
         $isFirst = $product->images()->count() === 0;
         foreach ($files as $index => $file) {
-            $filename = \Illuminate\Support\Str::uuid() . '.' . $file->extension();
+            $filename = \Illuminate\Support\Str::uuid().'.'.$file->extension();
             $path = $file->storeAs('products', $filename, 'public');
             $product->images()->create([
                 'image_path' => $path,
@@ -128,6 +147,7 @@ class ProductController extends Controller
             ]);
         }
     }
+
     protected function deleteImages(array $imageIds): void
     {
         $images = ProductImage::whereIn('id', $imageIds)->get();
@@ -136,6 +156,7 @@ class ProductController extends Controller
             $image->delete();
         }
     }
+
     protected function setPrimaryImage(Product $product, int $imageId): void
     {
         $product->images()->update(['is_primary' => false]);

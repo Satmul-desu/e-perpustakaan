@@ -1,34 +1,40 @@
 <?php
+
 namespace App\Notifications;
+
 use App\Models\Complaint;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+
 class NewComplaintNotification extends Notification
 {
     use Queueable;
+
     protected $complaint;
+
     public function __construct(Complaint $complaint)
     {
         $this->complaint = $complaint;
     }
+
     public function via($notifiable)
     {
         return ['database'];
     }
+
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->subject('📢 Aduan/Laporan Baru: ' . $this->complaint->subject)
+            ->subject('📢 Aduan/Laporan Baru: '.$this->complaint->subject)
             ->line('Ada aduan/laporan baru dari pengguna.')
             ->line('')
             ->line('**Detail Aduan:**')
-            ->line('Nama: ' . $this->complaint->user->name)
-            ->line('Email: ' . $this->complaint->user->email)
-            ->line('Jenis: ' . ucfirst($this->complaint->type))
-            ->line('Kategori: ' . $this->complaint->category_name)
-            ->line('Prioritas: ' . $this->complaint->priority_name)
+            ->line('Nama: '.$this->complaint->user->name)
+            ->line('Email: '.$this->complaint->user->email)
+            ->line('Jenis: '.ucfirst($this->complaint->type))
+            ->line('Kategori: '.$this->complaint->category_name)
+            ->line('Prioritas: '.$this->complaint->priority_name)
             ->line('')
             ->line('**Pesan:**')
             ->line($this->complaint->message)
@@ -36,6 +42,7 @@ class NewComplaintNotification extends Notification
             ->action('Lihat Aduan', route('admin.complaints.show', $this->complaint))
             ->line('Segera tindaklanjuti aduan ini.');
     }
+
     public function toArray($notifiable)
     {
         return [

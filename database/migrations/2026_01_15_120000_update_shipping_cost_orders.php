@@ -1,6 +1,8 @@
 <?php
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
+
 return new class extends Migration
 {
     public function up(): void
@@ -10,7 +12,6 @@ return new class extends Migration
             ->orWhereNull('shipping_cost')
             ->update(['shipping_cost' => 10000]);
     }
-    public function down(): void
-    {
-    }
+
+    public function down(): void {}
 };

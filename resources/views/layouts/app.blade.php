@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,69 +20,69 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: 'Inter', sans-serif;
             background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
             min-height: 100vh;
             color: #e0e0e0;
         }
-        
+
         .bg-dark-custom {
             background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%) !important;
         }
-        
+
         .bg-dark-card {
             background: rgba(30, 41, 59, 0.95) !important;
             border: 1px solid #334155 !important;
         }
-        
+
         .text-primary-custom {
             color: #60a5fa !important;
         }
-        
+
         .btn-primary-custom {
             background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
             border: none;
             color: white;
         }
-        
+
         .btn-primary-custom:hover {
             background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
             color: white;
             transform: translateY(-2px);
         }
-        
+
         .form-control-custom {
             background: rgba(15, 23, 42, 0.6);
             border: 1px solid #334155;
             color: white;
         }
-        
+
         .form-control-custom:focus {
             background: rgba(15, 23, 42, 0.8);
             border-color: #3b82f6;
             color: white;
             box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.25);
         }
-        
+
         .form-control-custom::placeholder {
             color: #64748b;
         }
-        
+
         .card-custom {
             background: rgba(30, 41, 59, 0.9);
             border: 1px solid #334155;
             border-radius: 16px;
         }
-        
+
         .floating-cs-button {
             position: fixed;
             bottom: 30px;
             right: 30px;
             z-index: 9999;
         }
-        
+
         .floating-cs-link {
             display: flex;
             align-items: center;
@@ -95,17 +96,17 @@
             box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
             transition: all 0.3s ease;
         }
-        
+
         .floating-cs-link:hover {
             transform: scale(1.1);
             box-shadow: 0 6px 30px rgba(99, 102, 241, 0.5);
             color: white;
         }
-        
+
         .floating-cs-icon {
             font-size: 1.75rem;
         }
-        
+
         .floating-cs-badge {
             position: absolute;
             top: -5px;
@@ -122,22 +123,22 @@
             justify-content: center;
             border: 2px solid #1e293b;
         }
-        
+
         #toast-container {
             z-index: 10000;
         }
-        
+
         @media (max-width: 575.98px) {
             .floating-cs-button {
                 bottom: 20px;
                 right: 20px;
             }
-            
+
             .floating-cs-link {
                 width: 52px;
                 height: 52px;
             }
-            
+
             .floating-cs-icon {
                 font-size: 1.5rem;
             }
@@ -145,30 +146,31 @@
     </style>
     @yield('styles')
 </head>
+
 <body>
     @include('partials.navbar')
-    
+
     <div class="container mt-3">
         @include('partials.flash-messages')
     </div>
-    
+
     <main class="min-vh-100">
         @yield('content')
     </main>
-    
+
     @include('partials.footer')
-    
+
     <div class="floating-cs-button" data-bs-toggle="tooltip" data-bs-placement="left" title="Customer Service">
         <a href="{{ route('cs.index') }}" class="floating-cs-link">
             <div class="floating-cs-icon">
                 <i class="bi bi-headset"></i>
-                @if(isset($pendingComplaints) && $pendingComplaints > 0)
+                @if (isset($pendingComplaints) && $pendingComplaints > 0)
                     <span class="floating-cs-badge">{{ $pendingComplaints > 9 ? '9+' : $pendingComplaints }}</span>
                 @endif
             </div>
         </a>
     </div>
-    
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     @yield('scripts')
     <script>
@@ -176,7 +178,7 @@
             try {
                 const token = document.querySelector('meta[name="csrf-token"]').content;
                 console.log('Toggle wishlist for product:', productId);
-                
+
                 const response = await fetch(`/wishlist/toggle/${productId}`, {
                     method: "POST",
                     headers: {
@@ -184,14 +186,14 @@
                         "X-CSRF-TOKEN": token,
                     },
                 });
-                
+
                 console.log('Response status:', response.status);
-                
+
                 if (response.status === 401) {
                     window.location.href = "/login";
                     return;
                 }
-                
+
                 const responseText = await response.text();
                 let data;
                 try {
@@ -200,7 +202,7 @@
                     console.error('JSON parse error:', e);
                     throw new Error('Server returned invalid JSON');
                 }
-                
+
                 if (data.status === "success") {
                     updateWishlistUI(productId, data.added);
                     updateWishlistCounter(data.count);
@@ -213,7 +215,7 @@
                 showToast("Terjadi kesalahan sistem: " + error.message, "error");
             }
         }
-        
+
         function updateWishlistUI(productId, isAdded) {
             const buttons = document.querySelectorAll(`.wishlist-btn-${productId}`);
             buttons.forEach((btn) => {
@@ -227,7 +229,7 @@
                 }
             });
         }
-        
+
         function updateWishlistCounter(count) {
             const badge = document.getElementById("wishlist-count");
             if (badge) {
@@ -235,7 +237,7 @@
                 badge.style.display = count > 0 ? "inline-block" : "none";
             }
         }
-        
+
         function showToast(message, type = 'success') {
             let toastContainer = document.getElementById('toast-container');
             if (!toastContainer) {
@@ -244,11 +246,11 @@
                 toastContainer.className = 'position-fixed top-0 end-0 p-3';
                 document.body.appendChild(toastContainer);
             }
-            
+
             const toastId = 'toast-' + Date.now();
             const bgColor = type === 'success' ? 'success' : type === 'error' ? 'danger' : 'primary';
             const icon = type === 'success' ? 'bi-check-circle' : type === 'error' ? 'bi-x-circle' : 'bi-info-circle';
-            
+
             const toastHtml = `
                 <div id="${toastId}" class="toast align-items-center text-bg-${bgColor} border-0" role="alert">
                     <div class="d-flex">
@@ -260,28 +262,34 @@
                     </div>
                 </div>
             `;
-            
+
             toastContainer.insertAdjacentHTML('beforeend', toastHtml);
-            
+
             const toastEl = document.getElementById(toastId);
-            const toast = new bootstrap.Toast(toastEl, { autohide: true, delay: 3000 });
+            const toast = new bootstrap.Toast(toastEl, {
+                autohide: true,
+                delay: 3000
+            });
             toast.show();
-            
+
             toastEl.addEventListener('hidden.bs.toast', function() {
                 toastEl.remove();
             });
         }
-        
+
         document.addEventListener('DOMContentLoaded', function() {
             var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
             var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
                 return new bootstrap.Tooltip(tooltipTriggerEl, {
                     trigger: 'hover focus',
-                    delay: { show: 200, hide: 100 }
+                    delay: {
+                        show: 200,
+                        hide: 100
+                    }
                 });
             });
         });
     </script>
 </body>
-</html>
 
+</html>

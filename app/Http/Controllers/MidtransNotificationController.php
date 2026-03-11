@@ -1,10 +1,13 @@
 <?php
+
 namespace App\Http\Controllers;
+
 use App\Events\OrderPaidEvent;
 use App\Models\Order;
 use App\Models\Payment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+
 class MidtransNotificationController extends Controller
 {
     public function handle(Request $request)
@@ -14,45 +17,49 @@ class MidtransNotificationController extends Controller
             'order_id' => $payload['order_id'] ?? null,
             'status' => $payload['transaction_status'] ?? null,
         ]);
-        $orderId           = $payload['order_id'] ?? null;
+        $orderId = $payload['order_id'] ?? null;
         $transactionStatus = $payload['transaction_status'] ?? null;
-        $paymentType       = $payload['payment_type'] ?? null;
-        $statusCode        = $payload['status_code'] ?? null;
-        $grossAmount       = $payload['gross_amount'] ?? null;
-        $signatureKey      = $payload['signature_key'] ?? null;
-        $fraudStatus       = $payload['fraud_status'] ?? null;
-        $transactionId     = $payload['transaction_id'] ?? null;
+        $paymentType = $payload['payment_type'] ?? null;
+        $statusCode = $payload['status_code'] ?? null;
+        $grossAmount = $payload['gross_amount'] ?? null;
+        $signatureKey = $payload['signature_key'] ?? null;
+        $fraudStatus = $payload['fraud_status'] ?? null;
+        $transactionId = $payload['transaction_id'] ?? null;
         if (! $orderId || ! $transactionStatus || ! $signatureKey) {
             Log::warning('Midtrans Notification: Missing required fields', $payload);
+
             return response()->json(['message' => 'Invalid payload'], 400);
         }
         $serverKey = config('midtrans.server_key');
         $expectedSignature = hash(
             'sha512',
-            $orderId . $statusCode . $grossAmount . $serverKey
+            $orderId.$statusCode.$grossAmount.$serverKey
         );
         if ($signatureKey !== $expectedSignature) {
             Log::warning('Midtrans Notification: Invalid signature', [
                 'order_id' => $orderId,
             ]);
+
             return response()->json(['message' => 'Invalid signature'], 403);
         }
         $order = Order::where('order_number', $orderId)->first();
         if (! $order) {
-            Log::warning("Midtrans Notification: Order not found", ['order_id' => $orderId]);
+            Log::warning('Midtrans Notification: Order not found', ['order_id' => $orderId]);
+
             return response()->json(['message' => 'Order not found'], 404);
         }
         if (in_array($order->status, ['processing', 'shipped', 'delivered', 'cancelled'])) {
-            Log::info("Midtrans Notification: Order already processed", ['order_id' => $orderId]);
+            Log::info('Midtrans Notification: Order already processed', ['order_id' => $orderId]);
+
             return response()->json(['message' => 'Order already processed'], 200);
         }
         $payment = Payment::updateOrCreate(
             ['order_id' => $order->id],
             [
                 'midtrans_transaction_id' => $transactionId,
-                'payment_type'            => $paymentType,
-                'gross_amount'            => $grossAmount,
-                'raw_response'            => json_encode($payload),
+                'payment_type' => $paymentType,
+                'gross_amount' => $grossAmount,
+                'raw_response' => json_encode($payload),
             ]
         );
         switch ($transactionStatus) {
@@ -83,13 +90,15 @@ class MidtransNotificationController extends Controller
                 $this->handleRefund($order, $payment);
                 break;
             default:
-                Log::info("Midtrans Notification: Unknown status", [
+                Log::info('Midtrans Notification: Unknown status', [
                     'order_id' => $orderId,
-                    'status'   => $transactionStatus,
+                    'status' => $transactionStatus,
                 ]);
         }
+
         return response()->json(['message' => 'Notification processed'], 200);
     }
+
     protected function handleSuccess(Order $order, ?Payment $payment): void
     {
         Log::info("Payment SUCCESS for Order: {$order->order_number}");
@@ -98,12 +107,13 @@ class MidtransNotificationController extends Controller
         ]);
         if ($payment) {
             $payment->update([
-                'status'  => 'success',
+                'status' => 'success',
                 'paid_at' => now(),
             ]);
         }
         event(new OrderPaidEvent($order));
     }
+
     protected function handlePending(Order $order, ?Payment $payment, string $message = ''): void
     {
         Log::info("Payment PENDING for Order: {$order->order_number}", ['message' => $message]);
@@ -111,6 +121,7 @@ class MidtransNotificationController extends Controller
             $payment->update(['status' => 'pending']);
         }
     }
+
     protected function handleFailed(Order $order, ?Payment $payment, string $reason = ''): void
     {
         Log::info("Payment FAILED for Order: {$order->order_number}", ['reason' => $reason]);
@@ -124,6 +135,7 @@ class MidtransNotificationController extends Controller
             $item->product?->increment('stock', $item->quantity);
         }
     }
+
     protected function handleRefund(Order $order, ?Payment $payment): void
     {
         Log::info("Payment REFUNDED for Order: {$order->order_number}");

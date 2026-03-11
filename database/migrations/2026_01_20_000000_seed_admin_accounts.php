@@ -1,15 +1,16 @@
 <?php
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Schema;
+
 return new class extends Migration
 {
     public function up(): void
     {
         DB::table('users')->whereIn('email', [
             'AdminTB@TokoBuku.com',
-            'adminTb@TokoBuku.com'
+            'adminTb@TokoBuku.com',
         ])->delete();
         DB::table('users')->insert([
             'name' => 'Admin TB',
@@ -28,11 +29,12 @@ return new class extends Migration
             'updated_at' => now(),
         ]);
     }
+
     public function down(): void
     {
         DB::table('users')->whereIn('email', [
             'AdminTB@TokoBuku.com',
-            'adminTb@TokoBuku.com'
+            'adminTb@TokoBuku.com',
         ])->delete();
     }
 };

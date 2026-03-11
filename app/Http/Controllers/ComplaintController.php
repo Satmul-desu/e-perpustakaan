@@ -1,11 +1,14 @@
 <?php
+
 namespace App\Http\Controllers;
+
 use App\Models\Complaint;
 use App\Notifications\NewComplaintNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
+
 class ComplaintController extends Controller
 {
     public function index()
@@ -14,8 +17,10 @@ class ComplaintController extends Controller
             ->with('user')
             ->orderBy('created_at', 'desc')
             ->paginate(10);
+
         return view('cs.index', compact('complaints'));
     }
+
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -46,26 +51,30 @@ class ComplaintController extends Controller
                     Notification::send($admins, new NewComplaintNotification($complaint));
                 }
             } catch (\Exception $notificationException) {
-                \Log::error('Failed to send complaint notification: ' . $notificationException->getMessage());
+                \Log::error('Failed to send complaint notification: '.$notificationException->getMessage());
             }
+
             return redirect()
                 ->route('cs.index')
                 ->with('success', 'Aduan/Laporan Anda telah dikirim. Tim kami akan segera meninjaunya.');
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::error('Complaint submission failed: ' . $e->getMessage());
+            \Log::error('Complaint submission failed: '.$e->getMessage());
+
             return redirect()
                 ->route('cs.index')
                 ->with('error', 'Gagal mengirim aduan. Silakan coba lagi.')
                 ->withInput();
         }
     }
+
     public function show(Complaint $complaint)
     {
-        if ($complaint->user_id !== Auth::id() && !Auth::user()->isAdmin()) {
+        if ($complaint->user_id !== Auth::id() && ! Auth::user()->isAdmin()) {
             abort(403, 'Unauthorized action.');
         }
         $complaint->load(['user', 'responder']);
+
         return view('cs.show', compact('complaint'));
     }
 }

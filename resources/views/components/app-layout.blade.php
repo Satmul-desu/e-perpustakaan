@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,19 +9,17 @@
     <meta name="description" content="{{ $meta_description ?? 'Toko online terpercaya dengan produk berkualitas' }}">
     <link rel="icon" href="{{ asset('favicon.ico') }}">
     <link rel="preconnect" href="https:
-    <link href="https:
-    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
-    @stack('styles')
-</head>
+    <link href="https: @vite(['resources/sass/app.scss', 'resources/js/app.js']) @stack('styles') </head>
+
 <body class="font-sans antialiased">
     <div class="min-h-screen bg-gray-100">
         @include('partials.navbar')
         @if (isset($header))
-        <header class="bg-white shadow">
-            <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                {{ $header }}
-            </div>
-        </header>
+            <header class="bg-white shadow">
+                <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                    {{ $header }}
+                </div>
+            </header>
         @endif
         <div class="container mx-auto px-4 mt-4">
             @include('partials.flash-messages')
@@ -57,6 +56,7 @@
                 showToast("Terjadi kesalahan sistem.", "error");
             }
         }
+
         function updateWishlistUI(productId, isAdded) {
             const buttons = document.querySelectorAll(`.wishlist-btn-${productId}`);
             buttons.forEach((btn) => {
@@ -70,6 +70,7 @@
                 }
             });
         }
+
         function updateWishlistCounter(count) {
             const badge = document.getElementById("wishlist-count");
             if (badge) {
@@ -79,4 +80,5 @@
         }
     </script>
 </body>
+
 </html>

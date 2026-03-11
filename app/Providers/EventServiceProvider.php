@@ -1,10 +1,12 @@
 <?php
+
 namespace App\Providers;
+
 use App\Events\OrderPaidEvent;
 use App\Listeners\MergeCartListener;
 use App\Listeners\SendOrderPaidEmail;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Event;
+
 class EventServiceProvider extends ServiceProvider
 {
     protected $listen = [
@@ -15,9 +17,9 @@ class EventServiceProvider extends ServiceProvider
             SendOrderPaidEmail::class,
         ],
     ];
-    public function boot(): void
-    {
-    }
+
+    public function boot(): void {}
+
     public function shouldDiscoverEvents(): bool
     {
         return false;

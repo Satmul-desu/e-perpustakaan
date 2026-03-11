@@ -1,5 +1,5 @@
 // Fonts
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 
 // Variables - Must be imported BEFORE Bootstrap
 $primary: #3b82f6;
@@ -12,19 +12,19 @@ $light: #f8fafc;
 $dark: #0f172a;
 $body-bg: #0f172a;
 $body-color: #f1f5f9;
-$font-family-sans-serif: 'Inter', sans-serif;
+$font-family-sans-serif: "Inter", sans-serif;
 
 // Bootstrap
-@import 'bootstrap/scss/bootstrap';
+@import "bootstrap/scss/bootstrap";
 
 // Bootstrap Icons
-@import 'bootstrap-icons/font/bootstrap-icons.css';
+@import "bootstrap-icons/font/bootstrap-icons.css";
 
 // Custom Dark Theme Styles
 body {
     background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
     min-height: 100vh;
-    font-family: 'Inter', sans-serif;
+    font-family: "Inter", sans-serif;
 }
 
 // Text Colors
@@ -82,7 +82,7 @@ body {
 }
 
 .section-title::after {
-    content: '';
+    content: "";
     position: absolute;
     bottom: 0;
     left: 50%;
@@ -218,4 +218,3 @@ a:hover {
 .pagination .page-link:focus {
     box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.25);
 }
-

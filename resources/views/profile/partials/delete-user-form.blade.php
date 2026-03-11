@@ -19,12 +19,9 @@
                 </p>
                 <div class="mb-3">
                     <label for="password" class="form-label visually-hidden">Password</label>
-                    <input type="password"
-                           name="password"
-                           id="password"
-                           class="form-control @error('password', 'userDeletion') is-invalid @enderror"
-                           placeholder="Masukkan password kamu"
-                           required>
+                    <input type="password" name="password" id="password"
+                        class="form-control @error('password', 'userDeletion') is-invalid @enderror"
+                        placeholder="Masukkan password kamu" required>
                     @error('password', 'userDeletion')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -37,7 +34,7 @@
         </form>
     </div>
 </div>
-@if($errors->userDeletion->isNotEmpty())
+@if ($errors->userDeletion->isNotEmpty())
     <script type="module">
         const myModal = new bootstrap.Modal(document.getElementById('confirmUserDeletionModal'));
         myModal.show();

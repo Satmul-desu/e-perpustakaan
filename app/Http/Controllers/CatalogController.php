@@ -1,19 +1,21 @@
 <?php
+
 namespace App\Http\Controllers;
+
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
+
 class CatalogController extends Controller
 {
     public function index(Request $request)
     {
         $query = Product::query()
-            ->select('id', 'name', 'slug', 'price', 'discount_price', 'category_id', 'stock', 'is_active', 'created_at') 
-            ->with(['category:id,name,slug', 'primaryImage:id,image_path,product_id']) 
-            ->available(); 
+            ->select('id', 'name', 'slug', 'price', 'discount_price', 'category_id', 'stock', 'is_active', 'created_at')
+            ->with(['category:id,name,slug', 'primaryImage:id,image_path,product_id'])
+            ->available();
         if ($request->filled('q')) {
-            $query->search($request->q); 
+            $query->search($request->q);
         }
         if ($request->filled('category')) {
             $categorySlug = $request->category;
@@ -55,14 +57,14 @@ class CatalogController extends Controller
             $query->where('price', '<=', $request->max_price);
         }
         $sort = $request->get('sort', 'newest');
-        $query->when($sort === 'price_asc', fn($q) => $q->orderBy('price', 'asc'))
-            ->when($sort === 'price_desc', fn($q) => $q->orderBy('price', 'desc'))
-            ->when($sort === 'name_asc', fn($q) => $q->orderBy('name', 'asc'))
-            ->when($sort === 'name_desc', fn($q) => $q->orderBy('name', 'desc'))
-            ->when($sort === 'newest', fn($q) => $q->latest());
+        $query->when($sort === 'price_asc', fn ($q) => $q->orderBy('price', 'asc'))
+            ->when($sort === 'price_desc', fn ($q) => $q->orderBy('price', 'desc'))
+            ->when($sort === 'name_asc', fn ($q) => $q->orderBy('name', 'asc'))
+            ->when($sort === 'name_desc', fn ($q) => $q->orderBy('name', 'desc'))
+            ->when($sort === 'newest', fn ($q) => $q->latest());
         $products = $query->paginate(12)->withQueryString();
         $categories = Category::active()
-            ->withCount(['products' => fn($q) => $q->available()])
+            ->withCount(['products' => fn ($q) => $q->available()])
             ->whereHas('products', function ($q) {
                 $q->available();
             })
@@ -71,16 +73,20 @@ class CatalogController extends Controller
         $priceRange = Product::available()
             ->selectRaw('MIN(price) as min, MAX(price) as max')
             ->first();
+
         return view('catalog.index', compact('products', 'categories', 'priceRange'));
     }
+
     public function show($slug)
     {
         $product = Product::available()
-            ->with(['category', 'images']) 
+            ->with(['category', 'images'])
             ->where('slug', $slug)
-            ->firstOrFail(); 
+            ->firstOrFail();
+
         return view('catalog.show', compact('product'));
     }
+
     public function searchSuggestions(Request $request)
     {
         $query = $request->get('q', '');
@@ -94,7 +100,7 @@ class CatalogController extends Controller
             ->available()
             ->where(function ($q) use ($query) {
                 $q->where('name', 'LIKE', "%{$query}%")
-                  ->orWhere('description', 'LIKE', "%{$query}%");
+                    ->orWhere('description', 'LIKE', "%{$query}%");
             })
             ->orderBy('name', 'asc')
             ->limit($limit)
@@ -111,6 +117,7 @@ class CatalogController extends Controller
                 'url' => route('catalog.show', $product->slug),
             ];
         });
+
         return response()->json([
             'query' => $query,
             'count' => $suggestions->count(),

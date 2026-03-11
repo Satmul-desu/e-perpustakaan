@@ -1,7 +1,10 @@
 <?php
+
 namespace App\Models;
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
 class CartItem extends Model
 {
     protected $fillable = [
@@ -9,25 +12,31 @@ class CartItem extends Model
         'product_id',
         'quantity',
     ];
+
     protected $casts = [
         'quantity' => 'integer',
     ];
+
     public function cart(): BelongsTo
     {
         return $this->belongsTo(Cart::class);
     }
+
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
     }
+
     public function getSubtotalAttribute(): float
     {
         return $this->quantity * $this->product->display_price;
     }
+
     public function getFormattedSubtotalAttribute(): string
     {
-        return 'Rp ' . number_format($this->subtotal, 0, ',', '.');
+        return 'Rp '.number_format($this->subtotal, 0, ',', '.');
     }
+
     public function getTotalWeightAttribute(): int
     {
         return $this->quantity * $this->product->weight;

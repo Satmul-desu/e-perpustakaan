@@ -1,24 +1,29 @@
 <?php
+
 namespace App\Services;
-use App\Models\Cart;
+
 use App\Models\Order;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
+
 class OrderService
 {
     protected MidtransService $midtransService;
-    protected const SHIPPING_COST = 10000; 
+
+    protected const SHIPPING_COST = 10000;
+
     public function __construct(MidtransService $midtransService)
     {
         $this->midtransService = $midtransService;
     }
+
     public function createOrder(User $user, array $shippingData): Order
     {
         $cart = $user->cart;
         if (! $cart || $cart->items->isEmpty()) {
-            throw new \Exception("Keranjang belanja kosong.");
+            throw new \Exception('Keranjang belanja kosong.');
         }
+
         return DB::transaction(function () use ($user, $cart, $shippingData) {
             $totalAmount = 0;
             foreach ($cart->items as $item) {
@@ -28,30 +33,32 @@ class OrderService
                 $totalAmount += $item->product->price * $item->quantity;
             }
             $order = Order::create([
-                'user_id'          => $user->id,
-                'order_number'     => $this->generateOrderNumber(),
-                'status'           => 'pending',
-                'payment_status'   => 'unpaid',
-                'shipping_name'    => $shippingData['name'],
+                'user_id' => $user->id,
+                'order_number' => $this->generateOrderNumber(),
+                'status' => 'pending',
+                'payment_status' => 'unpaid',
+                'shipping_name' => $shippingData['name'],
                 'shipping_address' => $shippingData['address'],
-                'shipping_phone'   => $shippingData['phone'],
-                'total_amount'     => $totalAmount + self::SHIPPING_COST,
-                'shipping_cost'    => self::SHIPPING_COST,
+                'shipping_phone' => $shippingData['phone'],
+                'total_amount' => $totalAmount + self::SHIPPING_COST,
+                'shipping_cost' => self::SHIPPING_COST,
             ]);
             foreach ($cart->items as $item) {
                 $order->orderItems()->create([
-                    'product_id'   => $item->product_id,
+                    'product_id' => $item->product_id,
                     'product_name' => $item->product->name,
-                    'price'        => $item->product->price,
-                    'quantity'     => $item->quantity,
-                    'subtotal'     => $item->product->price * $item->quantity,
+                    'price' => $item->product->price,
+                    'quantity' => $item->quantity,
+                    'subtotal' => $item->product->price * $item->quantity,
                 ]);
                 $item->product->decrement('stock', $item->quantity);
             }
             $cart->items()->delete();
+
             return $order;
         });
     }
+
     private function generateOrderNumber(): string
     {
         $date = now()->format('Ymd');
@@ -59,8 +66,9 @@ class OrderService
         $random = strtoupper(substr(md5(uniqid(mt_rand(), true)), 0, 4));
         $orderNumber = "ORD-{$date}-{$time}-{$random}";
         if (Order::where('order_number', $orderNumber)->exists()) {
-            $orderNumber = "ORD-{$date}-{$time}-" . strtoupper(substr(md5(uniqid(mt_rand(), true)), 0, 6));
+            $orderNumber = "ORD-{$date}-{$time}-".strtoupper(substr(md5(uniqid(mt_rand(), true)), 0, 6));
         }
+
         return $orderNumber;
     }
 }

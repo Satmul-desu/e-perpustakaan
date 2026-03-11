@@ -1,9 +1,11 @@
 <?php
+
 namespace Database\Seeders;
-use App\Models\Product;
+
 use App\Models\Category;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Product;
 use Illuminate\Database\Seeder;
+
 class ProductSeeder extends Seeder
 {
     public function run(): void
@@ -11,6 +13,7 @@ class ProductSeeder extends Seeder
         $categories = Category::all();
         if ($categories->isEmpty()) {
             $this->command->warn('Tidak ada kategori ditemukan. Jalankan CategorySeeder terlebih dahulu.');
+
             return;
         }
         $genreToCategory = [
@@ -509,7 +512,7 @@ class ProductSeeder extends Seeder
                 'category_id' => $genreToCategory['fantasi'],
                 'name' => 'Nevernight',
                 'slug' => 'nevernight',
-                'description' => "Nevernight-Jay Kristoff – Fantasi gelap tentang seorang gadis yang dilatih menjadi pembunuh demi membalas dendam pada dunia. 🌑🗡️",
+                'description' => 'Nevernight-Jay Kristoff – Fantasi gelap tentang seorang gadis yang dilatih menjadi pembunuh demi membalas dendam pada dunia. 🌑🗡️',
                 'price' => 50000,
                 'discount_price' => null,
                 'stock' => 50,
@@ -522,7 +525,7 @@ class ProductSeeder extends Seeder
                 'category_id' => $genreToCategory['horor-fantasi'],
                 'name' => 'Jack the Ripper',
                 'slug' => 'jack-the-ripper',
-                'description' => "Jack the Ripper-Kerri Maniscalco – Misteri sejarah tentang pembunuh legendaris London, dipadukan dengan kecerdasan dan ketegangan yang mencekam. 🔍🩸",
+                'description' => 'Jack the Ripper-Kerri Maniscalco – Misteri sejarah tentang pembunuh legendaris London, dipadukan dengan kecerdasan dan ketegangan yang mencekam. 🔍🩸',
                 'price' => 50000,
                 'discount_price' => null,
                 'stock' => 50,
@@ -535,7 +538,7 @@ class ProductSeeder extends Seeder
                 'category_id' => $genreToCategory['drama'],
                 'name' => 'Inherited',
                 'slug' => 'inherited',
-                'description' => "Inherited-Alex Grey – Thriller kriminal tentang warisan kelam yang menyeret tokohnya ke dalam kejahatan dan rahasia berbahaya. 🧬⚠️",
+                'description' => 'Inherited-Alex Grey – Thriller kriminal tentang warisan kelam yang menyeret tokohnya ke dalam kejahatan dan rahasia berbahaya. 🧬⚠️',
                 'price' => 50000,
                 'discount_price' => null,
                 'stock' => 50,
@@ -548,7 +551,7 @@ class ProductSeeder extends Seeder
                 'category_id' => $genreToCategory['fantasi'],
                 'name' => 'Crimson Rogue Cheongfios',
                 'slug' => 'crimson-rogue-cheongfios',
-                'description' => "Crimson Rogue Cheongfios-Laselle – Kisah fantasi penuh intrik tentang pemberontakan, darah bangsawan, dan kekuatan terlarang. 🩸⚔️",
+                'description' => 'Crimson Rogue Cheongfios-Laselle – Kisah fantasi penuh intrik tentang pemberontakan, darah bangsawan, dan kekuatan terlarang. 🩸⚔️',
                 'price' => 50000,
                 'discount_price' => null,
                 'stock' => 50,
@@ -561,7 +564,7 @@ class ProductSeeder extends Seeder
                 'category_id' => $genreToCategory['drama'],
                 'name' => 'The Death Pact',
                 'slug' => 'the-death-pact',
-                'description' => "The Death Pact-Susan Summers – Novel menegangkan tentang perjanjian berbahaya yang mengikat hidup dan kematian para tokohnya. ☠️📜",
+                'description' => 'The Death Pact-Susan Summers – Novel menegangkan tentang perjanjian berbahaya yang mengikat hidup dan kematian para tokohnya. ☠️📜',
                 'price' => 50000,
                 'discount_price' => null,
                 'stock' => 50,
@@ -574,7 +577,7 @@ class ProductSeeder extends Seeder
                 'category_id' => $genreToCategory['fantasi'],
                 'name' => 'Fire in the Sky',
                 'slug' => 'fire-in-the-sky',
-                'description' => "Fire in the Sky-Sophie Jordan – Cerita petualangan fantasi tentang kekuatan api, takdir, dan perjuangan melawan kekuasaan tirani. 🔥🌌",
+                'description' => 'Fire in the Sky-Sophie Jordan – Cerita petualangan fantasi tentang kekuatan api, takdir, dan perjuangan melawan kekuasaan tirani. 🔥🌌',
                 'price' => 50000,
                 'discount_price' => null,
                 'stock' => 50,
@@ -587,7 +590,7 @@ class ProductSeeder extends Seeder
                 'category_id' => $genreToCategory['romance'],
                 'name' => 'Scarlet Huntress',
                 'slug' => 'scarlet-huntress',
-                'description' => "Scarlet Huntress-Leann Mason – Kisah seorang pemburu wanita yang terjebak antara kewajiban, cinta, dan rahasia dunia magis. 🏹❤️",
+                'description' => 'Scarlet Huntress-Leann Mason – Kisah seorang pemburu wanita yang terjebak antara kewajiban, cinta, dan rahasia dunia magis. 🏹❤️',
                 'price' => 50000,
                 'discount_price' => null,
                 'stock' => 50,
@@ -600,7 +603,7 @@ class ProductSeeder extends Seeder
                 'category_id' => $genreToCategory['drama'],
                 'name' => 'Cold Lake',
                 'slug' => 'cold-lake',
-                'description' => "Cold Lake-Jeff Carson – Thriller kriminal berlatar kota kecil dengan kasus pembunuhan misterius dan rahasia gelap penduduknya. ❄️🔎",
+                'description' => 'Cold Lake-Jeff Carson – Thriller kriminal berlatar kota kecil dengan kasus pembunuhan misterius dan rahasia gelap penduduknya. ❄️🔎',
                 'price' => 50000,
                 'discount_price' => null,
                 'stock' => 50,
@@ -613,7 +616,7 @@ class ProductSeeder extends Seeder
                 'category_id' => $genreToCategory['fantasi'],
                 'name' => 'Witch',
                 'slug' => 'witch',
-                'description' => "Witch-Finbar Hawkins – Cerita fantasi tentang penyihir muda yang harus memilih antara kekuatan dan kemanusiaannya. 🧙‍♀️✨",
+                'description' => 'Witch-Finbar Hawkins – Cerita fantasi tentang penyihir muda yang harus memilih antara kekuatan dan kemanusiaannya. 🧙‍♀️✨',
                 'price' => 50000,
                 'discount_price' => null,
                 'stock' => 50,
@@ -626,7 +629,7 @@ class ProductSeeder extends Seeder
                 'category_id' => $genreToCategory['fantasi'],
                 'name' => 'The Uncrowned Queen',
                 'slug' => 'the-uncrowned-queen',
-                'description' => "The Uncrowned Queen-Lucy Steele – Novel fantasi politik tentang perebutan tahta, pengkhianatan, dan seorang ratu tanpa mahkota. 👑⚔️",
+                'description' => 'The Uncrowned Queen-Lucy Steele – Novel fantasi politik tentang perebutan tahta, pengkhianatan, dan seorang ratu tanpa mahkota. 👑⚔️',
                 'price' => 50000,
                 'discount_price' => null,
                 'stock' => 50,
@@ -639,7 +642,7 @@ class ProductSeeder extends Seeder
                 'category_id' => $genreToCategory['fantasi'],
                 'name' => 'The Sea Witch',
                 'slug' => 'the-sea-witch',
-                'description' => "The Sea Witch-Eva Leight – Kisah magis berlatar laut tentang penyihir, kutukan, dan cinta yang terlarang. 🌊🧜‍♀️",
+                'description' => 'The Sea Witch-Eva Leight – Kisah magis berlatar laut tentang penyihir, kutukan, dan cinta yang terlarang. 🌊🧜‍♀️',
                 'price' => 50000,
                 'discount_price' => null,
                 'stock' => 50,
@@ -652,7 +655,7 @@ class ProductSeeder extends Seeder
                 'category_id' => $genreToCategory['fantasi'],
                 'name' => 'Of the Dark Moon',
                 'slug' => 'of-the-dark-moon',
-                'description' => "Of the Dark Moon-Melissa Kieran – Fantasi romantis tentang kekuatan bulan gelap, rahasia kuno, dan cinta di tengah kegelapan. 🌑💫",
+                'description' => 'Of the Dark Moon-Melissa Kieran – Fantasi romantis tentang kekuatan bulan gelap, rahasia kuno, dan cinta di tengah kegelapan. 🌑💫',
                 'price' => 50000,
                 'discount_price' => null,
                 'stock' => 50,
@@ -665,7 +668,7 @@ class ProductSeeder extends Seeder
                 'category_id' => $genreToCategory['fiksi-remaja'],
                 'name' => 'Human',
                 'slug' => 'human',
-                'description' => "Human-Greassy Microwave – Novel distopia reflektif tentang arti menjadi manusia di dunia yang perlahan kehilangan empati. 🤖❤️",
+                'description' => 'Human-Greassy Microwave – Novel distopia reflektif tentang arti menjadi manusia di dunia yang perlahan kehilangan empati. 🤖❤️',
                 'price' => 50000,
                 'discount_price' => null,
                 'stock' => 50,
@@ -690,6 +693,6 @@ class ProductSeeder extends Seeder
                 ]
             );
         }
-        $this->command->info('Berhasil membuat ' . count($products) . ' produk buku dengan gambar yang benar.');
+        $this->command->info('Berhasil membuat '.count($products).' produk buku dengan gambar yang benar.');
     }
 }

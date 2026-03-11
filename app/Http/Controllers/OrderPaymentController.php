@@ -1,9 +1,12 @@
 <?php
+
 namespace App\Http\Controllers;
+
 use App\Models\Order;
 use App\Services\MidtransService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
+
 class OrderPaymentController extends Controller
 {
     public function snapToken(string $orderNumber, MidtransService $midtrans): JsonResponse
@@ -21,6 +24,7 @@ class OrderPaymentController extends Controller
             $order->update([
                 'snap_token' => $snapToken,
             ]);
+
             return response()->json([
                 'snap_token' => $snapToken,
             ]);
@@ -29,6 +33,7 @@ class OrderPaymentController extends Controller
                 'order' => $orderNumber,
                 'error' => $e->getMessage(),
             ]);
+
             return response()->json([
                 'message' => 'Gagal membuat snap token',
                 'error' => $e->getMessage(),

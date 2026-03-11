@@ -45,7 +45,11 @@
    ================================================ */
 
 body {
-    font-family: "Inter", system-ui, -apple-system, sans-serif;
+    font-family:
+        "Inter",
+        system-ui,
+        -apple-system,
+        sans-serif;
     color: var(--text-dark);
 }
 
@@ -63,7 +67,9 @@ footer {
 
 /* Card Produk */
 .product-card {
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition:
+        transform 0.2s,
+        box-shadow 0.2s;
 }
 
 .product-card:hover {

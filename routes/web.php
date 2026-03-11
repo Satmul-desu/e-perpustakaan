@@ -1,24 +1,26 @@
 <?php
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\CatalogController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\WishlistController;
-use App\Http\Controllers\LoanController;
-use App\Http\Controllers\ComplaintController;
-use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\ProductController;
-use App\Http\Controllers\Admin\LoanController as AdminLoanController;
+
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ComplaintController as AdminComplaintController;
-use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\LoanController as AdminLoanController;
+use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ReportController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\Auth\GoogleController;
+use App\Http\Controllers\CatalogController;
+use App\Http\Controllers\ComplaintController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LoanController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\WishlistController;
+use Illuminate\Support\Facades\Route;
+
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/flash-sale', [HomeController::class, 'flashSale'])->name('flash-sale');
-Route::get('/tentang', fn() => view('tentang'));
+Route::get('/tentang', fn () => view('tentang'));
 Route::middleware('guest')->group(function () {
     Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [LoginController::class, 'login'])->middleware('throttle:5,1')->name('login');
@@ -84,7 +86,8 @@ Route::middleware(['auth', 'admin'])
         Route::resource('complaints', AdminComplaintController::class);
         Route::resource('categories', CategoryController::class);
         Route::get('reports/loans', [ReportController::class, 'loans'])->name('reports.loans');
-        Route::get('reports/export-loans', [ReportController::class, 'exportLoans'])->name('reports.export-loans');
+        Route::get('reports/export-loans/excel', [ReportController::class, 'exportLoansExcel'])->name('reports.export-loans.excel');
+        Route::get('reports/export-loans/word', [ReportController::class, 'exportLoansWord'])->name('reports.export-loans.word');
         Route::get('reports/sales', [ReportController::class, 'sales'])->name('reports.sales');
         Route::get('users', [UserController::class, 'index'])->name('users.index');
         Route::resource('orders', \App\Http\Controllers\Admin\OrderController::class);

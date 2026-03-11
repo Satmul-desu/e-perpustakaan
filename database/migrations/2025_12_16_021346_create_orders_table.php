@@ -1,7 +1,9 @@
 <?php
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+
 return new class extends Migration
 {
     public function up(): void
@@ -15,11 +17,11 @@ return new class extends Migration
             $table->decimal('total_amount', 15, 2);
             $table->decimal('shipping_cost', 12, 2)->default(0);
             $table->enum('status', [
-                'pending',    
-                'processing', 
-                'shipped',    
-                'delivered',  
-                'cancelled',  
+                'pending',
+                'processing',
+                'shipped',
+                'delivered',
+                'cancelled',
             ])->default('pending');
             $table->string('shipping_name');
             $table->string('shipping_phone', 20);
@@ -32,6 +34,7 @@ return new class extends Migration
             $table->index('created_at');
         });
     }
+
     public function down(): void
     {
         Schema::dropIfExists('orders');

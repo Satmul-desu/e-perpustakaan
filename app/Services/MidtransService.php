@@ -1,29 +1,36 @@
 <?php
+
 namespace App\Services;
+
 use App\Models\Order;
 use Midtrans\Config;
 use Midtrans\Snap;
+
 class MidtransService
 {
     public function __construct()
     {
-        Config::$serverKey    = config('midtrans.server_key');
+        Config::$serverKey = config('midtrans.server_key');
         Config::$isProduction = config('midtrans.is_production');
-        Config::$isSanitized  = config('midtrans.is_sanitized');
-        Config::$is3ds        = config('midtrans.is_3ds');
+        Config::$isSanitized = config('midtrans.is_sanitized');
+        Config::$is3ds = config('midtrans.is_3ds');
     }
+
     protected function generateMidtransOrderId(Order $order): string
     {
-        return $order->order_number . '-' . uniqid('', true);
+        return $order->order_number.'-'.uniqid('', true);
     }
+
     public function createSnapToken(Order $order): string
     {
         if (empty($order->midtrans_order_id)) {
             $order->midtrans_order_id = $this->generateMidtransOrderId($order);
             $order->save(['midtrans_order_id' => true]);
         }
+
         return $this->createSnapTokenWithRetry($order);
     }
+
     protected function createSnapTokenWithRetry(Order $order, int $maxRetries = 2): string
     {
         $attempt = 0;
@@ -35,21 +42,25 @@ class MidtransService
                 if ($this->isDuplicateOrderIdError($e)) {
                     $order->midtrans_order_id = $this->generateMidtransOrderId($order);
                     $order->save(['midtrans_order_id' => true]);
+
                     continue;
                 }
                 throw $e;
             }
         }
-        throw new \Exception('Failed to create Snap token after ' . $maxRetries . ' attempts');
+        throw new \Exception('Failed to create Snap token after '.$maxRetries.' attempts');
     }
+
     protected function isDuplicateOrderIdError(\Exception $e): bool
     {
         $message = $e->getMessage();
+
         return str_contains($message, 'order_id has already been taken') ||
                str_contains($message, 'order_id sudah digunakan') ||
                str_contains($message, 'duplicate') ||
                str_contains($message, 'HTTP status code: 400');
     }
+
     protected function createSnapTokenOnce(Order $order): string
     {
         $user = $order->user ?? $order->userRelation ?? null;
@@ -80,6 +91,7 @@ class MidtransService
                 ];
             })->toArray(),
         ];
+
         return Snap::getSnapToken($params);
     }
 }

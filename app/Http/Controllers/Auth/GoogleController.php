@@ -1,12 +1,15 @@
 <?php
+
 namespace App\Http\Controllers\Auth;
-use App\Http\Controllers\Controller; 
-use App\Models\User;                 
-use Exception;                       
-use Illuminate\Support\Facades\Auth; 
-use Illuminate\Support\Facades\Hash; 
-use Illuminate\Support\Str;          
+
+use App\Http\Controllers\Controller;
+use App\Models\User;
+use Exception;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
+
 class GoogleController extends Controller
 {
     public function redirectToGoogle()
@@ -15,6 +18,7 @@ class GoogleController extends Controller
             ->scopes(['email', 'profile'])
             ->redirect();
     }
+
     public function handleGoogleCallback()
     {
         if (request()->has('error')) {
@@ -24,15 +28,17 @@ class GoogleController extends Controller
                     ->route('login')
                     ->with('info', 'Login dengan Google dibatalkan.');
             }
+
             return redirect()
                 ->route('login')
-                ->with('error', 'Terjadi kesalahan: ' . $error);
+                ->with('error', 'Terjadi kesalahan: '.$error);
         }
         try {
             $googleUser = Socialite::driver('google')->user();
             $user = $this->findOrCreateUser($googleUser);
             Auth::login($user, remember: true);
             session()->regenerate();
+
             return redirect()
                 ->intended(route('home'))
                 ->with('success', 'Berhasil login dengan Google!');
@@ -41,41 +47,47 @@ class GoogleController extends Controller
                 ->route('login')
                 ->with('error', 'Session telah berakhir. Silakan coba lagi.');
         } catch (\GuzzleHttp\Exception\ClientException $e) {
-            logger()->error('Google API Error: ' . $e->getMessage());
+            logger()->error('Google API Error: '.$e->getMessage());
+
             return redirect()
                 ->route('login')
                 ->with('error', 'Terjadi kesalahan saat menghubungi Google. Coba lagi.');
         } catch (Exception $e) {
-            logger()->error('OAuth Error: ' . $e->getMessage());
+            logger()->error('OAuth Error: '.$e->getMessage());
+
             return redirect()
                 ->route('login')
                 ->with('error', 'Gagal login. Silakan coba lagi.');
         }
     }
+
     protected function findOrCreateUser($googleUser): User
     {
         $user = User::where('google_id', $googleUser->getId())->first();
         if ($user) {
             $user->update(['avatar' => $googleUser->getAvatar()]);
+
             return $user;
         }
         $user = User::where('email', $googleUser->getEmail())->first();
         if ($user) {
             $user->update([
-                'google_id'         => $googleUser->getId(),
-                'avatar'            => $googleUser->getAvatar() ?? $user->avatar,
+                'google_id' => $googleUser->getId(),
+                'avatar' => $googleUser->getAvatar() ?? $user->avatar,
                 'email_verified_at' => $user->email_verified_at ?? now(),
             ]);
+
             return $user;
         }
+
         return User::create([
-            'name'              => $googleUser->getName(),
-            'email'             => $googleUser->getEmail(),
-            'google_id'         => $googleUser->getId(),
-            'avatar'            => $googleUser->getAvatar(),
+            'name' => $googleUser->getName(),
+            'email' => $googleUser->getEmail(),
+            'google_id' => $googleUser->getId(),
+            'avatar' => $googleUser->getAvatar(),
             'email_verified_at' => now(),
-            'password'          => Hash::make(Str::random(24)),
-            'role'              => 'customer',
+            'password' => Hash::make(Str::random(24)),
+            'role' => 'customer',
         ]);
     }
 }

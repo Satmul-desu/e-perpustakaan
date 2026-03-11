@@ -1,8 +1,10 @@
 <?php
+
 namespace Database\Seeders;
+
 use App\Models\Category;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+
 class CategorySeeder extends Seeder
 {
     public function run(): void
@@ -71,6 +73,6 @@ class CategorySeeder extends Seeder
                 $categoryData
             );
         }
-        $this->command->info('Berhasil membuat ' . count($categories) . ' kategori sample.');
+        $this->command->info('Berhasil membuat '.count($categories).' kategori sample.');
     }
 }

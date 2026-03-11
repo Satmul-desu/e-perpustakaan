@@ -1,23 +1,27 @@
 <?php
+
 namespace App\Http\Requests;
+
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+
 class ProfileUpdateRequest extends FormRequest
 {
     public function authorize(): bool
     {
         return true;
     }
+
     public function rules(): array
     {
         return [
-            'name'    => [
+            'name' => [
                 'required',
                 'string',
                 'max:255',
             ],
-             'email'   => [
+            'email' => [
                 'required',
                 'string',
                 'lowercase',
@@ -25,18 +29,18 @@ class ProfileUpdateRequest extends FormRequest
                 'max:255',
                 Rule::unique(User::class)->ignore($this->user()->id),
             ],
- 'phone'   => [
+            'phone' => [
                 'nullable',
                 'string',
                 'max:20',
                 'regex:/^(\+62|62|0)8[1-9][0-9]{6,10}$/',
             ],
-           'address' => [
+            'address' => [
                 'nullable',
                 'string',
                 'max:500',
             ],
-  'avatar'  => [
+            'avatar' => [
                 'nullable',
                 'image',
                 'mimes:jpeg,jpg,png,webp',
@@ -45,23 +49,25 @@ class ProfileUpdateRequest extends FormRequest
             ],
         ];
     }
-       public function messages(): array
+
+    public function messages(): array
     {
         return [
-            'phone.regex'       => 'Format nomor telepon tidak valid. Gunakan format 08xx atau +628xx.',
-            'avatar.max'        => 'Ukuran foto maksimal 2MB.',
+            'phone.regex' => 'Format nomor telepon tidak valid. Gunakan format 08xx atau +628xx.',
+            'avatar.max' => 'Ukuran foto maksimal 2MB.',
             'avatar.dimensions' => 'Dimensi foto harus antara 100x100 hingga 2000x2000 pixel.',
-            'email.unique'      => 'Email ini sudah digunakan oleh pengguna lain.',
+            'email.unique' => 'Email ini sudah digunakan oleh pengguna lain.',
         ];
     }
-       public function attributes(): array
+
+    public function attributes(): array
     {
         return [
-            'name'    => 'nama',
-            'email'   => 'alamat email',
-            'phone'   => 'nomor telepon',
+            'name' => 'nama',
+            'email' => 'alamat email',
+            'phone' => 'nomor telepon',
             'address' => 'alamat domisili',
-            'avatar'  => 'foto profil',
+            'avatar' => 'foto profil',
         ];
     }
 }

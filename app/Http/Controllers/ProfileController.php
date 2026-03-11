@@ -1,4 +1,5 @@
 <?php
+
 // app/Http/Controllers/ProfileController.php
 
 namespace App\Http\Controllers;
@@ -38,14 +39,14 @@ class ProfileController extends Controller
         // Handle Upload Avatar
         if ($request->hasFile('avatar')) {
             // Hapus avatar lama jika ada dan merupakan file lokal
-            if ($user->avatar && 
-                !$this->isGoogleAvatar($user->avatar) && 
+            if ($user->avatar &&
+                ! $this->isGoogleAvatar($user->avatar) &&
                 Storage::disk('public')->exists($user->avatar)) {
                 Storage::disk('public')->delete($user->avatar);
             }
 
             // Generate nama file unik
-            $filename = 'avatar-' . $user->id . '-' . time() . '.' . $request->file('avatar')->extension();
+            $filename = 'avatar-'.$user->id.'-'.time().'.'.$request->file('avatar')->extension();
             $path = $request->file('avatar')->storeAs('avatars', $filename, 'public');
 
             // Simpan ke database
@@ -68,6 +69,7 @@ class ProfileController extends Controller
         if (empty($avatar)) {
             return false;
         }
+
         return str_starts_with($avatar, 'http://') || str_starts_with($avatar, 'https://');
     }
 
@@ -82,19 +84,19 @@ class ProfileController extends Controller
         // Cek apakah user mengupload file baru di input 'avatar'?
         if ($request->hasFile('avatar')) {
             // Hapus avatar lama jika ada dan merupakan file lokal
-            if ($user->avatar && 
-                !$this->isGoogleAvatar($user->avatar) && 
+            if ($user->avatar &&
+                ! $this->isGoogleAvatar($user->avatar) &&
                 Storage::disk('public')->exists($user->avatar)) {
                 Storage::disk('public')->delete($user->avatar);
             }
 
             // Generate nama file unik
-            $filename = 'avatar-' . $user->id . '-' . time() . '.' . $request->file('avatar')->extension();
+            $filename = 'avatar-'.$user->id.'-'.time().'.'.$request->file('avatar')->extension();
             $path = $request->file('avatar')->storeAs('avatars', $filename, 'public');
 
             // Simpan path ke properti model
             $user->avatar = $path;
-            
+
             // Jika user login dengan Google, set google_id ke NULL agar menggunakan avatar lokal
             if ($user->isGoogleUser()) {
                 $user->google_id = null;
@@ -131,7 +133,7 @@ class ProfileController extends Controller
 
         // Generate nama file unik untuk mencegah bentrok nama.
         // Format: avatar-{user_id}-{timestamp}.{ext}
-        $filename = 'avatar-' . $user->id . '-' . time() . '.' . $request->file('avatar')->extension();
+        $filename = 'avatar-'.$user->id.'-'.time().'.'.$request->file('avatar')->extension();
 
         // Simpan file ke folder: storage/app/public/avatars
         // return path relatif: "avatars/namafile.jpg"
@@ -165,7 +167,7 @@ class ProfileController extends Controller
     {
         $validated = $request->validateWithBag('updatePassword', [
             'current_password' => ['required', 'current_password'],
-            'password'         => ['required', 'confirmed', 'min:8'],
+            'password' => ['required', 'confirmed', 'min:8'],
         ]);
 
         $request->user()->update([

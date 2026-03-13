@@ -96,11 +96,11 @@
                         <table class="table table-hover mb-0" style="border-color: #334155;">
                             <thead style="background: rgba(15, 23, 42, 0.8);">
                                 <tr>
-                                    <th class="text-black px-4 py-3" style="white-space: nowrap;">Buku</th>
-                                    <th class="text-black py-3" style="white-space: nowrap;">Tgl Pinjam</th>
-                                    <th class="text-black py-3" style="white-space: nowrap;">Jatuh Tempo</th>
-                                    <th class="text-black py-3" style="white-space: nowrap;">Status</th>
-                                    <th class="text-black py-3" style="white-space: nowrap;">Aksi</th>
+                                    <th class="text-white px-4 py-3" style="white-space: nowrap;">Buku</th>
+                                    <th class="text-white py-3" style="white-space: nowrap;">Tgl Pinjam</th>
+                                    <th class="text-white py-3" style="white-space: nowrap;">Jatuh Tempo</th>
+                                    <th class="text-white py-3" style="white-space: nowrap;">Status</th>
+                                    <th class="text-white py-3" style="white-space: nowrap;">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody style="color: #e2e8f0;">
@@ -112,16 +112,15 @@
                                                     height="60" style="object-fit: cover; border: 1px solid #475569;">
                                                 <div>
                                                     <small
-                                                        class="text-black d-block fw-bold">{{ Str::limit($loan->book->name, 25) }}</small>
+                                                        class="text-white d-block fw-bold">{{ Str::limit($loan->book->name, 25) }}</small>
                                                     <small
-                                                        class="text-black">{{ $loan->book->category->name ?? 'Buku' }}</small>
+                                                        class="text-white">{{ $loan->book->category->name ?? 'Buku' }}</small>
                                                 </div>
                                             </div>
                                         </td>
-                                        <td class="py-3" style="white-space: nowrap; color: black;">
+                                        <td class="py-3" style="white-space: nowrap; color: white;">
                                             {{ $loan->loan_date->format('d M Y') }}</td>
-                                        <td class="py-3 {{ $loan->is_overdue ? 'text-black fw-bold' : 'text-black' }}"
-                                            style="white-space: nowrap;">
+                                        <td class="py-3 {{ $loan->is_overdue ? 'text-danger fw-bold' : 'text-white' }}" style="white-space: nowrap;">
                                             {{ $loan->due_date->format('d M Y') }}
                                             @if ($loan->is_overdue)
                                                 <i class="bi bi-exclamation-circle ms-1"></i>

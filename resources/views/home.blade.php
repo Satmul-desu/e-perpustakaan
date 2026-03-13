@@ -10,31 +10,31 @@
         <div class="hero-overlay" style="background: rgba(0, 0, 0, 0.6);"></div>
         <div class="container position-relative" style="padding-top: 80px;">
             <div class="row justify-content-center text-center">
+                <div class="col-lg-12 mb-4">
+                    <img src="{{ asset('images/logo-removebg-preview.png') }}" alt="Perpustakaan"
+                        class="hero-image img-fluid" style="max-height: 250px;">
+                </div>
+                
                 <div class="col-lg-10 col-md-12">
                     <h1 class="hero-title mb-4">
                         <span class="text-white">Selamat Datang di</span><br>
                         <span class="text-primary">Perpustakaan Buku</span><br>
                         <span class="text-white">Online</span>
                     </h1>
-                    <p class="hero-subtitle mb-4">
+                    <p class="hero-subtitle text-white mb-4">
                         Temukan dan pinjam buku favorit Anda dengan mudah.
                         Nikmati pengalaman membaca tanpa batas!
                     </p>
                     <div class="trust-badges mt-4 d-flex flex-wrap justify-content-center gap-4">
-                        <div class="trust-badge">
+                        <div class="trust-badge text-white">
                             <i class="bi bi-book text-success"></i>
                             <span>Koleksi Lengkap</span>
                         </div>
-                        <div class="trust-badge">
+                        <div class="trust-badge text-white">
                             <i class="bi bi-clock-history text-info"></i>
                             <span>Peminjaman Cepat</span>
                         </div>
                     </div>
-                </div>
-
-                <div class="col-lg-12 mt-4">
-                    <img src="{{ asset('images/logo-removebg-preview.png') }}" alt="Perpustakaan"
-                        class="hero-image img-fluid">
                 </div>
             </div>
         </div>
@@ -48,7 +48,7 @@
                     <i class="bi bi-grid-3x3-gap-fill me-2 text-primary"></i>
                     Semua Genre
                 </h2>
-                <p class="section-subtitle text-secondary">Pilih genre buku favoritmu</p>
+                <p class="section-subtitle text-white opacity-75">Pilih genre buku favoritmu</p>
             </div>
 
             {{-- Category Slider --}}
@@ -80,7 +80,7 @@
                                 <div class="category-card h-100">
                                     <div class="category-icon mb-2">{{ $genre['icon'] }}</div>
                                     <h6 class="category-name text-white mb-1">{{ $genre['name'] }}</h6>
-                                    <small class="category-count text-secondary">{{ $genre['count'] }} Buku</small>
+                                    <small class="category-count text-white opacity-75">{{ $genre['count'] }} Buku</small>
                                 </div>
                             </a>
                         </div>
@@ -103,7 +103,7 @@
                     <i class="bi bi-star-fill me-2 text-warning"></i>
                     Koleksi Unggulan
                 </h2>
-                <p class="section-subtitle text-secondary">Buku-buku pilihan yang tersedia untuk dipinjam</p>
+                <p class="section-subtitle text-white opacity-75">Buku-buku pilihan yang tersedia untuk dipinjam</p>
             </div>
 
             @if ($featuredProducts->count() > 0)
@@ -127,8 +127,8 @@
                 </div>
             @else
                 <div class="text-center py-5">
-                    <i class="bi bi-inbox text-secondary" style="font-size: 4rem;"></i>
-                    <p class="text-secondary mt-3">Belum ada buku tersedia.</p>
+                    <i class="bi bi-inbox text-white opacity-50" style="font-size: 4rem;"></i>
+                    <p class="text-white opacity-75 mt-3">Belum ada buku tersedia.</p>
                 </div>
             @endif
         </div>
@@ -144,7 +144,7 @@
                             <i class="bi bi-book me-2 text-primary"></i>
                             Mulai Membaca Hari Ini!
                         </h3>
-                        <p class="text-secondary mb-0">Pinjam buku favorit Anda dengan mudah dan nyaman. Bergabung sekarang!
+                        <p class="text-white opacity-75 mb-0">Pinjam buku favorit Anda dengan mudah dan nyaman. Bergabung sekarang!
                         </p>
                     </div>
                     <div class="col-lg-4 text-lg-end">

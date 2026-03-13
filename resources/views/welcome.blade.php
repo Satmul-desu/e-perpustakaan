@@ -1,49 +1,234 @@
-@extends('layouts.app')
-@section('content')
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div class="text-center">
-            <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">
-                Selamat Datang di {{ config('app.name', 'Toko Online') }}
-            </h1>
-            <p class="text-xl text-gray-600 dark:text-gray-300 mb-8">
-                Platform e-commerce modern untuk semua kebutuhan belanja Anda
-            </p>
-            <div class="grid md:grid-cols-3 gap-8 mb-12">
-                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
-                    <div class="text-3xl mb-4">🛍️</div>
-                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Beragam Produk</h3>
-                    <p class="text-gray-600 dark:text-gray-300">Temukan berbagai produk berkualitas dari penjual terpercaya
-                    </p>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ config('app.name', 'E-Perpustakaan') }} - Portofolio Web App</title>
+    <link rel="icon" href="{{ asset('favicon.ico') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navbar-custom {
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .navbar-custom .nav-link {
+            color: #e2e8f0;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-custom .nav-link:hover {
+            color: #60a5fa;
+            transform: translateY(-2px);
+        }
+        
+        .btn-solid-primary {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 0.5rem 1.25rem;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-solid-primary:hover {
+            background: #2563eb;
+            color: white;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+        }
+
+        .hero-section {
+            padding: 100px 0 60px;
+            text-align: center;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: #94a3b8;
+            max-width: 600px;
+            margin: 0 auto 40px;
+        }
+
+        .feature-card {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            height: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            background: rgba(30, 41, 59, 0.9);
+            border-color: #3b82f6;
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.2);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            color: #60a5fa;
+            margin-bottom: 20px;
+        }
+
+        section {
+            padding: 60px 0;
+        }
+        
+        main {
+            flex: 1;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar Khusus Landing Page -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom sticky-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center fw-bold" href="{{ url('/') }}">
+                <img src="{{ asset('images/logo-removebg-preview.png') }}" alt="Logo" width="40" height="40" class="me-2 object-fit-contain">
+                <span>E-<span class="text-primary">Perpustakaan</span></span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#landingNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="landingNavbar">
+                <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#tentang-kami">Tentang Kami</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#tentang-app">Tentang E-Perpustakaan</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#tentang-pembuat">Tentang Pembuat</a>
+                    </li>
+                </ul>
+                <div class="d-flex align-items-center gap-3">
+                    @auth
+                        <a href="{{ route('home') }}" class="btn btn-solid-primary">Masuk Aplikasi <i class="bi bi-arrow-right"></i></a>
+                    @else
+                        <a href="{{ route('login') }}" class="nav-link text-white">Login</a>
+                        <a href="{{ route('register') }}" class="btn btn-solid-primary">Register</a>
+                    @endauth
                 </div>
-                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
-                    <div class="text-3xl mb-4">🚚</div>
-                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Pengiriman Cepat</h3>
-                    <p class="text-gray-600 dark:text-gray-300">Layanan pengiriman yang cepat dan aman ke seluruh Indonesia
-                    </p>
-                </div>
-                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
-                    <div class="text-3xl mb-4">💳</div>
-                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Pembayaran Aman</h3>
-                    <p class="text-gray-600 dark:text-gray-300">Berbagai metode pembayaran yang aman dan terpercaya</p>
-                </div>
-            </div>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                @guest
-                    <a href="{{ route('register') }}"
-                        class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors">
-                        Daftar Sekarang
-                    </a>
-                    <a href="{{ route('login') }}"
-                        class="bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-900 dark:text-white px-8 py-3 rounded-lg font-semibold transition-colors">
-                        Masuk
-                    </a>
-                @else
-                    <a href="{{ url('/dashboard') }}"
-                        class="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors">
-                        Ke Dashboard
-                    </a>
-                @endguest
             </div>
         </div>
-    </div>
-@endsection
+    </nav>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="container">
+                <img src="{{ asset('images/logo-removebg-preview.png') }}" alt="E-Perpus Logo" class="img-fluid mb-4" style="max-height: 200px; animation: float 3s ease-in-out infinite;">
+                <h1 class="hero-title">E-Perpustakaan System</h1>
+                <p class="hero-subtitle">Platform manajemen perpustakaan digital modern yang memudahkan proses peminjaman, pengelolaan inventaris, dan memberikan pengalaman membaca tanpa batas untuk semua anggota.</p>
+                @guest
+                <div class="d-flex justify-content-center gap-3">
+                    <a href="{{ route('login') }}" class="btn btn-solid-primary btn-lg px-4">Mulai Sekarang</a>
+                    <a href="#tentang-app" class="btn btn-outline-light btn-lg px-4" style="border-radius: 8px;">Pelajari Lebih Lanjut</a>
+                </div>
+                @endguest
+            </div>
+        </section>
+
+        <!-- Tentang E-Perpustakaan (Fitur) -->
+        <section id="tentang-app" class="bg-dark-custom" style="background: rgba(15, 23, 42, 0.4);">
+            <div class="container">
+                <div class="text-center mb-5">
+                    <h2 class="text-white fw-bold">Fitur Utama</h2>
+                    <p class="text-secondary">Kenapa menggunakan platform E-Perpustakaan ini?</p>
+                </div>
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <div class="feature-card">
+                            <i class="bi bi-book feature-icon"></i>
+                            <h4 class="text-white mb-3">Katalog Lengkap</h4>
+                            <p class="text-secondary mb-0">Ribuan koleksi buku digital dari berbagai genre yang dapat dieksplorasi dengan mudah dan cepat melalui fitur pencarian canggih.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="feature-card">
+                            <i class="bi bi-arrow-repeat feature-icon"></i>
+                            <h4 class="text-white mb-3">Peminjaman Digital</h4>
+                            <p class="text-secondary mb-0">Sistem sirkulasi peminjaman dan pengembalian buku yang terotomatisasi penuh dengan notifikasi masa pinjam.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="feature-card">
+                            <i class="bi bi-shield-check feature-icon"></i>
+                            <h4 class="text-white mb-3">Admin Dashboard</h4>
+                            <p class="text-secondary mb-0">Panel kelola komprehensif untuk pengurus perpustakaan memantau data peminjam, persetujuan, dan statistik bulanan.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tentang Kami & Pembuat -->
+        <section id="tentang-kami">
+            <div class="container">
+                <div class="row align-items-center mb-5 pb-5 border-bottom border-secondary">
+                    <div class="col-md-6 mb-4 mb-md-0">
+                        <div class="p-4 rounded-4" style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2);">
+                            <h3 class="text-white fw-bold mb-3"><i class="bi bi-building me-2 text-primary"></i> Tentang Kami</h3>
+                            <p class="text-light" style="line-height: 1.8;">
+                                Kami adalah tim inovator yang bertekad membawa pengalaman perpustakaan tradisional ke era digital. 
+                                Dengan visi "Membaca Tanpa Batas Ruang dan Waktu," platform E-Perpustakaan didedikasikan untuk 
+                                institusi pendidikan, perusahaan, maupun komunitas membaca publik.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-6" id="tentang-pembuat">
+                        <div class="p-4 rounded-4" style="background: rgba(168, 85, 247, 0.1); border: 1px solid rgba(168, 85, 247, 0.2);">
+                            <h3 class="text-white fw-bold mb-3"><i class="bi bi-person-badge me-2" style="color: #a855f7;"></i> Tentang Pembuat</h3>
+                            <p class="text-light" style="line-height: 1.8;">
+                                Proyek portofolio Web Developer ini dikembangkan dengan menggunakan tumpukan teknologi modern (Laravel, Bootstrap). 
+                                Dibuat dengan passion terhadap User Interface dan User Experience yang responsif, minimalis, dan elegan.
+                            </p>
+                            <a href="https://github.com" class="btn btn-sm btn-outline-light mt-2" style="border-radius: 8px;"><i class="bi bi-github me-1"></i> Lihat Portofolio Lain</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    @include('partials.footer')
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+    </style>
+</body>
+</html>

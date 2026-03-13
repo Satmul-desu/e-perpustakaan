@@ -5,12 +5,6 @@
     <div class="row">
         <div class="col-12">
             <div class="card border-0 shadow-sm">
-                <div class="card-header bg-dark d-flex justify-content-between align-items-center">
-                    <h6 class="mb-0 text-white">Daftar Kategori</h6>
-                    <a href="{{ route('admin.categories.create') }}" class="btn btn-primary">
-                        <i class="bi bi-plus-circle me-2"></i>Tambah Kategori
-                    </a>
-                </div>
                 <div class="card-body">
                     @if (session('success'))
                         <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -25,10 +19,20 @@
                         </div>
                     @endif
                     <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead class="table-light">
+                        <table class="table table-hover table-bordered mb-0">
+                            <thead class="table-dark">
                                 <tr>
-                                    <th>Icon</th>
+                                    <th colspan="6" class="py-3">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <h5 class="mb-0 text-white"><i class="bi bi-folder me-2"></i>Daftar Kategori</h5>
+                                            <a href="{{ route('admin.categories.create') }}" class="btn btn-primary btn-sm">
+                                                <i class="bi bi-plus-circle me-1"></i>Tambah Kategori
+                                            </a>
+                                        </div>
+                                    </th>
+                                </tr>
+                                <tr class="table-light text-dark">
+                                    <th>No</th>
                                     <th>Nama Kategori</th>
                                     <th>Deskripsi</th>
                                     <th>Jumlah Produk</th>
@@ -38,26 +42,14 @@
                             </thead>
                             <tbody>
                                 @forelse($categories as $category)
-                                    <tr>
-                                        <td>
-                                            @if ($category->icon)
-                                                <div class="bg-light rounded d-flex align-items-center justify-content-center"
-                                                    style="width: 50px; height: 50px;">
-                                                    <i class="{{ $category->icon }} fs-4 text-primary"></i>
-                                                </div>
-                                            @else
-                                                <div class="bg-light rounded d-flex align-items-center justify-content-center"
-                                                    style="width: 50px; height: 50px;">
-                                                    <i class="bi bi-folder fs-4 text-muted"></i>
-                                                </div>
-                                            @endif
-                                        </td>
-                                        <td>
-                                            <strong>{{ $category->name }}</strong>
-                                            <br>
-                                            <small class="text-muted">{{ $category->slug }}</small>
-                                        </td>
-                                        <td>{{ Str::limit($category->description, 50) }}</td>
+                                <tr>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td>
+                                        <strong>{{ $category->name }}</strong>
+                                        <br>
+                                        <small class="text-muted">{{ $category->slug }}</small>
+                                    </td>
+                                    <td>{{ Str::limit($category->description, 50) }}</td>
                                         <td>
                                             <span class="badge bg-info">{{ $category->products_count }}</span>
                                         </td>
@@ -71,23 +63,17 @@
                                         <td>
                                             <div class="btn-group" role="group">
                                                 <a href="{{ route('admin.categories.show', $category) }}"
-                                                    class="btn btn-sm btn-outline-info" title="Lihat Detail">
-                                                    <i class="bi bi-eye"></i>
-                                                </a>
+                                                    class="btn btn-sm btn-info text-white" title="Lihat Detail">Detail</a>
                                                 <a href="{{ route('admin.categories.edit', $category) }}"
-                                                    class="btn btn-sm btn-outline-warning" title="Edit">
-                                                    <i class="bi bi-pencil"></i>
-                                                </a>
+                                                    class="btn btn-sm btn-warning text-dark" title="Edit">Edit</a>
                                                 @if ($category->products_count == 0)
                                                     <form action="{{ route('admin.categories.destroy', $category) }}"
                                                         method="POST" class="d-inline"
                                                         onsubmit="return confirm('Yakin ingin menghapus kategori ini?')">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="submit" class="btn btn-sm btn-outline-danger"
-                                                            title="Hapus">
-                                                            <i class="bi bi-trash"></i>
-                                                        </button>
+                                                        <button type="submit" class="btn btn-sm btn-danger"
+                                                            title="Hapus">Hapus</button>
                                                     </form>
                                                 @endif
                                             </div>

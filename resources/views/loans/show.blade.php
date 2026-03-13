@@ -162,11 +162,11 @@
                         <div class="table-responsive">
                             <table class="table table-borderless" style="color: #94a3b8;">
                                 <tr>
-                                    <td class="py-2"><i class="bi bi-calendar me-2"></i>Tanggal Pinjam</td>
+                                    <td class="text-white py-2"><i class="bi bi-calendar me-2"></i>Tanggal Pinjam</td>
                                     <td class="text-white text-end">{{ $loan->loan_date->format('d M Y') }}</td>
                                 </tr>
                                 <tr>
-                                    <td class="py-2"><i class="bi bi-calendar-check me-2"></i>Jatuh Tempo</td>
+                                    <td class="py-2 text-white"><i class="bi bi-calendar-check me-2"></i>Jatuh Tempo</td>
                                     <td class="text-white text-end {{ $loan->is_overdue ? 'text-danger fw-bold' : '' }}">
                                         {{ $loan->due_date->format('d M Y') }}
                                         @if ($loan->is_overdue)
@@ -176,12 +176,12 @@
                                 </tr>
                                 @if ($loan->return_date)
                                     <tr>
-                                        <td class="py-2"><i class="bi bi-calendar-x me-2"></i>Tanggal Kembali</td>
+                                        <td class="py-2 text-white"><i class="bi bi-calendar-x me-2"></i>Tanggal Kembali</td>
                                         <td class="text-white text-end">{{ $loan->return_date->format('d M Y') }}</td>
                                     </tr>
                                 @endif
                                 <tr>
-                                    <td class="py-2"><i class="bi bi-clock me-2"></i>Durasi</td>
+                                    <td class="py-2 text-white"><i class="bi bi-clock me-2"></i>Durasi</td>
                                     <td class="text-white text-end">
                                         @if ($loan->is_hours_duration)
                                             {{ $loan->loan_duration_hours }} jam

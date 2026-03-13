@@ -79,6 +79,11 @@ class ProfileController extends Controller
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
         $user = $request->user();
+        $validated = $request->validated();
+
+        // Pisahkan avatar dari data lain untuk penanganan manual,
+        // ini untuk menghindari masalah mass-assignment jika 'avatar' tidak ada di $fillable.
+        unset($validated['avatar']);
 
         // 1. Handle Upload Avatar
         // Cek apakah user mengupload file baru di input 'avatar'?
@@ -94,7 +99,7 @@ class ProfileController extends Controller
             $filename = 'avatar-'.$user->id.'-'.time().'.'.$request->file('avatar')->extension();
             $path = $request->file('avatar')->storeAs('avatars', $filename, 'public');
 
-            // Simpan path ke properti model
+            // Set path avatar langsung ke model untuk bypass mass assignment.
             $user->avatar = $path;
 
             // Jika user login dengan Google, set google_id ke NULL agar menggunakan avatar lokal
@@ -104,7 +109,7 @@ class ProfileController extends Controller
         }
 
         // 2. Update Data Text (Nama, Email, dll)
-        $user->fill($request->validated());
+        $user->fill($validated);
 
         // 3. Cek Perubahan Email
         if ($user->isDirty('email')) {

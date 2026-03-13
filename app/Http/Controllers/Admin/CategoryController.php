@@ -45,6 +45,7 @@ class CategoryController extends Controller
             'name' => 'required|string|max:100|unique:categories',
             'description' => 'nullable|string|max:500',
             'image' => 'nullable|image|max:1024',
+            'icon' => 'nullable|string|max:50',
             'is_active' => 'boolean',
         ]);
         if ($request->hasFile('image')) {
@@ -64,6 +65,7 @@ class CategoryController extends Controller
             'name' => 'required|string|max:100|unique:categories,name,'.$category->id,
             'description' => 'nullable|string|max:500',
             'image' => 'nullable|image|max:1024',
+            'icon' => 'nullable|string|max:50',
             'is_active' => 'boolean',
         ]);
         if ($request->hasFile('image')) {

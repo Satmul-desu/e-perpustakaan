@@ -5,12 +5,6 @@
     <div class="row">
         <div class="col-12">
             <div class="card border-0 shadow-sm">
-                <div class="card-header bg-dark d-flex justify-content-between align-items-center">
-                    <h6 class="mb-0 text-white">Daftar Buku</h6>
-                    <a href="{{ route('admin.products.create') }}" class="btn btn-primary">
-                        <i class="bi bi-plus-circle me-2"></i>Tambah Buku
-                    </a>
-                </div>
                 <div class="card-body">
                     <form method="GET" class="row g-3 mb-4">
                         <div class="col-md-4">
@@ -52,9 +46,20 @@
                         </div>
                     @endif
                     <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead class="table-light">
+                        <table class="table table-hover table-bordered mb-0">
+                            <thead class="table-dark">
                                 <tr>
+                                    <th colspan="7" class="py-3">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <h5 class="mb-0 text-white"><i class="bi bi-book me-2"></i>Daftar Buku</h5>
+                                            <a href="{{ route('admin.products.create') }}" class="btn btn-primary btn-sm">
+                                                <i class="bi bi-plus-circle me-1"></i>Tambah Buku
+                                            </a>
+                                        </div>
+                                    </th>
+                                </tr>
+                                <tr class="table-light text-dark">
+                                    <th>No</th>
                                     <th>Gambar</th>
                                     <th>Nama Buku</th>
                                     <th>Kategori</th>
@@ -66,6 +71,7 @@
                             <tbody>
                                 @forelse($products as $product)
                                     <tr>
+                                        <td>{{ $loop->iteration }}</td>
                                         <td>
                                             @php
                                                 $mainImage =
@@ -107,22 +113,16 @@
                                         <td>
                                             <div class="btn-group" role="group">
                                                 <a href="{{ route('admin.products.show', $product) }}"
-                                                    class="btn btn-sm btn-outline-info" title="Lihat Detail">
-                                                    <i class="bi bi-eye"></i>
-                                                </a>
+                                                    class="btn btn-sm btn-info text-white" title="Lihat Detail">Detail</a>
                                                 <a href="{{ route('admin.products.edit', $product) }}"
-                                                    class="btn btn-sm btn-outline-warning" title="Edit">
-                                                    <i class="bi bi-pencil"></i>
-                                                </a>
+                                                    class="btn btn-sm btn-warning text-dark" title="Edit">Edit</a>
                                                 <form action="{{ route('admin.products.destroy', $product) }}"
                                                     method="POST" class="d-inline"
                                                     onsubmit="return confirm('Yakin ingin menghapus buku ini?')">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-sm btn-outline-danger"
-                                                        title="Hapus">
-                                                        <i class="bi bi-trash"></i>
-                                                    </button>
+                                                    <button type="submit" class="btn btn-sm btn-danger"
+                                                        title="Hapus">Hapus</button>
                                                 </form>
                                             </div>
                                         </td>

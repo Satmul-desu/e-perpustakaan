@@ -5,9 +5,6 @@
     <div class="row">
         <div class="col-12">
             <div class="card border-0 shadow-sm">
-                <div class="card-header bg-dark d-flex justify-content-between align-items-center">
-                    <h6 class="mb-0 text-white">Daftar Anggota</h6>
-                </div>
                 <div class="card-body">
                     @if (session('success'))
                         <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -22,9 +19,17 @@
                         </div>
                     @endif
                     <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead class="table-light">
+                        <table class="table table-hover table-bordered mb-0">
+                            <thead class="table-dark">
                                 <tr>
+                                    <th colspan="7" class="py-3">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <h5 class="mb-0 text-white"><i class="bi bi-people me-2"></i>Daftar Anggota</h5>
+                                        </div>
+                                    </th>
+                                </tr>
+                                <tr class="table-light text-dark">
+                                    <th>No</th>
                                     <th>Avatar</th>
                                     <th>Nama</th>
                                     <th>Email</th>
@@ -36,6 +41,7 @@
                             <tbody>
                                 @forelse($users as $user)
                                     <tr>
+                                        <td>{{ $loop->iteration }}</td>
                                         <td>
                                             @if ($user->avatar && file_exists(public_path('storage/' . $user->avatar)))
                                                 <img src="{{ asset('storage/' . $user->avatar) }}" alt="{{ $user->name }}"

@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="id" data-bs-theme="dark">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -68,7 +67,7 @@
             height: 100vh;
             width: var(--sidebar-width);
             background: linear-gradient(180deg, var(--bg-sidebar) 0%, #0f0a2e 100%);
-            z-index: 1000;
+            z-index: 1100;
             transition: all 0.3s ease;
             border-right: 1px solid rgba(255, 255, 255, 0.05);
             box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
@@ -282,7 +281,7 @@
             padding: 1rem 2rem;
             position: sticky;
             top: 0;
-            z-index: 100;
+            z-index: 1050;
             width: 100%;
         }
 
@@ -479,12 +478,16 @@
         .table thead th {
             background: rgba(0, 0, 0, 0.2);
             border-bottom: 1px solid var(--border-color);
-            color: var(--text-secondary);
+            color: #ffffff;
             font-weight: 600;
             font-size: 0.8rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             padding: 1rem 1.5rem;
+        }
+
+        .table th {
+            color: #ffffff !important;
         }
 
         .table tbody td {
@@ -770,7 +773,7 @@
                     <div class="logo-icon">
                         <i class="bi bi-book"></i>
                     </div>
-                    <span class="logo-text">Perpustakaan</span>
+                    <span class="logo-text text-white">E-<span class="text-primary">Perpustakaan</span></span>
                 </a>
             </div>
 
@@ -901,8 +904,7 @@
                             <div class="dropdown-body-custom">
                                 @if (isset($recentComplaints) && $recentComplaints->count() > 0)
                                     @foreach ($recentComplaints as $complaint)
-                                        <a href="{{ route('admin.complaints.show', $complaint) }}"
-                                            class="dropdown-item-custom">
+                                        <a href="{{ route('admin.complaints.show', $complaint) }}" class="dropdown-item-custom">
                                             <div class="icon-wrapper complaint">
                                                 <i class="bi bi-headset"></i>
                                             </div>
@@ -927,8 +929,7 @@
                                     </div>
                                 @endif
                                 @if (isset($pendingCount) && $pendingCount > 0)
-                                    <a href="{{ route('admin.loans.index', ['status' => 'pending']) }}"
-                                        class="dropdown-item-custom">
+                                    <a href="{{ route('admin.loans.index', ['status' => 'pending']) }}" class="dropdown-item-custom">
                                         <div class="icon-wrapper order">
                                             <i class="bi bi-journal-bookmark"></i>
                                         </div>
@@ -956,28 +957,36 @@
                                 <h6>Pengaturan</h6>
                             </div>
                             <a href="{{ route('profile.edit') }}" class="dropdown-item-custom">
-                                <i class="bi bi-person"></i>
+                                <i class="bi bi-person-circle"></i>
                                 <div class="content">
                                     <div class="title">Profil Saya</div>
                                     <div class="description">Kelola akun Anda</div>
                                 </div>
                             </a>
-                            <a href="{{ route('admin.users.index') }}" class="dropdown-item-custom">
+                            <a href="{{ route('admin.users.index', ['role' => 'customer']) }}" class="dropdown-item-custom">
                                 <i class="bi bi-people"></i>
                                 <div class="content">
                                     <div class="title">Kelola Anggota</div>
-                                    <div class="description">Admin & Anggota</div>
+                                    <div class="description">Lihat semua anggota perpustakaan</div>
+                                </div>
+                            </a>
+                            <a href="{{ route('admin.users.index', ['role' => 'admin']) }}" class="dropdown-item-custom">
+                                <i class="bi bi-person-workspace"></i>
+                                <div class="content">
+                                    <div class="title">Kelola Staf</div>
+                                    <div class="description">Lihat semua admin & staf</div>
                                 </div>
                             </a>
                             <div class="dropdown-footer-custom"
                                 style="border-top: 1px solid var(--border-color); padding: 0.75rem;">
-                                <form method="POST" action="{{ route('logout') }}" class="m-0">
+                                <a href="{{ route('logout') }}" class="dropdown-item-custom"
+                                   style="width: 100%; justify-content: center; color: var(--danger-color);"
+                                   onclick="event.preventDefault(); document.getElementById('logout-form-dropdown').submit();">
+                                    <i class="bi bi-box-arrow-right"></i>
+                                    <span class="title">Keluar</span>
+                                </a>
+                                <form id="logout-form-dropdown" action="{{ route('logout') }}" method="POST" class="d-none">
                                     @csrf
-                                    <button type="submit" class="dropdown-item-custom"
-                                        style="width: 100%; justify-content: center; color: var(--danger-color);">
-                                        <i class="bi bi-box-arrow-right"></i>
-                                        <span class="title">Keluar</span>
-                                    </button>
                                 </form>
                             </div>
                         </div>

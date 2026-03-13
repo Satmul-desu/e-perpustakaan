@@ -4,7 +4,7 @@
         <a class="navbar-brand d-flex align-items-center fw-bold" href="{{ route('home') }}">
             <img src="{{ asset('images/logo-removebg-preview.png') }}" alt="Logo" class="brand-logo me-2">
             <span class="brand-text">
-                <span class="text-white">Perpustakaan</span><span class="text-primary">Buku</span>
+                <span class="text-white">E-</span><span class="text-primary">Perpustakaan</span>
         </a>
 
         {{-- Desktop Search (Hidden on Mobile) --}}

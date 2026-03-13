@@ -21,6 +21,7 @@ class ComplaintController extends Controller
             ->orderBy('created_at', 'desc');
         if ($request->status && $request->status !== 'all') {
             $query->where('status', $request->status);
+        }
         if ($request->type && $request->type !== 'all') {
             $query->where('type', $request->type);
         }

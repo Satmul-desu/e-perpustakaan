@@ -84,15 +84,20 @@
         </div>
     </div>
     <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <span><i class="bi bi-table me-2"></i>Data Peminjaman</span>
-            <span class="text-muted">{{ $loans->total() }} data</span>
-        </div>
         <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-hover mb-0">
-                    <thead>
+                <table class="table table-hover table-bordered mb-0">
+                    <thead class="table-dark">
                         <tr>
+                            <th colspan="7" class="py-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0 text-white"><i class="bi bi-clock-history me-2"></i>Data Peminjaman</h5>
+                                    <span class="badge bg-light text-dark">{{ $loans->total() }} data</span>
+                                </div>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th>No</th>
                             <th>Peminjam</th>
                             <th>Buku</th>
                             <th>Tgl Pinjam</th>
@@ -104,6 +109,7 @@
                     <tbody>
                         @forelse($loans as $loan)
                             <tr>
+                                <td>{{ $loop->iteration }}</td>
                                 <td>
                                     <div class="d-flex align-items-center">
                                         <div class="user-avatar-sm me-2">
@@ -153,9 +159,7 @@
                                 </td>
                                 <td>
                                     <a href="{{ route('admin.loans.show', $loan) }}"
-                                        class="btn btn-sm btn-outline-primary">
-                                        <i class="bi bi-eye"></i>
-                                    </a>
+                                        class="btn btn-sm btn-primary text-white">Detail</a>
                                 </td>
                             </tr>
                         @empty

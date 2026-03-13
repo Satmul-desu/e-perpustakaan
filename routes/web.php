@@ -18,7 +18,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\WishlistController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/', fn () => view('welcome'))->name('welcome');
+Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('/flash-sale', [HomeController::class, 'flashSale'])->name('flash-sale');
 Route::get('/tentang', fn () => view('tentang'));
 Route::middleware('guest')->group(function () {

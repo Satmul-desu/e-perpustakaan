@@ -7,7 +7,7 @@
                 <div class="footer-logo mb-3">
                     <img src="{{ asset('images/logo-removebg-preview.png') }}" alt="Logo" class="footer-logo-img">
                     <span class="fw-bold fs-5">
-                        <span class="text-white">Perpustakaan</span><span class="text-primary">Buku</span>
+                        <span class="text-white">E-</span><span class="text-primary">Perpustakaan</span>
                     </span>
                 </div>
                 <p class="footer-desc text-secondary small mb-3">
@@ -135,7 +135,7 @@
                 <div class="col-md-6 text-md-end">
                     <p class="copyright mb-0 text-secondary small">
                         <i class="bi bi-c-circle me-1"></i>
-                        {{ date('Y') }} <span class="text-white fw-bold">Perpustakaan Buku</span>.
+                        {{ date('Y') }} <span class="text-white fw-bold">E-Perpustakaan</span>.
                         All rights reserved. Made with tsutaz<i class="bi bi-heart-fill text-danger"
                             style="font-size: 0.7rem;"></i>
                     </p>

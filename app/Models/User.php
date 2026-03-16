@@ -122,11 +122,8 @@ class User extends Authenticatable
         if ($this->isGoogleAvatar()) {
             return $this->avatar;
         }
-        if (file_exists(public_path('storage/'.$this->avatar))) {
-            return asset('storage/'.$this->avatar);
-        }
-
-        return $this->getDefaultAvatarUrl();
+        
+        return asset('storage/' . $this->avatar);
     }
 
     protected function getDefaultAvatarUrl(): string

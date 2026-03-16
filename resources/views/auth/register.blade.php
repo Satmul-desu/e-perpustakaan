@@ -70,8 +70,8 @@
         }
 
         .register-header .logo {
-            width: 85px;
-            height: 85px;
+            width: 120px;
+            height: 120px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             border-radius: 50%;
             display: flex;
@@ -82,8 +82,8 @@
         }
 
         .register-header .logo img {
-            width: 52px;
-            height: 52px;
+            width: 80px;
+            height: 80px;
             object-fit: contain;
             filter: brightness(0) invert(1);
         }
@@ -278,13 +278,13 @@
             }
 
             .register-header .logo {
-                width: 70px;
-                height: 70px;
+                width: 100px;
+                height: 100px;
             }
 
             .register-header .logo img {
-                width: 45px;
-                height: 45px;
+                width: 65px;
+                height: 65px;
             }
 
             .register-header h3 {
@@ -337,13 +337,13 @@
             }
 
             .register-header .logo {
-                width: 60px;
-                height: 60px;
+                width: 80px;
+                height: 80px;
             }
 
             .register-header .logo img {
-                width: 38px;
-                height: 38px;
+                width: 50px;
+                height: 50px;
             }
 
             .register-body {

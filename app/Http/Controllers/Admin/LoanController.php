@@ -150,6 +150,26 @@ class LoanController extends Controller
             ->with('success', "{$count} peminjaman ditandai sebagai terlambat.");
     }
 
+    public function sendFine(Request $request, Loan $loan)
+    {
+        if ($loan->status !== Loan::STATUS_OVERDUE && ! $loan->is_overdue) {
+            return redirect()->back()->with('error', 'Hanya buku yang terlambat dapat diberikan denda.');
+        }
+
+        $request->validate([
+            'fine_amount' => 'required|numeric|min:1000',
+        ]);
+
+        $loan->update([
+            'fine_amount' => $request->fine_amount,
+            'fine_status' => 'unpaid',
+            'admin_notes' => ($loan->admin_notes ?? '') . "\n" .
+                'Sanksi Denda: Rp ' . number_format($request->fine_amount, 0, ',', '.') . ' oleh ' . Auth::user()->name . ' pada ' . now()->format('Y-m-d'),
+        ]);
+
+        return redirect()->back()->with('success', 'Tagihan Denda berhasil dikirim ke Pengguna.');
+    }
+
     public function getStats()
     {
         return response()->json([

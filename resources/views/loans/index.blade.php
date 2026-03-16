@@ -7,6 +7,20 @@
                 <i class="bi bi-book me-2"></i>Peminjaman Saya
             </h2>
         </div>
+
+        @php
+            $unpaidFines = auth()->user()->loans()->where('fine_status', 'unpaid')->where('fine_amount', '>', 0)->get();
+        @endphp
+        
+        @if($unpaidFines->count() > 0)
+            <div class="alert alert-danger d-flex align-items-center mb-4" role="alert" style="border-radius: 12px; background: rgba(239, 68, 68, 0.15); border: 1px solid #ef4444; color: #f87171;">
+                <i class="bi bi-exclamation-triangle-fill flex-shrink-0 me-3 fs-4"></i>
+                <div>
+                    <strong>Peringatan!</strong> Anda memiliki {{ $unpaidFines->count() }} tagihan denda yang belum dibayar dengan total <strong>Rp {{ number_format($unpaidFines->sum('fine_amount'), 0, ',', '.') }}</strong>. Silakan segera lunasi denda Anda.
+                </div>
+            </div>
+        @endif
+
         <div class="row g-3 mb-4">
             <div class="col-md-3">
                 <div class="card stat-card h-100"
@@ -67,9 +81,9 @@
         </div>
         <div class="card mb-4" style="background: rgba(30, 41, 59, 0.95); border: 1px solid #334155; border-radius: 16px;">
             <div class="card-body py-3">
-                <form method="GET" class="row g-3 align-items-center">
-                    <div class="col-md-4">
-                        <label class="form-label text-secondary mb-1">Filter Status</label>
+                <form method="GET" class="d-flex flex-wrap align-items-center gap-3">
+                    <div class="d-flex align-items-center flex-grow-1" style="max-width: 400px;">
+                        <label class="form-label text-secondary mb-0 me-3" style="white-space: nowrap;">Filter Status</label>
                         <select name="status" class="form-select"
                             style="background: rgba(15, 23, 42, 0.6); border: 1px solid #334155; color: white; border-radius: 10px;">
                             <option value="">Semua Status</option>
@@ -81,8 +95,8 @@
                             <option value="cancelled">Dibatalkan</option>
                         </select>
                     </div>
-                    <div class="col-md-2 d-flex align-items-end">
-                        <button type="submit" class="btn btn-primary w-100" style="border-radius: 10px;">
+                    <div>
+                        <button type="submit" class="btn btn-primary" style="border-radius: 10px;">
                             <i class="bi bi-filter me-1"></i>Filter
                         </button>
                     </div>
@@ -159,6 +173,9 @@
                                                 <br><small class="text-info mt-1 d-block"><i
                                                         class="bi bi-clock me-1"></i>{{ $loan->days_remaining }}
                                                     hari</small>
+                                            @endif
+                                            @if($loan->fine_amount > 0 && $loan->fine_status == 'unpaid')
+                                                <br><span class="badge bg-danger mt-1"><i class="bi bi-exclamation-circle me-1"></i>Denda: Rp {{ number_format($loan->fine_amount, 0, ',', '.') }}</span>
                                             @endif
                                         </td>
                                         <td class="py-3" style="white-space: nowrap;">

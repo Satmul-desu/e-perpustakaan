@@ -200,6 +200,19 @@
                                 <i class="bi bi-clock-history me-1"></i>Perpanjang Durasi
                             </button>
                         @endif
+
+                        @if ($loan->status == 'overdue')
+                            <button type="button" class="btn btn-warning w-100 mb-2" data-bs-toggle="modal"
+                                data-bs-target="#fineModal">
+                                <i class="bi bi-cash-coin me-1"></i>Kirim Tagihan Denda
+                            </button>
+                            <form method="POST" action="{{ route('admin.loans.process-return', $loan) }}">
+                                @csrf
+                                <button type="submit" class="btn btn-success w-100">
+                                    <i class="bi bi-journal-check me-1"></i>Proses Pengembalian
+                                </button>
+                            </form>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -260,6 +273,32 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
                         <button type="submit" class="btn btn-warning">Perpanjang</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Denda -->
+    <div class="modal fade" id="fineModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="POST" action="{{ route('admin.loans.fine', $loan) }}">
+                    @csrf
+                    <div class="modal-header">
+                        <h5 class="modal-title">Kirim Tagihan Denda</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">Nominal Denda (Rp)</label>
+                            <input type="number" name="fine_amount" class="form-control" min="1000" step="500" placeholder="Misal: 5000" required>
+                            <small class="text-secondary">Pesan akan ditambahkan di catatan admin secara otomatis.</small>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-warning"><i class="bi bi-send me-1"></i>Kirim Tagihan</button>
                     </div>
                 </form>
             </div>

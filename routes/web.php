@@ -84,12 +84,13 @@ Route::middleware(['auth', 'admin'])
         Route::post('/loans/{loan}/process-return', [AdminLoanController::class, 'processReturn'])->name('loans.process-return');
         Route::post('/loans/{loan}/extend', [AdminLoanController::class, 'extend'])->name('loans.extend');
         Route::post('/loans/mark-overdue', [AdminLoanController::class, 'markOverdue'])->name('loans.mark-overdue');
+        Route::post('/loans/{loan}/fine', [AdminLoanController::class, 'sendFine'])->name('loans.fine');
         Route::resource('complaints', AdminComplaintController::class);
         Route::resource('categories', CategoryController::class);
         Route::get('reports/loans', [ReportController::class, 'loans'])->name('reports.loans');
         Route::get('reports/export-loans/excel', [ReportController::class, 'exportLoansExcel'])->name('reports.export-loans.excel');
         Route::get('reports/export-loans/word', [ReportController::class, 'exportLoansWord'])->name('reports.export-loans.word');
         Route::get('reports/sales', [ReportController::class, 'sales'])->name('reports.sales');
-        Route::get('users', [UserController::class, 'index'])->name('users.index');
+        Route::resource('users', UserController::class);
         Route::resource('orders', \App\Http\Controllers\Admin\OrderController::class);
     });

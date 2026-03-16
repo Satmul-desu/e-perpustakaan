@@ -602,9 +602,9 @@
             </div>
         </div>
 
-        <div class="row g-4">
+        <div class="row justify-content-center g-4">
             <!-- Form Section -->
-            <div class="col-lg-8">
+            <div class="col-lg-10 col-xl-8">
                 <div class="form-container">
                     <h5 class="form-title">
                         <i class="bi bi-pencil-square"></i>
@@ -745,15 +745,15 @@
                             </div>
                         </div>
 
-                        <button type="submit" class="btn btn-submit mt-4">
+                        <button type="submit" class="btn btn-primary mt-4 w-100" style="padding: 1rem 2rem; border-radius: 14px; font-weight: 600;">
                             <i class="bi bi-send me-2"></i>Kirim Aduan/Laporan
                         </button>
                     </form>
                 </div>
             </div>
 
-            <!-- Sidebar -->
-            <div class="col-lg-4">
+            <!-- History Section Below Form -->
+            <div class="col-lg-10 col-xl-8 mt-5">
                 <!-- Complaint History -->
                 <div class="history-container mb-4">
                     <div class="history-header">

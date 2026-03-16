@@ -37,7 +37,7 @@
                                     <th>Deskripsi</th>
                                     <th>Jumlah Produk</th>
                                     <th>Status</th>
-                                    <th>Aksi</th>
+                                    <th class="text-center">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -60,7 +60,7 @@
                                                 <span class="badge bg-secondary">Tidak Aktif</span>
                                             @endif
                                         </td>
-                                        <td>
+                                        <td class="text-center">
                                             <div class="btn-group" role="group">
                                                 <a href="{{ route('admin.categories.show', $category) }}"
                                                     class="btn btn-sm btn-info text-white" title="Lihat Detail">Detail</a>

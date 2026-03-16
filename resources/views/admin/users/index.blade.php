@@ -25,6 +25,9 @@
                                     <th colspan="7" class="py-3">
                                         <div class="d-flex justify-content-between align-items-center">
                                             <h5 class="mb-0 text-white"><i class="bi bi-people me-2"></i>Daftar Anggota</h5>
+                                            <a href="{{ route('admin.users.create') }}" class="btn btn-primary btn-sm">
+                                                <i class="bi bi-person-plus me-1"></i>Tambah Anggota
+                                            </a>
                                         </div>
                                     </th>
                                 </tr>

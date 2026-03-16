@@ -8,9 +8,9 @@
                 <div class="col-lg-3 d-none d-lg-block">
                     <div class="filter-sidebar card border-0"
                         style="background: rgba(30, 41, 59, 0.95); border: 1px solid #334155 !important; position: sticky; top: 80px;">
-                        <div class="card-header bg-transparent border-bottom border-secondary fw-bold py-3">
-                            <i class="bi bi-funnel me-2 text-white"></i>
-                            <h6 class="text-white">Filter Buku</h6>
+                        <div class="card-header bg-transparent border-bottom border-secondary fw-bold py-3 text-center">
+                            <i class="bi bi-funnel text-white mb-2 d-block" style="font-size: 1.5rem;"></i>
+                            <h6 class="text-white mb-0">Filter Buku</h6>
                         </div>
                         <div class="card-body">
                             <form action="{{ route('catalog.index') }}" method="GET" id="filter-form">
@@ -20,8 +20,8 @@
 
                                 {{-- Genre Filter --}}
                                 <div class="filter-group mb-4">
-                                    <h6 class="fw-bold mb-3 text-white d-flex align-items-center">
-                                        <i class="bi bi-grid-3x3-gap me-2" style="color: #60a5fa;"></i>
+                                    <h6 class="fw-bold mb-3 text-white text-center">
+                                        <i class="bi bi-grid-3x3-gap d-block mb-1" style="color: #60a5fa; font-size: 1.2rem;"></i>
                                         Genre
                                     </h6>
 
@@ -33,9 +33,9 @@
                                     </div>
 
                                     {{-- Radio Buttons --}}
-                                    <div class="genre-list">
-                                        <div class="form-check mb-2 ps-0 genre-item">
-                                            <label class="form-check-label d-flex align-items-center cursor-pointer"
+                                    <div class="genre-list px-2">
+                                        <div class="form-check mb-2 genre-item">
+                                            <label class="form-check-label d-flex align-items-center cursor-pointer w-100"
                                                 for="category_all">
                                                 <input class="form-check-input me-2 mt-0" type="radio" name="category"
                                                     value="" id="category_all"
@@ -85,9 +85,9 @@
                                         @endphp
 
                                         @foreach ($genreList as $genre)
-                                            <div class="form-check mb-2 ps-0 genre-item"
+                                            <div class="form-check mb-2 genre-item"
                                                 data-name="{{ strtolower($genre['name']) }}">
-                                                <label class="form-check-label d-flex align-items-center cursor-pointer"
+                                                <label class="form-check-label d-flex align-items-center cursor-pointer w-100"
                                                     for="category_{{ $genre['slug'] }}">
                                                     <input class="form-check-input me-2 mt-0" type="radio" name="category"
                                                         value="{{ $genre['slug'] }}" id="category_{{ $genre['slug'] }}"
@@ -258,10 +258,6 @@
                                     style="width: auto; background: rgba(30, 41, 59, 0.8); border: 1px solid #334155; color: white; min-width: 150px;">
                                     <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>Terbaru
                                     </option>
-                                    <option value="price_asc" {{ request('sort') == 'price_asc' ? 'selected' : '' }}>
-                                        Harga: Rendah ke Tinggi</option>
-                                    <option value="price_desc" {{ request('sort') == 'price_desc' ? 'selected' : '' }}>
-                                        Harga: Tinggi ke Rendah</option>
                                     <option value="name_asc" {{ request('sort') == 'name_asc' ? 'selected' : '' }}>Nama:
                                         A-Z</option>
                                     <option value="name_desc" {{ request('sort') == 'name_desc' ? 'selected' : '' }}>Nama:

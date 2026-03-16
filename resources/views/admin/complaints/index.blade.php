@@ -103,7 +103,7 @@
                             <th>Status</th>
                             <th>Prioritas</th>
                             <th>Tanggal</th>
-                            <th style="width: 100px;">Aksi</th>
+                            <th class="text-center" style="width: 100px;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -153,7 +153,7 @@
                                 <td>
                                     <small class="text-muted">{{ $complaint->created_at->format('d/m/Y H:i') }}</small>
                                 </td>
-                                <td>
+                                <td class="text-center">
                                     <a href="{{ route('admin.complaints.show', $complaint) }}"
                                         class="btn btn-sm btn-outline-primary">
                                         <i class="bi bi-eye"></i>

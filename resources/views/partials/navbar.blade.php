@@ -1,68 +1,83 @@
 <nav class="navbar navbar-expand-lg navbar-dark sticky-top modern-navbar">
-    <div class="container">
-        {{-- Logo & Brand --}}
-        <a class="navbar-brand d-flex align-items-center fw-bold" href="{{ route('home') }}">
-            <img src="{{ asset('images/logo-removebg-preview.png') }}" alt="Logo" class="brand-logo me-2">
-            <span class="brand-text">
-                <span class="text-white">E-</span><span class="text-primary">Perpustakaan</span>
+    <div class="container-fluid px-4 px-lg-5 position-relative">
+        
+        {{-- Mobile Logo & Brand (Hidden on Desktop) --}}
+        <a class="navbar-brand d-flex align-items-center fw-bold d-lg-none" href="{{ route('home') }}">
+            <img src="{{ asset('images/logo-removebg-preview.png') }}" alt="Logo" class="brand-logo" style="width: 70px; height: 70px; object-fit: contain; margin-top: -15px; margin-bottom: -15px;">
+            <span class="brand-text ms-2" style="font-size: 1.3rem;">
+                <span class="text-white">E-</span><span class="text-primary">Perpus</span>
+            </span>
         </a>
 
-        {{-- Desktop Search (Hidden on Mobile) --}}
-        <form class="d-none d-lg-flex nav-search mx-3" style="max-width: 350px; width: 100%;"
-            action="{{ route('catalog.index') }}" method="GET">
-            <div class="input-group search-input-group">
-                <input type="text" name="q" class="form-control border-secondary" placeholder="Cari buku..."
-                    value="{{ request('q') }}">
-                <button class="btn btn-search" type="submit">
-                    <i class="bi bi-search"></i>
-                </button>
-            </div>
-        </form>
+        {{-- Desktop Center Section (Logo + Search Group) --}}
+        <div class="d-none d-lg-flex align-items-center mx-auto" style="gap: 2.5rem;">
+            <a class="navbar-brand d-flex align-items-center fw-bold m-0" href="{{ route('home') }}" style="position: relative; z-index: 1040;">
+                <img src="{{ asset('images/logo-removebg-preview.png') }}" alt="Logo" class="brand-logo" style="width: 140px; height: 140px; object-fit: contain; margin-top: -45px; margin-bottom: -45px; margin-right: 0.5rem; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));">
+                <span class="brand-text" style="font-size: 2.1rem; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">
+                    <span class="text-white">E-</span><span class="text-primary">Perpustakaan</span>
+                </span>
+            </a>
+
+            <form class="nav-search" style="width: 450px;" action="{{ route('catalog.index') }}" method="GET">
+                <div class="input-group search-input-group shadow-sm">
+                    <input type="text" name="q" class="form-control border-secondary" placeholder="Cari buku..."
+                        value="{{ request('q') }}" style="padding: 0.75rem 1.25rem; font-size: 1.1rem;">
+                    <button class="btn btn-search px-4" type="submit">
+                        <i class="bi bi-search fs-5"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
 
         {{-- Right Menu --}}
         <div class="collapse navbar-collapse" id="navbarMain">
             <ul class="navbar-nav ms-auto align-items-center nav-menu">
                 {{-- Katalog (Desktop) --}}
-                <li class="nav-item d-none d-lg-block">
-                    <a class="nav-link d-flex align-items-center text-white" href="{{ route('catalog.index') }}">
-                        <i class="bi bi-grid-3x3-gap-fill me-1"></i> Katalog
+                <li class="nav-item d-none d-lg-block mx-2">
+                    <a class="nav-link d-flex flex-column align-items-center justify-content-center text-white p-2" href="{{ route('catalog.index') }}">
+                        <i class="bi bi-grid-3x3-gap-fill mb-1" style="font-size: 1.3rem;"></i>
+                        <span style="font-size: 0.8rem; line-height: 1;">Katalog</span>
                     </a>
                 </li>
 
                 @auth
                     {{-- Wishlist --}}
-                    <li class="nav-item">
-                        <a class="nav-link position-relative d-flex align-items-center text-white nav-icon-link"
+                    <li class="nav-item mx-2">
+                        <a class="nav-link position-relative d-flex flex-column align-items-center justify-content-center text-white p-2"
                             href="{{ route('wishlist.index') }}">
-                            <i class="bi bi-heart-fill nav-icon" style="color: #f472b6;"></i>
-                            @if (auth()->user()->wishlists()->count() > 0)
-                                <span
-                                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger nav-badge">
-                                    {{ auth()->user()->wishlists()->count() > 9 ? '9+' : auth()->user()->wishlists()->count() }}
-                                </span>
-                            @endif
+                            <div class="position-relative mb-1">
+                                <i class="bi bi-heart-fill nav-icon" style="color: #f472b6;"></i>
+                                @if (auth()->user()->wishlists()->count() > 0)
+                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger nav-badge">
+                                        {{ auth()->user()->wishlists()->count() > 9 ? '9+' : auth()->user()->wishlists()->count() }}
+                                    </span>
+                                @endif
+                            </div>
+                            <span style="font-size: 0.8rem; line-height: 1;">Wishlist</span>
                         </a>
                     </li>
 
                     {{-- Loans / Peminjaman --}}
-                    <li class="nav-item">
-                        <a class="nav-link position-relative d-flex align-items-center text-white nav-icon-link"
+                    <li class="nav-item mx-2">
+                        <a class="nav-link position-relative d-flex flex-column align-items-center justify-content-center text-white p-2"
                             href="{{ route('loans.index') }}">
-                            <i class="bi bi-book nav-icon" style="color: #60a5fa;"></i>
-                            @php
-                                $loanCount =
-                                    auth()
-                                        ->user()
-                                        ->loans()
-                                        ->whereIn('status', ['pending', 'approved', 'borrowed'])
-                                        ->count() ?? 0;
-                            @endphp
-                            @if ($loanCount > 0)
-                                <span
-                                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning nav-badge">
-                                    {{ $loanCount > 9 ? '9+' : $loanCount }}
-                                </span>
-                            @endif
+                            <div class="position-relative mb-1">
+                                <i class="bi bi-book nav-icon" style="color: #60a5fa;"></i>
+                                @php
+                                    $loanCount =
+                                        auth()
+                                            ->user()
+                                            ->loans()
+                                            ->whereIn('status', ['pending', 'approved', 'borrowed'])
+                                            ->count() ?? 0;
+                                @endphp
+                                @if ($loanCount > 0)
+                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning nav-badge text-dark">
+                                        {{ $loanCount > 9 ? '9+' : $loanCount }}
+                                    </span>
+                                @endif
+                            </div>
+                            <span style="font-size: 0.8rem; line-height: 1;">Peminjaman</span>
                         </a>
                     </li>
 
@@ -160,20 +175,20 @@
     .modern-navbar {
         background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
         border-bottom: 1px solid #334155;
-        padding-top: 0.5rem;
-        padding-bottom: 0.5rem;
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
         position: relative;
         z-index: 1030;
     }
 
     .brand-logo {
-        width: 36px;
-        height: 36px;
+        width: 70px;
+        height: 70px;
         object-fit: contain;
     }
 
     .brand-text {
-        font-size: 1.25rem;
+        font-size: 1.5rem;
         letter-spacing: -0.5px;
     }
 
@@ -402,12 +417,12 @@
     /* ========== TABLET (576px - 991px) ========== */
     @media (min-width: 576px) and (max-width: 991.98px) {
         .brand-logo {
-            width: 32px;
-            height: 32px;
+            width: 50px;
+            height: 50px;
         }
 
         .brand-text {
-            font-size: 1.15rem;
+            font-size: 1.3rem;
         }
 
         .nav-icon {
@@ -422,12 +437,12 @@
         }
 
         .brand-logo {
-            width: 28px;
-            height: 28px;
+            width: 45px;
+            height: 45px;
         }
 
         .brand-text {
-            font-size: 1.1rem;
+            font-size: 1.25rem;
         }
 
         .navbar-collapse {
@@ -475,12 +490,12 @@
     /* ========== VERY SMALL MOBILE (< 360px) ========== */
     @media (max-width: 359.98px) {
         .brand-logo {
-            width: 24px;
-            height: 24px;
+            width: 40px;
+            height: 40px;
         }
 
         .brand-text {
-            font-size: 1rem;
+            font-size: 1.15rem;
         }
     }
 </style>

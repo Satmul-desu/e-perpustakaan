@@ -85,7 +85,7 @@
                                             </span>
                                         </div>
                                         <div>
-                                            <p class="text-white mb-1 fw-bold">Buku Diambil</p>
+                                            <p class="text-white mb-1 fw-bold">Buku Dipinjam</p>
                                             <small
                                                 class="text-secondary">{{ $loan->loan_date->format('d M Y, H:i') }}</small>
                                         </div>

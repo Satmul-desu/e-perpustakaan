@@ -213,7 +213,7 @@
                                 Proyek portofolio Web Developer ini dikembangkan dengan menggunakan tumpukan teknologi modern (Laravel, Bootstrap). 
                                 Dibuat dengan passion terhadap User Interface dan User Experience yang responsif, minimalis, dan elegan.
                             </p>
-                            <a href="https://github.com" class="btn btn-sm btn-outline-light mt-2" style="border-radius: 8px;"><i class="bi bi-github me-1"></i> Lihat Portofolio Lain</a>
+                            <a href="https://github.com/satmul-desu" class="btn btn-sm btn-outline-light mt-2" style="border-radius: 8px;"><i class="bi bi-github me-1"></i> Lihat Portofolio Lain</a>
                         </div>
                     </div>
                 </div>

@@ -103,7 +103,7 @@
                             <th>Tgl Pinjam</th>
                             <th>Jatuh Tempo</th>
                             <th>Status</th>
-                            <th>Aksi</th>
+                            <th class="text-center">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -157,14 +157,14 @@
                                         {{ $statusText[$loan->status] ?? ucfirst($loan->status) }}
                                     </span>
                                 </td>
-                                <td>
+                                <td class="text-center">
                                     <a href="{{ route('admin.loans.show', $loan) }}"
                                         class="btn btn-sm btn-primary text-white">Detail</a>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="text-center text-secondary py-4">
+                                <td colspan="7" class="text-center text-secondary py-4">
                                     <i class="bi bi-inbox d-block mb-2" style="font-size: 2rem;"></i>
                                     Tidak ada data peminjaman
                                 </td>

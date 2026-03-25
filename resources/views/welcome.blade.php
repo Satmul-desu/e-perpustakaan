@@ -54,24 +54,25 @@
         }
 
         .hero-section {
-            padding: 100px 0 60px;
+            padding: 70px 0 45px;
             text-align: center;
         }
 
         .hero-title {
-            font-size: 3.5rem;
+            font-size: 3.6rem;
             font-weight: 800;
             margin-bottom: 20px;
-            background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: #ffffff;
+            text-shadow: none;
         }
 
         .hero-subtitle {
-            font-size: 1.25rem;
-            color: #94a3b8;
+            font-size: 1.45rem;
+            color: #ffffff;
+            font-weight: 500;
             max-width: 600px;
-            margin: 0 auto 40px;
+            margin: 0 auto 35px;
+            text-shadow: none;
         }
 
         .feature-card {
@@ -113,7 +114,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom sticky-top">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center fw-bold" href="{{ url('/') }}">
-                <img src="{{ asset('images/logo-removebg-preview.png') }}" alt="Logo" width="40" height="40" class="me-2 object-fit-contain">
+                <img src="{{ asset('images/logo-removebg-preview.png') }}" alt="Logo" class="me-2 object-fit-contain" style="width: 100px; height:  100px; margin-top: -15px; margin-bottom: -15px;">
                 <span>E-<span class="text-primary">Perpustakaan</span></span>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#landingNavbar">
@@ -145,10 +146,10 @@
 
     <main>
         <!-- Hero Section -->
-        <section class="hero-section">
+        <section class="hero-section" style="background: transparent; box-shadow: none; position: relative; z-index: 10;">
             <div class="container">
-                <img src="{{ asset('images/logo-removebg-preview.png') }}" alt="E-Perpus Logo" class="img-fluid mb-4" style="max-height: 200px; animation: float 3s ease-in-out infinite;">
-                <h1 class="hero-title">E-Perpustakaan System</h1>
+                <img src="{{ asset('images/logo-removebg-preview.png') }}" alt="E-Perpus Logo" class="img-fluid" style="max-height: 420px; margin-top: -65px; margin-bottom: -45px; animation: float 3s ease-in-out infinite; position: relative; z-index: 10;">
+                <h1 class="hero-title" style="color: #60a5fa !important;">E-Perpustakaan System</h1>
                 <p class="hero-subtitle">Platform manajemen perpustakaan digital modern yang memudahkan proses peminjaman, pengelolaan inventaris, dan memberikan pengalaman membaca tanpa batas untuk semua anggota.</p>
                 @guest
                 <div class="d-flex justify-content-center gap-3">

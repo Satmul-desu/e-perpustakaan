@@ -2,26 +2,25 @@
 @section('title', 'Beranda')
 @section('content')
     <section class="hero-section py-5">
-        <div class="hero-video-frame">
-            <video class="hero-video" autoplay muted loop playsinline>
+        <div class="hero-video-frame" style="border: none !important; box-shadow: none !important;">
+            <video class="hero-video" autoplay muted loop playsinline style="opacity: 0.15; filter: none !important;">
                 <source src="{{ asset('vidios.mp4') }}" type="video/mp4">
             </video>
         </div>
-        <div class="hero-overlay" style="background: rgba(0, 0, 0, 0.6);"></div>
-        <div class="container position-relative" style="padding-top: 80px;">
+        <div class="container position-relative" style="padding-top: 80px; z-index: 10;">
             <div class="row justify-content-center text-center">
-                <div class="col-lg-12 mb-4">
+                <div class="col-lg-12">
                     <img src="{{ asset('images/logo-removebg-preview.png') }}" alt="Perpustakaan"
-                        class="hero-image img-fluid" style="max-height: 250px;">
+                        class="hero-image img-fluid" style="max-height: 480px; margin-top: -85px; margin-bottom: -65px; filter: brightness(1.2) drop-shadow(0 0 15px rgba(255,255,255,0.5));">
                 </div>
                 
                 <div class="col-lg-10 col-md-12">
-                    <h1 class="hero-title mb-4">
-                        <span class="text-white">Selamat Datang di</span><br>
-                        <span class="text-primary">Perpustakaan Buku</span><br>
-                        <span class="text-white">Online</span>
+                    <h1 class="hero-title mb-3">
+                        <span style="color: #ffffff; text-shadow: none;">Selamat Datang di</span><br>
+                        <span style="color: #60a5fa !important; text-shadow: none;">Perpustakaan Buku</span><br>
+                        <span style="color: #ffffff; text-shadow: none;">Online</span>
                     </h1>
-                    <p class="hero-subtitle text-white mb-4">
+                    <p class="hero-subtitle mb-4" style="color: #ffffff !important; text-shadow: none;">
                         Temukan dan pinjam buku favorit Anda dengan mudah.
                         Nikmati pengalaman membaca tanpa batas!
                     </p>
@@ -226,57 +225,32 @@
         }
 
         .hero-video-frame::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 30%, transparent 70%, rgba(255, 255, 255, 0.05) 100%);
-            z-index: 2;
-            pointer-events: none;
-        }
-
-        .hero-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(30, 58, 138, 0.85) 50%, rgba(15, 23, 42, 0.9) 100%);
-            z-index: 1;
+            display: none;
         }
 
         .hero-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-            pointer-events: none;
-            z-index: 2;
+            display: none;
         }
 
         .hero-title {
-            font-size: 3.5rem;
+            font-size: 3.6rem;
             font-weight: 800;
             line-height: 1.2;
-            text-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 0 0 40px rgba(59, 130, 246, 0.6), 3px 3px 10px rgba(0, 0, 0, 0.8);
+            text-shadow: none !important;
         }
 
         .hero-subtitle {
-            font-size: 1.3rem;
+            font-size: 1.45rem;
+            font-weight: 500;
             opacity: 1;
             line-height: 1.6;
-            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+            text-shadow: none !important;
         }
 
         .hero-image {
             max-height: 600px;
             animation: float 3s ease-in-out infinite;
-            filter: drop-shadow(0 0 30px rgba(255, 255, 255, 0.5)) drop-shadow(0 8px 25px rgba(0, 0, 0, 0.8));
+            filter: brightness(1.2) drop-shadow(0 0 40px rgba(255, 255, 255, 0.8));
         }
 
         @keyframes float {

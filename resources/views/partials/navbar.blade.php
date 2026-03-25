@@ -3,7 +3,7 @@
         
         {{-- Mobile Logo & Brand (Hidden on Desktop) --}}
         <a class="navbar-brand d-flex align-items-center fw-bold d-lg-none" href="{{ route('home') }}">
-            <img src="{{ asset('images/logo-removebg-preview.png') }}" alt="Logo" class="brand-logo" style="width: 70px; height: 70px; object-fit: contain; margin-top: -15px; margin-bottom: -15px;">
+            <img src="{{ asset('images/logo-removebg-preview.png') }}" alt="Logo" class="brand-logo" style="width: 100px; height: 100px; object-fit: contain; margin-top: -25px; margin-bottom: -25px;">
             <span class="brand-text ms-2" style="font-size: 1.3rem;">
                 <span class="text-white">E-</span><span class="text-primary">Perpus</span>
             </span>
@@ -12,7 +12,7 @@
         {{-- Desktop Center Section (Logo + Search Group) --}}
         <div class="d-none d-lg-flex align-items-center mx-auto" style="gap: 2.5rem;">
             <a class="navbar-brand d-flex align-items-center fw-bold m-0" href="{{ route('home') }}" style="position: relative; z-index: 1040;">
-                <img src="{{ asset('images/logo-removebg-preview.png') }}" alt="Logo" class="brand-logo" style="width: 140px; height: 140px; object-fit: contain; margin-top: -45px; margin-bottom: -45px; margin-right: 0.5rem; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));">
+                <img src="{{ asset('images/logo-removebg-preview.png') }}" alt="Logo" class="brand-logo" style="width: 200px; height: 200px; object-fit: contain; margin-top: -85px; margin-bottom: -85px; margin-right: 0.5rem; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));">
                 <span class="brand-text" style="font-size: 2.1rem; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">
                     <span class="text-white">E-</span><span class="text-primary">Perpustakaan</span>
                 </span>
@@ -33,16 +33,16 @@
         <div class="collapse navbar-collapse" id="navbarMain">
             <ul class="navbar-nav ms-auto align-items-center nav-menu">
                 {{-- Katalog (Desktop) --}}
-                <li class="nav-item d-none d-lg-block mx-2">
+                <li class="nav-item d-none d-lg-block mx-3">
                     <a class="nav-link d-flex flex-column align-items-center justify-content-center text-white p-2" href="{{ route('catalog.index') }}">
-                        <i class="bi bi-grid-3x3-gap-fill mb-1" style="font-size: 1.3rem;"></i>
-                        <span style="font-size: 0.8rem; line-height: 1;">Katalog</span>
+                        <i class="bi bi-grid-3x3-gap-fill mb-1" style="font-size: 1.8rem;"></i>
+                        <span style="font-size: 1rem; line-height: 1; font-weight: 500;">Katalog</span>
                     </a>
                 </li>
 
                 @auth
                     {{-- Wishlist --}}
-                    <li class="nav-item mx-2">
+                    <li class="nav-item mx-3">
                         <a class="nav-link position-relative d-flex flex-column align-items-center justify-content-center text-white p-2"
                             href="{{ route('wishlist.index') }}">
                             <div class="position-relative mb-1">
@@ -53,12 +53,12 @@
                                     </span>
                                 @endif
                             </div>
-                            <span style="font-size: 0.8rem; line-height: 1;">Wishlist</span>
+                            <span style="font-size: 1rem; line-height: 1; font-weight: 500;">Wishlist</span>
                         </a>
                     </li>
 
                     {{-- Loans / Peminjaman --}}
-                    <li class="nav-item mx-2">
+                    <li class="nav-item mx-3">
                         <a class="nav-link position-relative d-flex flex-column align-items-center justify-content-center text-white p-2"
                             href="{{ route('loans.index') }}">
                             <div class="position-relative mb-1">
@@ -77,18 +77,20 @@
                                     </span>
                                 @endif
                             </div>
-                            <span style="font-size: 0.8rem; line-height: 1;">Peminjaman</span>
+                            <span style="font-size: 1rem; line-height: 1; font-weight: 500;">Peminjaman</span>
                         </a>
                     </li>
 
                     {{-- User Dropdown --}}
-                    <li class="nav-item dropdown ms-1 ms-lg-2">
-                        <a class="nav-link dropdown-toggle d-flex align-items-center user-dropdown-toggle" href="#"
+                    <li class="nav-item dropdown ms-3 ms-lg-4">
+                        <a class="nav-link dropdown-toggle d-flex flex-column align-items-center justify-content-center user-dropdown-toggle p-2" href="#"
                             id="userDropdown" data-bs-toggle="dropdown">
-                            {!! auth()->user()->avatar_html !!}
-                            <span class="d-none d-lg-inline ms-2 user-name">{{ auth()->user()->name }}</span>
+                            <span style="transform: scale(1.4); margin-bottom: 3px; display: inline-block;">
+                                {!! auth()->user()->avatar_html !!}
+                            </span>
+                            <span class="d-none d-lg-block mt-1 user-name fw-bold" style="font-size: 1.1rem; max-width: 150px;">{{ auth()->user()->name }}</span>
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-end modern-dropdown">
+                        <ul class="dropdown-menu dropdown-menu-end modern-dropdown mt-2" style="font-size: 1.1rem;">
                             <li>
                                 <a class="dropdown-item" href="{{ route('profile.edit') }}">
                                     <i class="bi bi-person-fill me-2"></i> Profil Saya
@@ -175,8 +177,8 @@
     .modern-navbar {
         background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
         border-bottom: 1px solid #334155;
-        padding-top: 0.25rem;
-        padding-bottom: 0.25rem;
+        padding-top: 0;
+        padding-bottom: 0;
         position: relative;
         z-index: 1030;
     }
@@ -214,16 +216,17 @@
     }
 
     .nav-icon {
-        font-size: 1.3rem;
+        font-size: 1.8rem;
     }
 
     .nav-badge {
-        font-size: 0.6rem;
-        min-width: 18px;
-        height: 18px;
+        font-size: 0.75rem;
+        min-width: 20px;
+        height: 20px;
         display: flex;
         align-items: center;
         justify-content: center;
+        font-weight: bold;
     }
 
     /* ========== SEARCH STYLES ========== */
@@ -406,7 +409,7 @@
     /* ========== DESKTOP STYLES (≥992px) ========== */
     @media (min-width: 992px) {
         .modern-navbar {
-            padding: 0.75rem 0;
+            padding: 0 0;
         }
 
         .nav-menu {

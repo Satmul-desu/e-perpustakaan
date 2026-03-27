@@ -3,8 +3,8 @@
         
         {{-- Mobile Logo & Brand (Hidden on Desktop) --}}
         <a class="navbar-brand d-flex align-items-center fw-bold d-lg-none" href="{{ route('home') }}">
-            <img src="{{ asset('images/logo-removebg-preview.png') }}" alt="Logo" class="brand-logo" style="width: 100px; height: 100px; object-fit: contain; margin-top: -25px; margin-bottom: -25px;">
-            <span class="brand-text ms-2" style="font-size: 1.3rem;">
+            <img src="{{ asset('images/logo-removebg-preview.png') }}" alt="Logo" class="brand-logo" style="width: 100px; height: 100px; object-fit: contain; margin-top: -25px; margin-bottom: -25px; margin-right: -15px;">
+            <span class="brand-text" style="font-size: 1.3rem;">
                 <span class="text-white">E-</span><span class="text-primary">Perpus</span>
             </span>
         </a>
@@ -12,8 +12,8 @@
         {{-- Desktop Center Section (Logo + Search Group) --}}
         <div class="d-none d-lg-flex align-items-center mx-auto" style="gap: 2.5rem;">
             <a class="navbar-brand d-flex align-items-center fw-bold m-0" href="{{ route('home') }}" style="position: relative; z-index: 1040;">
-                <img src="{{ asset('images/logo-removebg-preview.png') }}" alt="Logo" class="brand-logo" style="width: 200px; height: 200px; object-fit: contain; margin-top: -85px; margin-bottom: -85px; margin-right: 0.5rem; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));">
-                <span class="brand-text" style="font-size: 2.1rem; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">
+                <img src="{{ asset('images/logo-removebg-preview.png') }}" alt="Logo" class="brand-logo" style="width: 200px; height: 200px; object-fit: contain; margin-top: -90px; margin-bottom: -90px; margin-right: -35px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));">
+                <span class="brand-text" style="font-size: 1.8rem; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">
                     <span class="text-white">E-</span><span class="text-primary">Perpustakaan</span>
                 </span>
             </a>
@@ -21,9 +21,9 @@
             <form class="nav-search" style="width: 450px;" action="{{ route('catalog.index') }}" method="GET">
                 <div class="input-group search-input-group shadow-sm">
                     <input type="text" name="q" class="form-control border-secondary" placeholder="Cari buku..."
-                        value="{{ request('q') }}" style="padding: 0.75rem 1.25rem; font-size: 1.1rem;">
-                    <button class="btn btn-search px-4" type="submit">
-                        <i class="bi bi-search fs-5"></i>
+                        value="{{ request('q') }}" style="padding: 0.5rem 1rem; font-size: 1rem;">
+                    <button class="btn btn-search px-3" type="submit">
+                        <i class="bi bi-search fs-6"></i>
                     </button>
                 </div>
             </form>
@@ -33,36 +33,36 @@
         <div class="collapse navbar-collapse" id="navbarMain">
             <ul class="navbar-nav ms-auto align-items-center nav-menu">
                 {{-- Katalog (Desktop) --}}
-                <li class="nav-item d-none d-lg-block mx-3">
-                    <a class="nav-link d-flex flex-column align-items-center justify-content-center text-white p-2" href="{{ route('catalog.index') }}">
-                        <i class="bi bi-grid-3x3-gap-fill mb-1" style="font-size: 1.8rem;"></i>
-                        <span style="font-size: 1rem; line-height: 1; font-weight: 500;">Katalog</span>
+                <li class="nav-item d-none d-lg-block mx-2">
+                    <a class="nav-link d-flex flex-column align-items-center justify-content-center text-white py-1 px-2" href="{{ route('catalog.index') }}">
+                        <i class="bi bi-grid-3x3-gap-fill mb-1" style="font-size: 1.4rem;"></i>
+                        <span style="font-size: 0.85rem; line-height: 1; font-weight: 500;">Katalog</span>
                     </a>
                 </li>
 
                 @auth
                     {{-- Wishlist --}}
-                    <li class="nav-item mx-3">
-                        <a class="nav-link position-relative d-flex flex-column align-items-center justify-content-center text-white p-2"
+                    <li class="nav-item mx-2">
+                        <a class="nav-link position-relative d-flex flex-column align-items-center justify-content-center text-white py-1 px-2"
                             href="{{ route('wishlist.index') }}">
                             <div class="position-relative mb-1">
-                                <i class="bi bi-heart-fill nav-icon" style="color: #f472b6;"></i>
+                                <i class="bi bi-heart-fill nav-icon" style="font-size: 1.4rem; color: #f472b6;"></i>
                                 @if (auth()->user()->wishlists()->count() > 0)
-                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger nav-badge">
+                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger nav-badge" style="font-size: 0.65rem; min-width: 15px; height: 15px;">
                                         {{ auth()->user()->wishlists()->count() > 9 ? '9+' : auth()->user()->wishlists()->count() }}
                                     </span>
                                 @endif
                             </div>
-                            <span style="font-size: 1rem; line-height: 1; font-weight: 500;">Wishlist</span>
+                            <span style="font-size: 0.85rem; line-height: 1; font-weight: 500;">Wishlist</span>
                         </a>
                     </li>
 
                     {{-- Loans / Peminjaman --}}
-                    <li class="nav-item mx-3">
-                        <a class="nav-link position-relative d-flex flex-column align-items-center justify-content-center text-white p-2"
+                    <li class="nav-item mx-2">
+                        <a class="nav-link position-relative d-flex flex-column align-items-center justify-content-center text-white py-1 px-2"
                             href="{{ route('loans.index') }}">
                             <div class="position-relative mb-1">
-                                <i class="bi bi-book nav-icon" style="color: #60a5fa;"></i>
+                                <i class="bi bi-book nav-icon" style="font-size: 1.4rem; color: #60a5fa;"></i>
                                 @php
                                     $loanCount =
                                         auth()
@@ -72,23 +72,23 @@
                                             ->count() ?? 0;
                                 @endphp
                                 @if ($loanCount > 0)
-                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning nav-badge text-dark">
+                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning nav-badge text-dark" style="font-size: 0.65rem; min-width: 15px; height: 15px;">
                                         {{ $loanCount > 9 ? '9+' : $loanCount }}
                                     </span>
                                 @endif
                             </div>
-                            <span style="font-size: 1rem; line-height: 1; font-weight: 500;">Peminjaman</span>
+                            <span style="font-size: 0.85rem; line-height: 1; font-weight: 500;">Peminjaman</span>
                         </a>
                     </li>
 
                     {{-- User Dropdown --}}
-                    <li class="nav-item dropdown ms-3 ms-lg-4">
-                        <a class="nav-link dropdown-toggle d-flex flex-column align-items-center justify-content-center user-dropdown-toggle p-2" href="#"
+                    <li class="nav-item dropdown ms-2 ms-lg-3">
+                        <a class="nav-link dropdown-toggle d-flex flex-column align-items-center justify-content-center user-dropdown-toggle py-1 px-2" href="#"
                             id="userDropdown" data-bs-toggle="dropdown">
-                            <span style="transform: scale(1.4); margin-bottom: 3px; display: inline-block;">
+                            <span style="transform: scale(1.1); margin-bottom: 2px; display: inline-block;">
                                 {!! auth()->user()->avatar_html !!}
                             </span>
-                            <span class="d-none d-lg-block mt-1 user-name fw-bold" style="font-size: 1.1rem; max-width: 150px;">{{ auth()->user()->name }}</span>
+                            <span class="d-none d-lg-block mt-1 user-name fw-bold" style="font-size: 0.9rem; max-width: 150px;">{{ auth()->user()->name }}</span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end modern-dropdown mt-2" style="font-size: 1.1rem;">
                             <li>

@@ -114,7 +114,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom sticky-top">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center fw-bold" href="{{ url('/') }}">
-                <img src="{{ asset('images/logo-removebg-preview.png') }}" alt="Logo" class="me-2 object-fit-contain" style="width: 100px; height:  100px; margin-top: -15px; margin-bottom: -15px;">
+                <img src="{{ asset('images/logo-removebg-preview.png') }}" alt="Logo" class="me-2 object-fit-contain" style="width: 160px; height: 160px; margin-top: -45px; margin-bottom: -45px;">
                 <span>E-<span class="text-primary">Perpustakaan</span></span>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#landingNavbar">

@@ -2,7 +2,7 @@
 @section('title', 'Detail Buku')
 @section('page-title', 'Detail Buku: ' . $product->name)
 @section('content')
-    <div class="center">
+    <div class="row">
         <div class="col-lg-8">
             <div class="card border-0 shadow-sm">
                 <div class="card-header bg-dark">

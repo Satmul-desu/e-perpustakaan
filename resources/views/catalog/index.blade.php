@@ -398,6 +398,10 @@
             }
 
             function fetchSearchSuggestions(query) {
+                // Tampilkan Skeleton Loading sebelum data datang
+                searchSuggestions.innerHTML = renderSkeleton();
+                searchSuggestions.style.display = 'block';
+
                 fetch(`/catalog/search/suggestions?q=${encodeURIComponent(query)}`)
                     .then(response => response.json())
                     .then(data => {
@@ -405,11 +409,31 @@
                             renderSuggestions(data.products);
                         } else {
                             searchSuggestions.innerHTML =
-                                '<div class="p-2 text-secondary small text-center">Tidak ada buku ditemukan</div>';
+                                '<div class="search-suggestions-list shadow p-2 text-secondary small text-center" style="background: rgba(30, 41, 59, 0.98); border: 1px solid #334155; border-radius: 0.5rem;">Tidak ada buku ditemukan</div>';
                             searchSuggestions.style.display = 'block';
                         }
                     })
-                    .catch(error => console.error('Error:', error));
+                    .catch(error => {
+                        console.error('Error:', error);
+                        searchSuggestions.style.display = 'none';
+                    });
+            }
+
+            function renderSkeleton() {
+                let html = '<div class="search-suggestions-list shadow p-2" style="background: rgba(30, 41, 59, 0.98); border: 1px solid #334155; border-radius: 0.5rem;">';
+                for(let i=0; i<3; i++) {
+                    html += `
+                        <div class="d-flex align-items-center mb-2 p-1">
+                            <div class="skeleton-img" style="width: 40px; height: 50px; border-radius: 4px; margin-right: 12px;"></div>
+                            <div class="suggestion-info flex-grow-1">
+                                <div class="skeleton-text skeleton-title mb-2"></div>
+                                <div class="skeleton-text skeleton-price"></div>
+                            </div>
+                        </div>
+                    `;
+                }
+                html += '</div>';
+                return html;
             }
 
             function renderSuggestions(products) {
@@ -653,6 +677,26 @@
                 min-width: 100px !important;
                 font-size: 0.8rem;
             }
+        }
+
+        /* ========== SKELETON LOADING ========== */
+        @keyframes pulseSkeleton {
+            0% { background-color: rgba(51, 65, 85, 0.4); }
+            50% { background-color: rgba(71, 85, 105, 0.7); }
+            100% { background-color: rgba(51, 65, 85, 0.4); }
+        }
+        .skeleton-img, .skeleton-text {
+            animation: pulseSkeleton 1.5s ease-in-out infinite;
+        }
+        .skeleton-title {
+            width: 70%;
+            height: 14px;
+            border-radius: 4px;
+        }
+        .skeleton-price {
+            width: 40%;
+            height: 12px;
+            border-radius: 4px;
         }
     </style>
 @endsection

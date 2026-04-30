@@ -20,3 +20,6 @@ Artisan::command('send-mail', function () {
     )->send($email);
     var_dump(ResponseHelper::toArray($response));
 })->purpose('Send Mail');
+
+use Illuminate\Support\Facades\Schedule;
+Schedule::command('loans:calculate-fines')->everyMinute();

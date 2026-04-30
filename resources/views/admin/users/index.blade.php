@@ -35,7 +35,9 @@
                                     <th>No</th>
                                     <th>Avatar</th>
                                     <th>Nama</th>
+                                    <th>Gelar</th>
                                     <th>Email</th>
+
                                     <th>Role</th>
                                     <th>Status Verifikasi</th>
                                     <th>Tanggal Daftar</th>
@@ -65,7 +67,9 @@
                                                 <small class="text-muted">{{ $user->phone }}</small>
                                             @endif
                                         </td>
+                                        <td>{{ $user->title ?? '-' }}</td>
                                         <td>{{ $user->email }}</td>
+
                                         <td>
                                             @if ($user->role === 'admin')
                                                 <span class="badge bg-danger">Admin</span>

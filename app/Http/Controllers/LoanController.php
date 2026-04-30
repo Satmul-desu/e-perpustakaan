@@ -4,11 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Models\Loan;
 use App\Models\Product;
+use App\Services\LoanService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class LoanController extends Controller
 {
+    protected $loanService;
+
+    public function __construct(LoanService $loanService)
+    {
+        $this->loanService = $loanService;
+    }
+
     public function index(Request $request)
     {
         $user = Auth::user();
@@ -42,38 +50,17 @@ class LoanController extends Controller
             'duration' => 'nullable|integer|min:1|max:30',
             'notes' => 'nullable|string|max:500',
         ]);
-        $user = Auth::user();
-        $book = Product::findOrFail($request->book_id);
-        $existingLoan = $user->loans()
-            ->where('book_id', $book->id)
-            ->whereIn('status', [
-                Loan::STATUS_PENDING,
-                Loan::STATUS_APPROVED,
-                Loan::STATUS_BORROWED,
-            ])
-            ->first();
-        if ($existingLoan) {
-            return redirect()->back()
-                ->with('error', 'Anda sudah memiliki peminjaman aktif untuk buku ini.');
+
+        try {
+            $loan = $this->loanService->requestLoan(
+                Auth::user(),
+                $request->book_id,
+                $request->duration,
+                $request->notes
+            );
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
         }
-        if (! $user->canBorrowBooks()) {
-            return redirect()->back()
-                ->with('error', 'Anda sudah mencapai batas maksimal peminjaman buku.');
-        }
-        if ($book->stock <= 0) {
-            return redirect()->back()
-                ->with('error', 'Buku ini sedang tidak tersedia.');
-        }
-        $duration = $request->duration ?? Loan::DEFAULT_LOAN_DURATION;
-        $loan = Loan::create([
-            'user_id' => $user->id,
-            'book_id' => $book->id,
-            'loan_date' => now(),
-            'due_date' => now()->addDays($duration),
-            'status' => Loan::STATUS_PENDING,
-            'notes' => $request->notes,
-        ]);
-        $book->decrementStock(1);
 
         return redirect()->route('loans.show', $loan)
             ->with('success', 'Permintaan peminjaman berhasil! Menunggu persetujuan admin.');
@@ -82,12 +69,12 @@ class LoanController extends Controller
     public function cancel(Request $request, Loan $loan)
     {
         $this->authorizeLoanAccess($loan);
-        if (! in_array($loan->status, [Loan::STATUS_PENDING, Loan::STATUS_APPROVED])) {
-            return redirect()->back()
-                ->with('error', 'Peminjaman tidak dapat dibatalkan.');
+        
+        try {
+            $this->loanService->cancelLoan($loan, $request->reason);
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
         }
-        $loan->cancel($request->reason ?? 'Dibatalkan oleh peminjam');
-        $loan->book->incrementStock(1);
 
         return redirect()->route('loans.index')
             ->with('success', 'Peminjaman berhasil dibatalkan.');

@@ -24,9 +24,9 @@ class Loan extends Model
     ];
 
     protected $casts = [
-        'loan_date' => 'date',
-        'due_date' => 'date',
-        'return_date' => 'date',
+        'loan_date' => 'datetime',
+        'due_date' => 'datetime',
+        'return_date' => 'datetime',
     ];
 
     const STATUS_PENDING = 'pending';

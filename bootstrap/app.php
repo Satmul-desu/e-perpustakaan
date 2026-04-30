@@ -15,5 +15,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'role.layout' => \App\Http\Middleware\RoleBasedLayout::class,
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
         ]);
+        $middleware->validateCsrfTokens(except: [
+            '/midtrans/notification',
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {})->create();

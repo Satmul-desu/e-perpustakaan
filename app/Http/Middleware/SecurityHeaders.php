@@ -14,8 +14,8 @@ class SecurityHeaders
         $response->headers->set('X-XSS-Protection', '1; mode=block');
         $response->headers->set('Referrer-Policy', 'strict-origin-when-cross-origin');
         $response->headers->set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
-        $midtransUrl = 'https:
-        $csp = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:
+        $midtransUrl = 'https://app.sandbox.midtrans.com';
+        $csp = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' " . $midtransUrl . ";";
         $response->headers->set('Content-Security-Policy', $csp);
         if ($request->isSecure()) {
             $response->headers->set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');

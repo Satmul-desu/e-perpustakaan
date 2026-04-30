@@ -20,14 +20,17 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-3">
-                            @if($loan->book->primaryImage)
-                                <img src="{{ asset('storage/products/' . $loan->book->primaryImage->image_path) }}" 
-                                     class="img-fluid rounded" alt="{{ $loan->book->name }}">
-                            @else
-                                <div class="bg-secondary rounded d-flex align-items-center justify-content-center" style="height: 150px;">
-                                    <i class="bi bi-image text-white display-4"></i>
-                                </div>
-                            @endif
+                                @if($loan->book && $loan->book->primaryImage)
+                                    <img src="{{ asset('storage/products/' . $loan->book->primaryImage->image_path) }}" 
+                                         class="img-fluid rounded" alt="{{ $loan->book->name }}">
+                                @elseif($loan->book)
+                                    <img src="{{ $loan->book->image_url }}" class="img-fluid rounded" alt="{{ $loan->book->name }}">
+                                @else
+                                    <div class="bg-secondary rounded d-flex align-items-center justify-content-center" style="height: 150px;">
+                                        <i class="bi bi-image text-white display-4"></i>
+                                    </div>
+                                @endif
+
                         </div>
                         <div class="col-md-9">
                             <h4 class="mb-2">{{ $loan->book->name }}</h4>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" data-bs-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +7,9 @@
     <title>@yield('title', 'Perpustakaan') - {{ config('app.name') }}</title>
     <meta name="description" content="@yield('meta_description', 'Toko online terpercaya dengan produk berkualitas')">
     <link rel="icon" href="{{ asset('favicon.ico') }}">
+    <link rel="manifest" href="{{ asset('manifest.json') }}">
+    <link rel="apple-touch-icon" href="{{ asset('images/icons/icon-192x192.png') }}">
+    <meta name="theme-color" content="#3b82f6">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -14,6 +17,24 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     <style>
+        :root {
+            --body-bg: #f8fafc;
+            --text-color: #0f172a;
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+            --input-bg: #ffffff;
+            --input-focus: #f1f5f9;
+        }
+
+        [data-bs-theme="dark"] {
+            --body-bg: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+            --text-color: #e0e0e0;
+            --card-bg: rgba(30, 41, 59, 0.95);
+            --border-color: #334155;
+            --input-bg: rgba(15, 23, 42, 0.6);
+            --input-focus: rgba(15, 23, 42, 0.8);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -22,18 +43,20 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+            background: var(--body-bg);
             min-height: 100vh;
-            color: #e0e0e0;
+            color: var(--text-color);
+            transition: background 0.3s ease, color 0.3s ease;
         }
 
         .bg-dark-custom {
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%) !important;
+            background: var(--body-bg) !important;
         }
 
         .bg-dark-card {
-            background: rgba(30, 41, 59, 0.95) !important;
-            border: 1px solid #334155 !important;
+            background: var(--card-bg) !important;
+            border: 1px solid var(--border-color) !important;
+            color: var(--text-color) !important;
         }
 
         .text-primary-custom {
@@ -53,15 +76,15 @@
         }
 
         .form-control-custom {
-            background: rgba(15, 23, 42, 0.6);
-            border: 1px solid #334155;
-            color: white;
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
         }
 
         .form-control-custom:focus {
-            background: rgba(15, 23, 42, 0.8);
+            background: var(--input-focus);
             border-color: #3b82f6;
-            color: white;
+            color: var(--text-color);
             box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.25);
         }
 
@@ -70,9 +93,10 @@
         }
 
         .card-custom {
-            background: rgba(30, 41, 59, 0.9);
-            border: 1px solid #334155;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
             border-radius: 16px;
+            color: var(--text-color);
         }
 
         .floating-cs-button {
@@ -171,6 +195,33 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        document.documentElement.setAttribute('data-bs-theme', savedTheme);
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-bs-theme', currentTheme);
+            localStorage.setItem('theme', currentTheme);
+            updateThemeIcon(currentTheme);
+        }
+        function updateThemeIcon(theme) {
+            const moonIcon = document.getElementById('theme-icon-moon');
+            const sunIcon = document.getElementById('theme-icon-sun');
+            if(moonIcon && sunIcon) {
+                if (theme === 'dark') {
+                    moonIcon.classList.add('d-none');
+                    sunIcon.classList.remove('d-none');
+                } else {
+                    sunIcon.classList.add('d-none');
+                    moonIcon.classList.remove('d-none');
+                }
+            }
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            updateThemeIcon(savedTheme);
+        });
+    </script>
     @yield('scripts')
     <script>
         async function toggleWishlist(productId) {
@@ -183,7 +234,7 @@
                     headers: {
                         "Accept": "application/json",
                         "X-CSRF-TOKEN": token,
-                    },
+                        },
                 });
 
                 console.log('Response status:', response.status);
@@ -288,6 +339,17 @@
                 });
             });
         });
+
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                    }, err => {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+            });
+        }
     </script>
 </body>
 

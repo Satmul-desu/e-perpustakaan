@@ -59,10 +59,42 @@ body {
     font-size: 1.5rem;
 }
 
+[data-bs-theme="light"] .navbar {
+    background-color: rgba(255, 255, 255, 0.9) !important;
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid #f1f5f9;
+}
+
+[data-bs-theme="light"] .navbar .nav-link {
+    color: #1e293b !important;
+}
+
+[data-bs-theme="light"] .navbar .nav-link:hover {
+    color: var(--primary-color) !important;
+}
+
 /* Footer */
 footer {
     background-color: #1f2937;
     color: #fff;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+[data-bs-theme="light"] footer {
+    background-color: #f8fafc !important;
+    color: #0f172a !important;
+    border-top: 1px solid #f1f5f9;
+}
+
+/* Menyesuaikan ukuran logo di footer agar sama dengan navbar & hero */
+/* Menggunakan negative margin agar ukuran fisik footer tidak berubah */
+footer img[src*="logo-removebg-preview.png"] {
+    width: 160px !important;
+    height: 160px !important;
+    margin-top: -45px !important;
+    margin-bottom: -45px !important;
+    object-fit: contain;
+    vertical-align: middle;
 }
 
 /* Card Produk */

@@ -44,8 +44,7 @@ class ProfileUpdateRequest extends FormRequest
                 'nullable',
                 'image',
                 'mimes:jpeg,jpg,png,webp',
-                'max:2048',
-                'dimensions:min_width=100,min_height=100,max_width=2000,max_height=2000',
+                'dimensions:min_width=100,min_height=100,max_width=4000,max_height=4000',
             ],
         ];
     }
@@ -54,8 +53,8 @@ class ProfileUpdateRequest extends FormRequest
     {
         return [
             'phone.regex' => 'Format nomor telepon tidak valid. Gunakan format 08xx atau +628xx.',
-            'avatar.max' => 'Ukuran foto maksimal 2MB.',
-            'avatar.dimensions' => 'Dimensi foto harus antara 100x100 hingga 2000x2000 pixel.',
+            'avatar.dimensions' => 'Dimensi foto harus antara 100x100 hingga 4000x4000 pixel.',
+            'avatar.uploaded' => 'Gagal mengunggah foto. Hal ini mungkin karena file terlalu besar bagi sistem server.',
             'email.unique' => 'Email ini sudah digunakan oleh pengguna lain.',
         ];
     }

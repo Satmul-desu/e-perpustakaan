@@ -16,8 +16,13 @@
                         <label class="form-label text-dark fw-bold">Nama Lengkap</label>
                         <input type="text" name="name" class="form-control bg-light @error('name') is-invalid @enderror" value="{{ old('name') }}" required placeholder="Masukkan nama lengkap...">
                         @error('name') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    <div class="mb-3">
+                        <label class="form-label text-dark fw-bold">Gelar (Opsional)</label>
+                        <input type="text" name="title" class="form-control bg-light @error('title') is-invalid @enderror" value="{{ old('title') }}" placeholder="Contoh: S.Kom, M.T, dll...">
+                        @error('title') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
                     
+
                     <div class="mb-3">
                         <label class="form-label text-dark fw-bold">Email</label>
                         <input type="email" name="email" class="form-control bg-light @error('email') is-invalid @enderror" value="{{ old('email') }}" required placeholder="Masukkan alamat email aktif...">

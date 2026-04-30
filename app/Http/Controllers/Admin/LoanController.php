@@ -4,11 +4,19 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Loan;
+use App\Services\LoanService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class LoanController extends Controller
 {
+    protected $loanService;
+
+    public function __construct(LoanService $loanService)
+    {
+        $this->loanService = $loanService;
+    }
+
     public function index(Request $request)
     {
         $query = Loan::with(['user', 'book.category']);
@@ -31,13 +39,7 @@ class LoanController extends Controller
             });
         }
         $loans = $query->orderBy('created_at', 'desc')->paginate(15);
-        $stats = [
-            'total' => Loan::count(),
-            'pending' => Loan::where('status', Loan::STATUS_PENDING)->count(),
-            'borrowed' => Loan::where('status', Loan::STATUS_BORROWED)->count(),
-            'returned' => Loan::where('status', Loan::STATUS_RETURNED)->count(),
-            'overdue' => Loan::overdue()->count(),
-        ];
+        $stats = $this->loanService->getAdminStats();
 
         return view('admin.loans.index', compact('loans', 'stats'));
     }
@@ -51,16 +53,14 @@ class LoanController extends Controller
 
     public function approve(Request $request, Loan $loan)
     {
-        if ($loan->status !== Loan::STATUS_PENDING) {
-            return redirect()->back()
-                ->with('error', 'Hanya peminjaman dengan status Menunggu yang dapat disetujui.');
-        }
         $request->validate([
             'notes' => 'nullable|string|max:500',
         ]);
-        $loan->approve(Auth::user(), true, Loan::LOAN_DURATION_45_HOURS);
-        if ($request->notes) {
-            $loan->update(['admin_notes' => $request->notes]);
+
+        try {
+            $this->loanService->approveLoan($loan, Auth::user(), $request->notes);
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
         }
 
         return redirect()->back()
@@ -152,32 +152,29 @@ class LoanController extends Controller
 
     public function sendFine(Request $request, Loan $loan)
     {
-        if ($loan->status !== Loan::STATUS_OVERDUE && ! $loan->is_overdue) {
-            return redirect()->back()->with('error', 'Hanya buku yang terlambat dapat diberikan denda.');
+        $daysLate = max(0, now()->diffInMinutes($loan->due_date));
+        
+        if ($daysLate < 3) {
+            return redirect()->back()->with('error', 'Tagihan Denda hanya bisa dikirim jika peminjam terlambat minimal 3 hari.');
         }
 
-        $request->validate([
-            'fine_amount' => 'required|numeric|min:1000',
-        ]);
-
         $loan->update([
-            'fine_amount' => $request->fine_amount,
+            'is_fine_active' => true,
             'fine_status' => 'unpaid',
             'admin_notes' => ($loan->admin_notes ?? '') . "\n" .
-                'Sanksi Denda: Rp ' . number_format($request->fine_amount, 0, ',', '.') . ' oleh ' . Auth::user()->name . ' pada ' . now()->format('Y-m-d'),
+                '[Surat Denda] Resmi Dikeluarkan oleh ' . Auth::user()->name . ' pada ' . now()->format('Y-m-d H:i'),
         ]);
 
-        return redirect()->back()->with('success', 'Tagihan Denda berhasil dikirim ke Pengguna.');
+        // Kirim Notifikasi Denda Utama ke User
+        if ($loan->user) {
+            $loan->user->notify(new \App\Notifications\LoanOverdueNotification($loan, false));
+        }
+
+        return redirect()->back()->with('success', 'Surat Denda resmi diterbitkan! Sistem akan menghitung akumulasi denda dari hari pertama.');
     }
 
     public function getStats()
     {
-        return response()->json([
-            'pending' => Loan::where('status', Loan::STATUS_PENDING)->count(),
-            'borrowed' => Loan::where('status', Loan::STATUS_BORROWED)->count(),
-            'returned' => Loan::where('status', Loan::STATUS_RETURNED)->count(),
-            'overdue' => Loan::overdue()->count(),
-            'total_books_borrowed' => Loan::where('status', '!=', Loan::STATUS_CANCELLED)->count(),
-        ]);
+        return response()->json($this->loanService->getAdminStats());
     }
 }

@@ -99,6 +99,10 @@
             box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
         }
 
+        .sidebar-brand .brand-logo {
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+        }
+
         .sidebar-brand .logo-text {
             font-size: 1.25rem;
             font-weight: 700;
@@ -770,10 +774,8 @@
         <aside class="sidebar d-flex flex-column">
             <div class="sidebar-brand">
                 <a href="{{ route('admin.dashboard') }}" class="logo">
-                    <div class="logo-icon">
-                        <i class="bi bi-book"></i>
-                    </div>
-                    <span class="logo-text text-white">E-<span class="text-primary">Perpustakaan</span></span>
+                    <img src="{{ asset('images/logo-removebg-preview.png') }}" alt="Logo" class="brand-logo" style="width: 100px; height: 100px; object-fit: contain; margin-top: -25px; margin-bottom: -25px; margin-right: -15px;">
+                    <span class="logo-text text-white">E-<span class="text-primary">Pertak</span></span>
                 </a>
             </div>
 

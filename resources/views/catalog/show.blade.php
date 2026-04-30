@@ -48,16 +48,7 @@
                             {{ $product->category->name }}
                         </a>
                         <h2 class="mb-3">{{ $product->name }}</h2>
-                        <div class="mb-4">
-                            @if ($product->has_discount)
-                                <div class="text-muted text-decoration-line-through">
-                                    {{ $product->formatted_original_price }}
-                                </div>
-                            @endif
-                            <div class="h3 text-primary fw-bold mb-0">
-                                {{ $product->formatted_price }}
-                            </div>
-                        </div>
+
                         <div class="mb-4">
                             @if ($product->stock > 10)
                                 <span class="badge bg-success">
@@ -73,26 +64,20 @@
                                 </span>
                             @endif
                         </div>
-                        <form action="{{ route('cart.add') }}" method="POST" class="mb-4">
+                        <form action="{{ route('loans.store') }}" method="POST" class="mb-4">
                             @csrf
-                            <input type="hidden" name="product_id" value="{{ $product->id }}">
+                            <input type="hidden" name="book_id" value="{{ $product->id }}">
                             <div class="row g-3 align-items-end">
                                 <div class="col-auto">
-                                    <label class="form-label">Jumlah</label>
+                                    <label class="form-label">Durasi Pinjam (hari)</label>
                                     <div class="input-group" style="width: 140px;">
-                                        <button type="button" class="btn btn-outline-secondary"
-                                            onclick="decrementQty()">-</button>
-                                        <input type="number" name="quantity" id="quantity" value="1" min="1"
-                                            max="{{ $product->stock }}" class="form-control text-center">
-                                        <button type="button" class="btn btn-outline-secondary"
-                                            onclick="incrementQty()">+</button>
+                                        <input type="number" name="duration" id="duration" value="7" min="1" max="30" class="form-control text-center">
                                     </div>
                                 </div>
                                 <div class="col">
-                                    <button type="submit" class="btn btn-primary btn-lg w-100"
-                                        @if ($product->stock == 0) disabled @endif>
-                                        <i class="bi bi-cart-plus me-2"></i>
-                                        Tambah ke Keranjang
+                                    <button type="submit" class="btn btn-primary btn-lg w-100" @if ($product->stock == 0) disabled @endif>
+                                        <i class="bi bi-book me-2"></i>
+                                        Pinjam Buku
                                     </button>
                                 </div>
                             </div>
@@ -109,38 +94,46 @@
                         <div class="mb-3">
                             <h6>Deskripsi</h6>
                             <p class="text-muted">{!! nl2br(e($product->description)) !!}</p>
-                            <img src="{{ asset('images/galih.jpg') }}" alt="Product Image" class="img-fluid mt-3"
-                                style="max-height: 300px;">
                         </div>
-                        <div class="row text-muted small">
-                            <div class="col-6 mb-2">
-                                <i class="bi bi-box me-2"></i> Berat: {{ $product->weight }} gram
-                            </div>
-                            <div class="col-6 mb-2">
-                                <i class="bi bi-tag me-2"></i> SKU: PROD-{{ $product->id }}
-                            </div>
-                        </div>
+
+
                     </div>
                 </div>
             </div>
         </div>
+        
+        <!-- Buku Serupa Section -->
+        <div class="row mt-5">
+            <div class="col-12 border-top pt-5">
+                <h4 class="mb-4 d-flex align-items-center">
+                    <i class="bi bi-stars text-warning me-2"></i> Buku yang mungkin Anda suka
+                </h4>
+                @if(isset($relatedBooks) && $relatedBooks->count() > 0)
+                    <div class="row row-cols-2 row-cols-md-4 g-4">
+                        @foreach($relatedBooks as $related)
+                            <div class="col">
+                                <a href="{{ route('catalog.show', $related->slug) }}" class="text-decoration-none">
+                                    <div class="card h-100 border-0 shadow-sm transition-hover">
+                                        <div class="position-relative bg-light rounded-top">
+                                            <img src="{{ $related->image_url }}" class="card-img-top w-100 p-2" alt="{{ $related->name }}" style="height: 200px; object-fit: contain;">
+                                        </div>
+                                        <div class="card-body p-3">
+                                            <div class="text-muted small mt-2"><i class="bi bi-tag me-1"></i> {{ optional($related->category)->name ?? 'Buku' }}</div>
+                                        </div>
+
+                                    </div>
+                                </a>
+                            </div>
+                        @endforeach
+                    </div>
+                @else
+                    <div class="alert alert-light text-muted border-0">
+                        <i class="bi bi-info-circle me-2"></i> Belum ada buku terkait dalam kategori ini.
+                    </div>
+                @endif
+            </div>
+        </div>
     </div>
     @push('scripts')
-        <script>
-            function incrementQty() {
-                const input = document.getElementById('quantity');
-                const max = parseInt(input.max);
-                if (parseInt(input.value) < max) {
-                    input.value = parseInt(input.value) + 1;
-                }
-            }
-
-            function decrementQty() {
-                const input = document.getElementById('quantity');
-                if (parseInt(input.value) > 1) {
-                    input.value = parseInt(input.value) - 1;
-                }
-            }
-        </script>
-    @endpush!
+    @endpush
 @endsection

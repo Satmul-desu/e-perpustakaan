@@ -43,6 +43,11 @@
                         <div class="card-body text-center">
                             {!! $user->profile_avatar_html !!}
                             <h4 class="mt-3 mb-1 text-white">{{ $user->name }}</h4>
+                            <div class="mb-2">
+                                <span class="badge bg-{{ $user->badge_color }} px-2 py-1 fs-6 rounded-pill border border-{{ $user->badge_color }}">
+                                    {{ $user->badge_name }}
+                                </span>
+                            </div>
                             <p class="text-secondary small mb-3">{{ $user->email }}</p>
                             @include('profile.partials.update-avatar-form')
                         </div>

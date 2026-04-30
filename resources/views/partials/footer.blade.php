@@ -167,8 +167,10 @@
     }
 
     .footer-logo-img {
-        width: 40px;
-        height: 40px;
+        width: 160px;
+        height: 160px;
+        margin-top: -60px;
+        margin-bottom: -60px;
         object-fit: contain;
     }
 
@@ -305,11 +307,6 @@
     @media (min-width: 576px) and (max-width: 991.98px) {
         .modern-footer {
             padding: 3rem 0 1.5rem;
-        }
-
-        .footer-logo-img {
-            width: 36px;
-            height: 36px;
         }
 
         .social-link {

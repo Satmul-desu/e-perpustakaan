@@ -21,7 +21,7 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-4 mb-3 mb-md-0">
-                                <img src="{{ $loan->book->image_url }}" class="img-fluid rounded"
+                                <img src="{{ $loan->book->image_url }}" onerror="this.src='{{ asset('images/placeholder.png') }}'" class="img-fluid rounded"
                                     style="border: 2px solid #334155; width: 100%; max-width: 200px;">
                             </div>
                             <div class="col-md-8">

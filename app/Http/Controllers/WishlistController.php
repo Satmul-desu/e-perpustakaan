@@ -3,11 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Services\WishlistService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class WishlistController extends Controller
 {
+    protected $wishlistService;
+
+    public function __construct(WishlistService $wishlistService)
+    {
+        $this->wishlistService = $wishlistService;
+    }
+
     public function index()
     {
         $products = auth()->user()->wishlists()
@@ -26,22 +34,14 @@ class WishlistController extends Controller
                 'message' => 'Silakan login terlebih dahulu.',
             ], 401);
         }
-        $user = auth()->user();
-        if ($user->hasInWishlist($product)) {
-            $user->wishlists()->where('product_id', $product->id)->delete();
-            $added = false;
-            $message = 'Produk dihapus dari wishlist.';
-        } else {
-            $user->wishlists()->create(['product_id' => $product->id]);
-            $added = true;
-            $message = 'Produk ditambahkan ke wishlist!';
-        }
+        
+        $result = $this->wishlistService->toggle(auth()->user(), $product);
 
         return response()->json([
             'status' => 'success',
-            'added' => $added,
-            'message' => $message,
-            'count' => $user->wishlists()->count(),
+            'added' => $result['added'],
+            'message' => $result['message'],
+            'count' => auth()->user()->wishlists()->count(),
         ]);
     }
 
@@ -54,10 +54,10 @@ class WishlistController extends Controller
         if (! auth()->check()) {
             return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu.');
         }
-        $user = auth()->user();
-        if (! $user->hasInWishlist($product)) {
-            $user->wishlists()->create(['product_id' => $product->id]);
-
+        
+        $added = $this->wishlistService->addToWishlist(auth()->user(), $product);
+        
+        if ($added) {
             return back()->with('success', 'Produk ditambahkan ke wishlist!');
         }
 
@@ -69,10 +69,10 @@ class WishlistController extends Controller
         if (! auth()->check()) {
             return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu.');
         }
-        $user = auth()->user();
-        if ($user->hasInWishlist($product)) {
-            $user->wishlists()->where('product_id', $product->id)->delete();
-
+        
+        $removed = $this->wishlistService->removeFromWishlist(auth()->user(), $product);
+        
+        if ($removed) {
             return back()->with('success', 'Produk dihapus dari wishlist.');
         }
 

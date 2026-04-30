@@ -109,7 +109,6 @@
 </head>
 
 <body>
-
     <!-- Navbar Khusus Landing Page -->
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom sticky-top">
         <div class="container">
@@ -233,3 +232,5 @@
     </style>
 </body>
 </html>
+
+

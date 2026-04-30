@@ -121,6 +121,28 @@ class ReportController extends Controller
         ];
         return view('admin.reports.loans', compact('loans', 'stats'));
     }
+
+    public function exportPreview(Request $request)
+    {
+        $query = Loan::with(['user', 'book.category']);
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+        if ($request->filled('date_from')) {
+            $query->whereDate('loan_date', '>=', $request->date_from);
+        }
+        if ($request->filled('date_to')) {
+            $query->whereDate('loan_date', '<=', $request->date_to);
+        }
+
+        // Kita ambil semua data (tanpa paginasi) untuk pratinjau ekspor
+        $loans = $query->orderBy('loan_date', 'desc')->get();
+        $filters = $request->all();
+
+        return view('admin.reports.export_preview', compact('loans', 'filters'));
+    }
+
     public function exportLoansExcel(Request $request)
     {
         $query = Loan::with(['user', 'book']);

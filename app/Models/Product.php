@@ -58,6 +58,11 @@ class Product extends Model
         return $this->hasMany(OrderItem::class);
     }
 
+    public function loans(): HasMany
+    {
+        return $this->hasMany(Loan::class, 'book_id');
+    }
+
     public function wishlists(): HasMany
     {
         return $this->hasMany(Wishlist::class);

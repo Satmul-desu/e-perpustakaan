@@ -5,6 +5,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Services\ProfileService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,6 +15,19 @@ use Illuminate\View\View;
 
 class ProfileController extends Controller
 {
+    /**
+     * Instance of ProfileService.
+     */
+    protected $profileService;
+
+    /**
+     * Create a new controller instance.
+     */
+    public function __construct(ProfileService $profileService)
+    {
+        $this->profileService = $profileService;
+    }
+
     /**
      * Menampilkan form edit profil.
      */
@@ -31,46 +45,19 @@ class ProfileController extends Controller
     public function updateAvatar(Request $request): RedirectResponse
     {
         $request->validate([
-            'avatar' => ['required', 'image', 'max:2048', 'mimes:jpeg,png,jpg,webp'],
+            'avatar' => ['required', 'image', 'mimes:jpeg,png,jpg,webp'],
+        ], [
+            'avatar.required' => 'Foto profil wajib diunggah.',
+            'avatar.image' => 'File harus berupa gambar.',
+            'avatar.mimes' => 'Format foto harus berupa jpeg, png, jpg, atau webp.',
+            'avatar.uploaded' => 'Gagal mengunggah foto. Hal ini mungkin karena file terlalu besar bagi sistem server.',
         ]);
 
-        $user = $request->user();
-
-        // Handle Upload Avatar
         if ($request->hasFile('avatar')) {
-            // Hapus avatar lama jika ada dan merupakan file lokal
-            if ($user->avatar &&
-                ! $this->isGoogleAvatar($user->avatar) &&
-                Storage::disk('public')->exists($user->avatar)) {
-                Storage::disk('public')->delete($user->avatar);
-            }
-
-            // Generate nama file unik
-            $filename = 'avatar-'.$user->id.'-'.time().'.'.$request->file('avatar')->extension();
-            $path = $request->file('avatar')->storeAs('avatars', $filename, 'public');
-
-            // Simpan ke database
-            // Jika user login dengan Google, set google_id ke NULL agar menggunakan avatar lokal
-            $updateData = ['avatar' => $path];
-            if ($user->isGoogleUser()) {
-                $updateData['google_id'] = null;
-            }
-            $user->update($updateData);
+            $this->profileService->updateAvatar($request->user(), $request->file('avatar'));
         }
 
         return back()->with('success', 'Foto profil berhasil diperbarui!');
-    }
-
-    /**
-     * Helper untuk cek apakah avatar adalah URL Google
-     */
-    protected function isGoogleAvatar(?string $avatar): bool
-    {
-        if (empty($avatar)) {
-            return false;
-        }
-
-        return str_starts_with($avatar, 'http://') || str_starts_with($avatar, 'https://');
     }
 
     /**
@@ -78,73 +65,16 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $user = $request->user();
         $validated = $request->validated();
+        $avatar = $request->file('avatar');
 
         // Pisahkan avatar dari data lain untuk penanganan manual,
-        // ini untuk menghindari masalah mass-assignment jika 'avatar' tidak ada di $fillable.
         unset($validated['avatar']);
 
-        // 1. Handle Upload Avatar
-        // Cek apakah user mengupload file baru di input 'avatar'?
-        if ($request->hasFile('avatar')) {
-            // Hapus avatar lama jika ada dan merupakan file lokal
-            if ($user->avatar &&
-                ! $this->isGoogleAvatar($user->avatar) &&
-                Storage::disk('public')->exists($user->avatar)) {
-                Storage::disk('public')->delete($user->avatar);
-            }
-
-            // Generate nama file unik
-            $filename = 'avatar-'.$user->id.'-'.time().'.'.$request->file('avatar')->extension();
-            $path = $request->file('avatar')->storeAs('avatars', $filename, 'public');
-
-            // Set path avatar langsung ke model untuk bypass mass assignment.
-            $user->avatar = $path;
-
-            // Jika user login dengan Google, set google_id ke NULL agar menggunakan avatar lokal
-            if ($user->isGoogleUser()) {
-                $user->google_id = null;
-            }
-        }
-
-        // 2. Update Data Text (Nama, Email, dll)
-        $user->fill($validated);
-
-        // 3. Cek Perubahan Email
-        if ($user->isDirty('email')) {
-            $user->email_verified_at = null;
-        }
-
-        // 4. Simpan ke Database
-        $user->save();
+        $this->profileService->updateProfile($request->user(), $validated, $avatar);
 
         return Redirect::route('profile.edit')
             ->with('success', 'Profil berhasil diperbarui!');
-    }
-
-    /**
-     * Helper khusus untuk menangani logika upload avatar.
-     * Mengembalikan string path file yang tersimpan.
-     */
-    protected function uploadAvatar(ProfileUpdateRequest $request, $user): string
-    {
-        // Hapus avatar lama (Garbage Collection)
-        // Cek 1: Apakah user punya avatar sebelumnya?
-        // Cek 2: Apakah file fisiknya benar-benar ada di storage 'public'?
-        if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
-            Storage::disk('public')->delete($user->avatar);
-        }
-
-        // Generate nama file unik untuk mencegah bentrok nama.
-        // Format: avatar-{user_id}-{timestamp}.{ext}
-        $filename = 'avatar-'.$user->id.'-'.time().'.'.$request->file('avatar')->extension();
-
-        // Simpan file ke folder: storage/app/public/avatars
-        // return path relatif: "avatars/namafile.jpg"
-        $path = $request->file('avatar')->storeAs('avatars', $filename, 'public');
-
-        return $path;
     }
 
     /**
@@ -152,15 +82,7 @@ class ProfileController extends Controller
      */
     public function deleteAvatar(Request $request): RedirectResponse
     {
-        $user = $request->user();
-
-        // Hapus file fisik
-        if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
-            Storage::disk('public')->delete($user->avatar);
-
-            // Set kolom di database jadi NULL
-            $user->update(['avatar' => null]);
-        }
+        $this->profileService->deleteAvatar($request->user());
 
         return back()->with('success', 'Foto profil berhasil dihapus.');
     }
@@ -175,9 +97,7 @@ class ProfileController extends Controller
             'password' => ['required', 'confirmed', 'min:8'],
         ]);
 
-        $request->user()->update([
-            'password' => \Illuminate\Support\Facades\Hash::make($validated['password']),
-        ]);
+        $this->profileService->updatePassword($request->user(), $validated['password']);
 
         return back()->with('status', 'password-updated');
     }
@@ -193,17 +113,8 @@ class ProfileController extends Controller
         ]);
 
         $user = $request->user();
-
-        // Logout dulu
         Auth::logout();
-
-        // Hapus avatar fisik user sebelum hapus data user
-        if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
-            Storage::disk('public')->delete($user->avatar);
-        }
-
-        // Hapus data user dari DB
-        $user->delete();
+        $this->profileService->deleteAccount($user);
 
         // Invalidate session agar tidak bisa dipakai lagi (Security)
         $request->session()->invalidate();

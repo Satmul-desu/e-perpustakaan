@@ -16,20 +16,20 @@
                 
                 <div class="col-lg-10 col-md-12">
                     <h1 class="hero-title mb-3">
-                        <span style="color: #ffffff; text-shadow: none;">Selamat Datang di</span><br>
+                        <span class="text-hero-main">Selamat Datang di</span><br>
                         <span style="color: #60a5fa !important; text-shadow: none;">Perpustakaan Buku</span><br>
-                        <span style="color: #ffffff; text-shadow: none;">Online</span>
+                        <span class="text-hero-main">Online</span>
                     </h1>
-                    <p class="hero-subtitle mb-4" style="color: #ffffff !important; text-shadow: none;">
+                    <p class="hero-subtitle mb-4">
                         Temukan dan pinjam buku favorit Anda dengan mudah.
                         Nikmati pengalaman membaca tanpa batas!
                     </p>
                     <div class="trust-badges mt-4 d-flex flex-wrap justify-content-center gap-4">
-                        <div class="trust-badge text-white">
+                        <div class="trust-badge">
                             <i class="bi bi-book text-success"></i>
                             <span>Koleksi Lengkap</span>
                         </div>
-                        <div class="trust-badge text-white">
+                        <div class="trust-badge">
                             <i class="bi bi-clock-history text-info"></i>
                             <span>Peminjaman Cepat</span>
                         </div>
@@ -43,11 +43,11 @@
     <section class="category-section py-5">
         <div class="container">
             <div class="section-header text-center mb-4">
-                <h2 class="section-title text-white mb-2">
+                <h2 class="section-title mb-2">
                     <i class="bi bi-grid-3x3-gap-fill me-2 text-primary"></i>
                     Semua Genre
                 </h2>
-                <p class="section-subtitle text-white opacity-75">Pilih genre buku favoritmu</p>
+                <p class="section-subtitle opacity-75">Pilih genre buku favoritmu</p>
             </div>
 
             {{-- Category Slider --}}
@@ -78,8 +78,8 @@
                                 class="text-decoration-none d-block h-100">
                                 <div class="category-card h-100">
                                     <div class="category-icon mb-2">{{ $genre['icon'] }}</div>
-                                    <h6 class="category-name text-white mb-1">{{ $genre['name'] }}</h6>
-                                    <small class="category-count text-white opacity-75">{{ $genre['count'] }} Buku</small>
+                                    <h6 class="category-name mb-1">{{ $genre['name'] }}</h6>
+                                    <small class="category-count opacity-75">{{ $genre['count'] }} Buku</small>
                                 </div>
                             </a>
                         </div>
@@ -98,11 +98,11 @@
     <section class="featured-section py-5">
         <div class="container">
             <div class="section-header text-center mb-4">
-                <h2 class="section-title text-white mb-2">
+                <h2 class="section-title mb-2">
                     <i class="bi bi-star-fill me-2 text-warning"></i>
                     Koleksi Unggulan
                 </h2>
-                <p class="section-subtitle text-white opacity-75">Buku-buku pilihan yang tersedia untuk dipinjam</p>
+                <p class="section-subtitle opacity-75">Buku-buku pilihan yang tersedia untuk dipinjam</p>
             </div>
 
             @if ($featuredProducts->count() > 0)
@@ -126,8 +126,8 @@
                 </div>
             @else
                 <div class="text-center py-5">
-                    <i class="bi bi-inbox text-white opacity-50" style="font-size: 4rem;"></i>
-                    <p class="text-white opacity-75 mt-3">Belum ada buku tersedia.</p>
+                    <i class="bi bi-inbox opacity-50" style="font-size: 4rem;"></i>
+                    <p class="opacity-75 mt-3">Belum ada buku tersedia.</p>
                 </div>
             @endif
         </div>
@@ -139,11 +139,11 @@
             <div class="cta-card">
                 <div class="row align-items-center">
                     <div class="col-lg-8 mb-3 mb-lg-0">
-                        <h3 class="text-white fw-bold mb-2">
+                        <h3 class="fw-bold mb-2">
                             <i class="bi bi-book me-2 text-primary"></i>
                             Mulai Membaca Hari Ini!
                         </h3>
-                        <p class="text-white opacity-75 mb-0">Pinjam buku favorit Anda dengan mudah dan nyaman. Bergabung sekarang!
+                        <p class="opacity-75 mb-0">Pinjam buku favorit Anda dengan mudah dan nyaman. Bergabung sekarang!
                         </p>
                     </div>
                     <div class="col-lg-4 text-lg-end">
@@ -174,7 +174,9 @@
             transform: translate(-50%, -50%);
             z-index: 0;
             object-fit: cover;
+            opacity: 0.75 !important; /* Ditingkatkan agar video lebih kelihatan (transparan tapi jelas) */
         }
+
 
         /* Video Frame/Bingkai */
         .hero-video-frame {
@@ -194,11 +196,11 @@
             left: 20px;
             right: 20px;
             bottom: 20px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.15); /* Lebih tipis dan transparan */
             border-radius: 20px;
             z-index: 1;
             pointer-events: none;
-            box-shadow: 0 0 30px rgba(0, 0, 0, 0.3), inset 0 0 30px rgba(0, 0, 0, 0.2);
+            box-shadow: none; /* Menghapus shadow agar lebih transparan/bersih */
         }
 
         /* Responsive Video Frame */
@@ -237,12 +239,13 @@
             font-weight: 800;
             line-height: 1.2;
             text-shadow: none !important;
+            color: #ffffff;
         }
 
         .hero-subtitle {
             font-size: 1.45rem;
             font-weight: 500;
-            opacity: 1;
+            color: #ffffff;
             line-height: 1.6;
             text-shadow: none !important;
         }
@@ -295,8 +298,7 @@
             font-size: 1rem;
             font-weight: 600;
             color: #ffffff;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.1);
             padding: 8px 16px;
             border-radius: 25px;
             backdrop-filter: blur(5px);
@@ -306,6 +308,80 @@
             font-size: 1.3rem;
             filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5));
         }
+
+        /* ========== LIGHT THEME OVERRIDES ========== */
+        [data-bs-theme="light"] .text-hero-main,
+        [data-bs-theme="light"] .hero-title,
+        [data-bs-theme="light"] .hero-subtitle,
+        [data-bs-theme="light"] .trust-badge,
+        [data-bs-theme="light"] .section-title,
+        [data-bs-theme="light"] .section-subtitle,
+        [data-bs-theme="light"] .category-name,
+        [data-bs-theme="light"] .category-count,
+        [data-bs-theme="light"] .cta-card h3,
+        [data-bs-theme="light"] .cta-card p,
+        [data-bs-theme="light"] .text-white,
+        [data-bs-theme="light"] .text-white-50 {
+            color: #0f172a !important;
+            text-shadow: none !important;
+        }
+
+
+        [data-bs-theme="light"] .trust-badge {
+            background: rgba(15, 23, 42, 0.05);
+            border: 1px solid rgba(15, 23, 42, 0.1);
+        }
+
+        [data-bs-theme="light"] .hero-video-frame::before {
+            border-color: rgba(0, 0, 0, 0.05);
+            background: transparent;
+        }
+
+        [data-bs-theme="light"] .category-section,
+        [data-bs-theme="light"] .featured-section {
+            background-color: #ffffff !important;
+        }
+
+        [data-bs-theme="light"] .category-card {
+            background: #ffffff;
+            border-color: #f1f5f9;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        [data-bs-theme="light"] .cta-section {
+            background: #f8fafc;
+        }
+
+        [data-bs-theme="light"] .cta-card {
+            background: #ffffff;
+            border-color: #e2e8f0;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+        }
+
+        [data-bs-theme="light"] .category-section,
+        [data-bs-theme="light"] .featured-section {
+            background: #ffffff;
+        }
+
+        [data-bs-theme="light"] .category-card {
+            background: #f8fafc;
+            border-color: #e2e8f0;
+        }
+
+        [data-bs-theme="light"] .cta-section {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        }
+
+        [data-bs-theme="light"] .cta-card {
+            background: rgba(59, 130, 246, 0.05);
+            border-color: rgba(59, 130, 246, 0.1);
+        }
+
+        [data-bs-theme="light"] .bi-inbox {
+            color: #64748b;
+        }
+        
+        .text-hero-main { color: inherit; }
 
         /* ========== CATEGORY SECTION ========== */
         .category-section {
@@ -319,10 +395,12 @@
         .section-title {
             font-size: 1.75rem;
             font-weight: 700;
+            color: #ffffff;
         }
 
         .section-subtitle {
             font-size: 0.95rem;
+            color: #ffffff;
         }
 
         .category-slider-wrapper {

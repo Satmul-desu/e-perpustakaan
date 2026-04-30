@@ -81,6 +81,15 @@
                         </a>
                     </li>
 
+                    {{-- Theme Toggle --}}
+                    <li class="nav-item mx-2 d-none d-lg-block">
+                        <button class="btn btn-link nav-link position-relative d-flex flex-column align-items-center justify-content-center text-white py-1 px-2 border-0" onclick="toggleTheme()">
+                            <i class="bi bi-sun-fill nav-icon text-warning" id="theme-icon-sun"></i>
+                            <i class="bi bi-moon-stars-fill nav-icon text-white d-none" id="theme-icon-moon"></i>
+                            <span style="font-size: 0.85rem; line-height: 1; font-weight: 500;">Tema</span>
+                        </button>
+                    </li>
+
                     {{-- User Dropdown --}}
                     <li class="nav-item dropdown ms-2 ms-lg-3">
                         <a class="nav-link dropdown-toggle d-flex flex-column align-items-center justify-content-center user-dropdown-toggle py-1 px-2" href="#"
@@ -91,6 +100,11 @@
                             <span class="d-none d-lg-block mt-1 user-name fw-bold" style="font-size: 0.9rem; max-width: 150px;">{{ auth()->user()->name }}</span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end modern-dropdown mt-2" style="font-size: 1.1rem;">
+                            <li class="px-3 py-2 border-bottom mb-2 text-center">
+                                <span class="badge bg-{{ auth()->user()->badge_color }} rounded-pill border border-{{ auth()->user()->badge_color }} bg-opacity-10 text-{{ auth()->user()->badge_color === 'warning' ? 'warning' : 'white' }} w-100 mb-1">
+                                    {{ auth()->user()->badge_name }}
+                                </span>
+                            </li>
                             <li>
                                 <a class="dropdown-item" href="{{ route('profile.edit') }}">
                                     <i class="bi bi-person-fill me-2"></i> Profil Saya

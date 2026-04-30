@@ -38,15 +38,19 @@ class UserController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
+            'title' => 'nullable|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
+
             'role' => 'required|in:admin,customer',
         ]);
 
         User::create([
             'name' => $request->name,
+            'title' => $request->title,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+
             'role' => $request->role,
             'email_verified_at' => now(), // Verifikasi otomatis agar user langsung bisa digunakan
         ]);

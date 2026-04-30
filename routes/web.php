@@ -41,6 +41,7 @@ Route::controller(GoogleController::class)->group(function () {
 });
 Route::get('/products', [CatalogController::class, 'index'])->name('catalog.index');
 Route::get('/products/{slug}', [CatalogController::class, 'show'])->name('catalog.show');
+Route::post('/midtrans/notification', [\App\Http\Controllers\LoanPaymentController::class, 'notification'])->name('midtrans.notification');
 Route::prefix('api')->group(function () {
     Route::get('/search/suggestions', [CatalogController::class, 'searchSuggestions'])->name('api.search.suggestions');
 });
@@ -64,6 +65,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/loans/{loan}/cancel', [LoanController::class, 'cancel'])->name('loans.cancel');
     Route::get('/loans/{loan}/return', [LoanController::class, 'requestReturn'])->name('loans.return');
     Route::post('/loans/{loan}/return', [LoanController::class, 'processReturn'])->name('loans.process-return');
+    Route::get('/loans/{loan}/pay-fine', [\App\Http\Controllers\LoanPaymentController::class, 'payFine'])->name('loans.pay-fine');
     Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
     Route::post('/wishlist/toggle/{product}', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
     Route::delete('/wishlist/remove/{product}', [WishlistController::class, 'destroy'])->name('wishlist.destroy');
@@ -90,7 +92,6 @@ Route::middleware(['auth', 'admin'])
         Route::get('reports/loans', [ReportController::class, 'loans'])->name('reports.loans');
         Route::get('reports/export-loans/excel', [ReportController::class, 'exportLoansExcel'])->name('reports.export-loans.excel');
         Route::get('reports/export-loans/word', [ReportController::class, 'exportLoansWord'])->name('reports.export-loans.word');
-        Route::get('reports/sales', [ReportController::class, 'sales'])->name('reports.sales');
         Route::resource('users', UserController::class);
-        Route::resource('orders', \App\Http\Controllers\Admin\OrderController::class);
     });
+

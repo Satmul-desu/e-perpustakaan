@@ -13,7 +13,9 @@ class User extends Authenticatable
 
     protected $fillable = [
         'name',
+        'title',
         'email',
+
         'password',
         'phone',
         'address',
@@ -187,5 +189,21 @@ class User extends Authenticatable
         return $this->wishlists()
             ->where('product_id', $productId)
             ->exists();
+    }
+
+    public function getBadgeNameAttribute(): string
+    {
+        $loans = $this->loans()->count();
+        if ($loans >= 15) return '👑 Kutu Buku Elite';
+        if ($loans >= 5) return '🎖️ Pustakawan Aktif';
+        return '🌱 Anggota Baru';
+    }
+
+    public function getBadgeColorAttribute(): string
+    {
+        $loans = $this->loans()->count();
+        if ($loans >= 15) return 'warning';
+        if ($loans >= 5) return 'primary';
+        return 'success';
     }
 }

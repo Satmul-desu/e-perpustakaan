@@ -26,7 +26,7 @@ class OrderController extends Controller
                 $midtransService = app(\App\Services\MidtransService::class);
                 $snapToken = $midtransService->createSnapToken($order);
                 $order->update(['snap_token' => $snapToken]);
-            } catch (\Exception $e) 
+            } catch (\Exception $e) {
                 logger()->error('Failed to generate snap token', [
                     'order_id' => $order->id,
                     'error' => $e->getMessage()

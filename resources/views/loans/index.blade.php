@@ -113,6 +113,8 @@
                                     <th class="text-white px-4 py-3" style="white-space: nowrap;">Buku</th>
                                     <th class="text-white py-3" style="white-space: nowrap;">Tgl Pinjam</th>
                                     <th class="text-white py-3" style="white-space: nowrap;">Jatuh Tempo</th>
+                                    <th class="text-white py-3" style="white-space: nowrap;">Tgl Pengembalian</th>
+
                                     <th class="text-white py-3" style="white-space: nowrap;">Status</th>
                                     <th class="text-white py-3" style="white-space: nowrap;">Aksi</th>
                                 </tr>
@@ -122,7 +124,7 @@
                                     <tr style="border-color: #334155; background: rgba(30, 41, 59, 0.7);">
                                         <td class="px-4 py-3">
                                             <div class="d-flex align-items-center">
-                                                <img src="{{ $loan->book->image_url }}" class="rounded me-3" width="45"
+                                                <img src="{{ $loan->book->image_url }}" onerror="this.src='{{ asset('images/placeholder.png') }}'" class="rounded me-3" width="45"
                                                     height="60" style="object-fit: cover; border: 1px solid #475569;">
                                                 <div>
                                                     <small
@@ -140,6 +142,10 @@
                                                 <i class="bi bi-exclamation-circle ms-1"></i>
                                             @endif
                                         </td>
+                                        <td class="py-3" style="white-space: nowrap; color: white;">
+                                            {{ $loan->return_date ? $loan->return_date->format('d M Y') : '-' }}
+                                        </td>
+
                                         <td class="py-3">
                                             @php
                                                 $statusBgColors = [
@@ -169,10 +175,6 @@
                                                 style="{{ $statusBgColors[$loan->status] ?? 'background: rgba(107, 114, 128, 0.2); border: 1px solid #6b7280; color: #9ca3af !important;' }}">
                                                 {{ $statusText[$loan->status] ?? ucfirst($loan->status) }}
                                             </span>
-                                            @if ($loan->status == 'borrowed' && $loan->days_remaining >= 0)
-                                                <br><small class="text-info mt-1 d-block"><i
-                                                        class="bi bi-clock me-1"></i>{{ $loan->days_remaining }}
-                                                    hari</small>
                                             @endif
                                             @if($loan->fine_amount > 0 && $loan->fine_status == 'unpaid')
                                                 <br><span class="badge bg-danger mt-1"><i class="bi bi-exclamation-circle me-1"></i>Denda: Rp {{ number_format($loan->fine_amount, 0, ',', '.') }}</span>
@@ -183,6 +185,11 @@
                                                 class="btn btn-sm btn-outline-primary me-1" style="border-radius: 8px;">
                                                 <i class="bi bi-eye me-1"></i>Detail
                                             </a>
+                                            @if($loan->fine_amount > 0 && $loan->fine_status == 'unpaid')
+                                                <a href="{{ route('loans.pay-fine', $loan) }}" class="btn btn-sm btn-warning me-1" style="border-radius: 8px;">
+                                                    <i class="bi bi-wallet2 me-1"></i>Bayar Denda
+                                                </a>
+                                            @endif
                                             @if (in_array($loan->status, ['pending', 'approved']))
                                                 <form method="POST" action="{{ route('loans.cancel', $loan) }}"
                                                     class="d-inline">
@@ -200,7 +207,7 @@
                                                     @csrf
                                                     <button type="submit" class="btn btn-sm btn-success"
                                                         style="border-radius: 8px;">
-                                                        <i class="bi bi-check2-circle"></i>
+                                                        Kembalikan
                                                     </button>
                                                 </form>
                                             @endif

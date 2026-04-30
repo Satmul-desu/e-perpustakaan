@@ -107,12 +107,12 @@
                     <div class="row text-center">
                         <div class="col-6">
                             <div class="border-end">
-                                <h4 class="text-primary mb-1">{{ $product->orderItems->sum('quantity') ?? 0 }}</h4>
+                                <h4 class="text-primary mb-1">{{ $product->loans()->whereIn('status', ['borrowed', 'overdue', 'returned'])->count() ?? 0 }}</h4>
                                 <small class="text-muted">Dipinjam</small>
                             </div>
                         </div>
                         <div class="col-6">
-                            <h4 class="text-success mb-1">{{ $product->orderItems->count() ?? 0 }}</h4>
+                            <h4 class="text-success mb-1">{{ $product->loans->count() ?? 0 }}</h4>
                             <small class="text-muted">Transaksi</small>
                         </div>
                     </div>
@@ -123,20 +123,20 @@
                     <h6 class="mb-0 text-white">Riwayat Peminjaman</h6>
                 </div>
                 <div class="card-body p-0">
-                    @if ($product->orderItems && $product->orderItems->count() > 0)
+                    @if ($product->loans && $product->loans->count() > 0)
                         <div class="list-group list-group-flush">
-                            @foreach ($product->orderItems->take(5) as $item)
+                            @foreach ($product->loans->sortByDesc('created_at')->take(5) as $item)
                                 <div class="list-group-item px-3 py-2">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div>
-                                            <small class="text-muted">{{ $item->order->order_number ?? '#' }}</small>
+                                            <small class="text-muted">User: {{ $item->user->name ?? 'N/A' }}</small>
                                             <br>
-                                            <small>{{ $item->order->user->name ?? 'N/A' }}</small>
+                                            <small>Status: {{ ucfirst($item->status) }}</small>
                                         </div>
                                         <div class="text-end">
-                                            <small class="fw-bold">{{ $item->quantity }} buku</small>
+                                            <small class="fw-bold">1 buku</small>
                                             <br>
-                                            <small class="text-muted">{{ $item->order->created_at->format('d/m') }}</small>
+                                            <small class="text-muted">{{ $item->created_at->format('d/m') }}</small>
                                         </div>
                                     </div>
                                 </div>

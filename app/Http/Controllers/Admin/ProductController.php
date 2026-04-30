@@ -73,7 +73,6 @@ class ProductController extends Controller
             'category',
             'images',
             'primaryImage',
-            'orderItems.order.user',
         ]);
 
         return view('admin.products.show', compact('product'));
@@ -120,9 +119,6 @@ class ProductController extends Controller
     public function destroy(Product $product): RedirectResponse
     {
         try {
-            if ($product->orderItems()->exists()) {
-                return back()->with('error', 'Gagal menghapus: Produk ini sudah ada dalam pesanan dan tidak dapat dihapus. Pertimbangkan untuk menonaktifkan produk (non-aktifkan) sebagai gantinya.');
-            }
             foreach ($product->images as $image) {
                 Storage::disk('public')->delete($image->image_path);
             }

@@ -36,21 +36,6 @@ class User extends Authenticatable
 
     protected $with = [];
 
-    public function orders(): HasMany
-    {
-        return $this->hasMany(Order::class);
-    }
-
-    public function cart(): HasOne
-    {
-        return $this->hasOne(Cart::class);
-    }
-
-    public function payments(): HasMany
-    {
-        return $this->hasMany(Payment::class);
-    }
-
     public function wishlists(): HasMany
     {
         return $this->hasMany(Wishlist::class);
